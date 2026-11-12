@@ -1,262 +1,1842 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Pro - Enterprise Edition (Live Firebase)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDKs via CDN -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, increment, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VibeTok Pro - Next-Gen Short Video</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDgAn4OehtWHwVtCp9ISdJDWHaOZKK3GFk",
-            authDomain: "tiktok-pro-46434.firebaseapp.com",
-            projectId: "tiktok-pro-46434",
-            storageBucket: "tiktok-pro-46434.firebasestorage.app",
-            messagingSenderId: "634109089305",
-            appId: "1:634109089305:web:85a8117ee997fd29a83c88",
-            measurementId: "G-91T9CD8ERJ"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const googleProvider = new GoogleAuthProvider();
-
-        // Expose Firebase tools globally for the app UI
-        window.FB = { auth, db, googleProvider, signInWithPopup, signOut, onAuthStateChanged, collection, addDoc, getDocs, updateDoc, doc, increment, query, orderBy, onSnapshot };
-    </script>
-
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: {} }
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Hind Siliguri', 'sans-serif'],
+          },
+          colors: {
+            brandCyan: '#00F2FE',
+            brandPink: '#FF0050',
+            brandGold: '#FFD700',
+            darkBg: '#000000',
+            darkCard: '#121212',
+            darkElevated: '#1E1E1E'
+          }
         }
-    </script>
-    <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .snap-container { scroll-snap-type: y mandatory; height: calc(100vh - 130px); overflow-y: scroll; }
-        .snap-item { scroll-snap-align: start; height: 100%; }
-        @keyframes pulse-heart { 0% { transform: scale(0.8); opacity: 0.8; } 50% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
-        .animate-heart { animation: pulse-heart 0.4s ease-in-out; }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #050505;
+      color: #ffffff;
+      font-family: 'Inter', 'Hind Siliguri', sans-serif;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Splash Screen Animation */
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.6)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 0 28px rgba(255, 0, 80, 0.85)); }
+    }
+    .splash-logo-anim {
+      animation: pulseLogo 1.8s ease-in-out infinite;
+    }
+
+    /* Vertical Snap Feed */
+    .snap-feed {
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    .snap-card {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Spinning Vinyl Record */
+    @keyframes spinVinyl {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .animate-vinyl {
+      animation: spinVinyl 5s linear infinite;
+    }
+    .paused-vinyl {
+      animation-play-state: paused;
+    }
+
+    /* Scrolling Audio Ticker */
+    @keyframes marqueeText {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+      width: 185px;
+    }
+    .ticker-move {
+      display: inline-block;
+      white-space: nowrap;
+      animation: marqueeText 8s linear infinite;
+    }
+
+    /* Double Tap Heart Pop */
+    @keyframes heartPop {
+      0% { transform: translate(-50%, -50%) scale(0.2) rotate(-15deg); opacity: 0; }
+      30% { transform: translate(-50%, -50%) scale(1.25) rotate(10deg); opacity: 1; }
+      70% { transform: translate(-50%, -50%) scale(1.0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(-50%, -110%) scale(1.5); opacity: 0; }
+    }
+    .double-tap-heart {
+      position: absolute;
+      pointer-events: none;
+      z-index: 40;
+      animation: heartPop 0.85s ease-out forwards;
+      filter: drop-shadow(0 4px 16px rgba(255, 0, 80, 0.8));
+    }
+
+    /* Custom Pro Upload Button */
+    .pro-plus-btn {
+      position: relative;
+      width: 46px;
+      height: 30px;
+      background: #ffffff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000000;
+      font-weight: 800;
+      z-index: 2;
+      transition: transform 0.15s ease;
+    }
+    .pro-plus-btn::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #00F2FE;
+      border-radius: 8px;
+      z-index: -1;
+    }
+    .pro-plus-btn::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #FF0050;
+      border-radius: 8px;
+      z-index: -1;
+    }
+    .pro-plus-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Video Scrubber Range Input */
+    input[type="range"].video-scrubber {
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 255, 255, 0.25);
+      height: 3px;
+      border-radius: 999px;
+      outline: none;
+      transition: height 0.15s ease;
+    }
+    input[type="range"].video-scrubber:hover {
+      height: 6px;
+    }
+    input[type="range"].video-scrubber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #00F2FE;
+      cursor: pointer;
+    }
+
+    .video-gradient-bottom {
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0) 100%);
+    }
+    .video-gradient-top {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+    }
+  </style>
 </head>
-<body class="bg-white text-slate-900 dark:bg-slate-950 dark:text-white font-sans transition-colors duration-300 flex flex-col h-screen overflow-hidden">
+<body class="bg-[#050505] text-white h-screen w-screen flex justify-center items-center select-none">
 
-    <!-- Top Navigation Bar -->
-    <header class="flex justify-between items-center px-4 py-3 border-b border-slate-200 dark:border-slate-800 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
-        <div class="flex items-center gap-2">
-            <span class="text-2xl font-black tracking-tighter bg-gradient-to-r from-rose-500 to-cyan-500 bg-clip-text text-transparent">TikTok</span>
-            <span class="bg-gradient-to-r from-rose-500 to-cyan-500 text-white text-[10px] font-black px-1.5 py-0.5 rounded tracking-widest uppercase">PRO LIVE</span>
-        </div>
-        <div class="flex items-center gap-4 text-sm font-semibold">
-            <button onclick="switchFeed('following')" id="nav-following" class="text-slate-400 hover:text-slate-900 dark:hover:text-white transition">Following</button>
-            <span class="text-slate-300 dark:text-slate-700">|</span>
-            <button onclick="switchFeed('foryou')" id="nav-foryou" class="border-b-2 border-rose-500 pb-0.5">For You</button>
-        </div>
-        <div class="flex items-center gap-2">
-            <button onclick="openLiveStudio()" class="bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white text-xs px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5">
-                <i class="fa-solid fa-broadcast-tower animate-pulse"></i><span>Go LIVE</span>
-            </button>
-            <button onclick="toggleDarkMode()" id="theme-toggle" class="text-lg p-1.5 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"><i class="fa-solid fa-moon"></i></button>
-            <div id="auth-container">
-                <button onclick="loginWithGoogle()" class="bg-gradient-to-r from-rose-500 to-cyan-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">Login</button>
-            </div>
-        </div>
-    </header>
+  <!-- ==================== APP LAUNCH SPLASH SCREEN ==================== -->
+  <div id="app-splash-screen" class="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center transition-opacity duration-500">
+    <div class="splash-logo-anim w-24 h-24 rounded-3xl bg-gradient-to-tr from-brandCyan via-black to-brandPink p-[3px] mb-5">
+      <div class="w-full h-full bg-black rounded-[21px] flex items-center justify-center">
+        <i class="fa-solid fa-play text-4xl bg-gradient-to-r from-brandCyan to-brandPink bg-clip-text text-transparent ml-1"></i>
+      </div>
+    </div>
+    <h1 class="text-3xl font-extrabold tracking-tight flex items-center gap-2">
+      VibeTok <span class="text-xs px-2.5 py-0.5 rounded-full bg-gradient-to-r from-brandCyan to-brandPink text-black font-black uppercase">PRO</span>
+    </h1>
+    <p class="text-xs text-gray-400 mt-2 tracking-widest uppercase">Create • Stream • Earn</p>
+    <div class="w-40 h-1 bg-white/10 rounded-full overflow-hidden mt-8">
+      <div id="splash-loader-bar" class="h-full bg-gradient-to-r from-brandCyan to-brandPink w-0 transition-all duration-1000"></div>
+    </div>
+  </div>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 relative overflow-hidden flex">
-        <div id="video-feed" class="snap-container no-scrollbar w-full h-full flex flex-col items-center justify-center">
-            <p class="text-xs text-slate-400 animate-pulse">Connecting to Firebase Realtime Cloud...</p>
+  <!-- Desktop Left Sidebar -->
+  <aside class="hidden lg:flex flex-col justify-between w-64 h-[94vh] mr-6 bg-[#121212] border border-white/10 rounded-3xl p-5 shadow-2xl">
+    <div>
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 mb-7 px-2">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brandCyan via-black to-brandPink p-[2px]">
+          <div class="w-full h-full bg-black rounded-[10px] flex items-center justify-center">
+            <i class="fa-solid fa-play text-lg text-brandCyan ml-0.5"></i>
+          </div>
         </div>
-    </main>
-
-    <!-- Bottom Navigation Bar -->
-    <nav class="flex justify-around items-center py-2.5 border-t border-slate-200 dark:border-slate-800 z-50 text-xs font-semibold bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400">
-        <button onclick="switchTab('home')" id="tab-home" class="flex flex-col items-center text-rose-500"><i class="fa-solid fa-house text-xl mb-0.5"></i><span>Home</span></button>
-        <button onclick="switchTab('discover')" id="tab-discover" class="flex flex-col items-center hover:text-slate-900 dark:hover:text-white"><i class="fa-solid fa-compass text-xl mb-0.5"></i><span>Discover</span></button>
-        <button onclick="openUploadModal()" class="flex items-center justify-center bg-gradient-to-r from-rose-500 to-cyan-500 text-white w-12 h-8 rounded-xl text-lg font-bold shadow-lg shadow-rose-500/20 hover:scale-105 transition"><i class="fa-solid fa-plus text-sm"></i></button>
-        <button onclick="switchTab('analytics')" id="tab-analytics" class="flex flex-col items-center hover:text-slate-900 dark:hover:text-white relative"><i class="fa-solid fa-chart-line text-xl mb-0.5"></i><span>Studio</span></button>
-        <button onclick="switchTab('profile')" id="tab-profile" class="flex flex-col items-center hover:text-slate-900 dark:hover:text-white"><i class="fa-regular fa-user text-xl mb-0.5"></i><span>Profile</span></button>
-    </nav>
-
-    <!-- Upload Modal -->
-    <div id="upload-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg rounded-3xl p-6 relative shadow-2xl">
-            <button onclick="closeUploadModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-2xl font-black mb-1">Upload to Firebase Cloud</h3>
-            <p class="text-xs text-slate-500 mb-6">Firestore & Cloud Storage Synchronized</p>
-            <div class="space-y-4">
-                <div>
-                    <label class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 block">Video Direct URL (MP4/HLS)</label>
-                    <input type="text" id="upload-url-input" placeholder="https://assets.mixkit.co/videos/preview/..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-rose-500 transition">
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1 block">Caption & Hashtags</label>
-                    <textarea id="upload-caption-input" placeholder="Awesome moment! #fyp #viral" rows="2" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-rose-500 transition resize-none"></textarea>
-                </div>
-                <button onclick="handleVideoUpload()" class="w-full bg-gradient-to-r from-rose-500 to-cyan-500 text-white font-black py-4 rounded-2xl shadow-lg shadow-rose-500/20 hover:opacity-90 transition text-sm">Publish Post</button>
-            </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight flex items-center gap-1.5">
+            VibeTok <span class="text-[11px] px-2 py-0.5 rounded-full bg-gradient-to-r from-brandCyan to-brandPink text-black font-extrabold uppercase">PRO</span>
+          </h1>
+          <p class="text-[11px] text-gray-400">Next-Gen Short Video</p>
         </div>
+      </div>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="space-y-1.5">
+        <button onclick="switchTab('home')" id="desk-nav-home" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl bg-white/10 text-brandPink font-semibold transition">
+          <i class="fa-solid fa-house text-lg w-6"></i>
+          <span>For You (হোম)</span>
+        </button>
+        <button onclick="switchTab('discover')" id="desk-nav-discover" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
+          <i class="fa-solid fa-compass text-lg w-6"></i>
+          <span>Discover (এক্সপ্লোর)</span>
+        </button>
+        <button onclick="openLiveModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
+          <i class="fa-solid fa-tower-broadcast text-lg w-6 text-red-500"></i>
+          <span>LIVE Streams (লাইভ)</span>
+        </button>
+        <button onclick="openUploadModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
+          <i class="fa-solid fa-cloud-arrow-up text-lg w-6 text-brandCyan"></i>
+          <span>Upload Video (আপলোড)</span>
+        </button>
+        <button onclick="switchTab('inbox')" id="desk-nav-inbox" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
+          <i class="fa-solid fa-message text-lg w-6"></i>
+          <span>Inbox & DM (মেসেজ)</span>
+        </button>
+        <button onclick="switchTab('profile')" id="desk-nav-profile" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
+          <i class="fa-solid fa-user text-lg w-6"></i>
+          <span>Profile (প্রোফাইল)</span>
+        </button>
+      </nav>
     </div>
 
-    <!-- Script Application Logic -->
-    <script>
-        let currentUser = null;
-        let videosCache = [];
+    <!-- Wallet & Coins Pill -->
+    <div class="space-y-3">
+      <div class="bg-gradient-to-r from-amber-500/15 to-yellow-500/5 border border-amber-400/20 rounded-2xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid fa-coins text-brandGold text-lg"></i>
+          <div>
+            <p class="text-[11px] text-gray-400">Vibe Coins</p>
+            <p id="desk-coin-balance" class="text-sm font-extrabold text-brandGold">250 Coins</p>
+          </div>
+        </div>
+        <button onclick="rechargeCoins()" class="px-2.5 py-1 rounded-lg bg-brandGold text-black text-[11px] font-extrabold hover:opacity-90">
+          + ফ্রি কয়েন
+        </button>
+      </div>
 
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const { auth, onAuthStateChanged, db, collection, query, orderBy, onSnapshot } = window.FB;
-                
-                // Auth State Listener
-                onAuthStateChanged(auth, (user) => {
-                    currentUser = user;
-                    const authContainer = document.getElementById('auth-container');
-                    if (user) {
-                        authContainer.innerHTML = `<div class="flex items-center gap-2"><img src="${user.photoURL || 'https://via.placeholder.com/30'}" class="w-7 h-7 rounded-full border border-rose-500"><button onclick="logout()" class="text-xs font-bold text-rose-500">Logout</button></div>`;
-                    } else {
-                        authContainer.innerHTML = `<button onclick="loginWithGoogle()" class="bg-gradient-to-r from-rose-500 to-cyan-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">Login</button>`;
-                    }
-                });
+      <!-- Desktop User Status Card -->
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-3.5">
+        <div id="desk-user-info" class="flex items-center gap-3 mb-3">
+          <img id="desk-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=GuestPro" alt="User" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-white/20" />
+          <div class="overflow-hidden">
+            <p id="desk-username" class="text-sm font-bold truncate">Guest Creator</p>
+            <p id="desk-email" class="text-xs text-gray-400 truncate">লগইন করে ভিডিও আপলোড করুন</p>
+          </div>
+        </div>
+        <button id="desk-auth-btn" onclick="openAuthModal()" class="w-full py-2 rounded-xl bg-brandPink hover:bg-rose-600 text-white font-semibold text-sm transition">
+          লগইন / সাইন আপ
+        </button>
+      </div>
+    </div>
+  </aside>
 
-                // Realtime Firestore Feed Sync
-                const q = query(collection(db, "videos"), orderBy("createdAt", "desc"));
-                onSnapshot(q, (snapshot) => {
-                    videosCache = [];
-                    snapshot.forEach((docSnap) => {
-                        videosCache.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    if(videosCache.length === 0) {
-                        // Seed default video if empty
-                        seedDefaultVideos();
-                    } else {
-                        renderFeed();
-                    }
-                });
-            }, 1000);
+  <!-- Main Mobile App Container -->
+  <main class="relative w-full h-full sm:w-[420px] sm:h-[94vh] sm:rounded-[34px] sm:border sm:border-white/15 bg-black overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.95)] flex flex-col">
+
+    <!-- ==================== VIEW 1: HOME VIDEO FEED ==================== -->
+    <section id="view-home" class="relative w-full h-full flex-1 overflow-hidden">
+      <!-- Top Floating Header -->
+      <header class="absolute top-0 left-0 right-0 z-30 pt-4 pb-6 px-4 flex items-center justify-between video-gradient-top pointer-events-none">
+        <!-- LIVE Button -->
+        <button onclick="openLiveModal()" class="pointer-events-auto flex items-center gap-1.5 bg-black/50 backdrop-blur-md border border-red-500/40 px-2.5 py-1 rounded-full hover:bg-red-500/20 transition">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+          <span class="text-[11px] font-extrabold tracking-wider text-white">LIVE</span>
+        </button>
+
+        <!-- Following | For You Tabs -->
+        <div class="pointer-events-auto flex items-center gap-4 text-[15px] font-bold">
+          <button onclick="setFeedFilter('following')" id="tab-following" class="text-white/60 hover:text-white transition relative pb-1">
+            Following
+          </button>
+          <span class="text-white/20">|</span>
+          <button onclick="setFeedFilter('foryou')" id="tab-foryou" class="text-white transition relative pb-1">
+            For You
+            <span id="tab-indicator" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-7 h-[3px] bg-white rounded-full transition-all"></span>
+          </button>
+        </div>
+
+        <!-- Speed & Mute Controls -->
+        <div class="pointer-events-auto flex items-center gap-1.5">
+          <button onclick="cyclePlaybackSpeed()" id="speed-toggle-btn" title="Playback Speed" class="px-2 h-8 rounded-full bg-black/45 backdrop-blur-md border border-white/15 text-[11px] font-extrabold text-brandCyan hover:bg-white/20 transition">
+            1x
+          </button>
+          <button onclick="toggleGlobalMute()" id="global-mute-btn" title="Mute / Unmute" class="w-8 h-8 rounded-full bg-black/45 backdrop-blur-md border border-white/15 flex items-center justify-center text-white hover:bg-white/20 transition">
+            <i id="global-mute-icon" class="fa-solid fa-volume-xmark text-xs"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Snap Scrolling Feed Container -->
+      <div id="video-feed-container" class="snap-feed no-scrollbar w-full h-full pb-16">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: DISCOVER / SEARCH ==================== -->
+    <section id="view-discover" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-20 px-4 pt-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-extrabold">Discover <span class="text-brandCyan">Pro</span></h2>
+        <span class="text-xs text-gray-400">ট্রেন্ডিং ভিডিও ও সাউন্ড</span>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative mb-4">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+        <input id="discover-search" oninput="renderDiscoverGrid()" type="text" placeholder="হ্যাশট্যাগ, ক্রিয়েটর বা মিউজিক খুঁজুন..." class="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brandCyan transition" />
+      </div>
+
+      <!-- Trending Hashtag Pills -->
+      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5">
+        <button onclick="filterByTag('all')" class="px-3.5 py-1.5 rounded-full bg-brandPink text-white text-xs font-semibold whitespace-nowrap">🔥 সব ভিডিও</button>
+        <button onclick="filterByTag('#nature')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#nature</button>
+        <button onclick="filterByTag('#travel')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#travel</button>
+        <button onclick="filterByTag('#vibes')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#vibes</button>
+        <button onclick="filterByTag('#bangladesh')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#bangladesh</button>
+      </div>
+
+      <!-- Video Thumbnail Grid -->
+      <div id="discover-grid" class="grid grid-cols-2 gap-3">
+        <!-- Populated dynamically -->
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: INBOX & DIRECT MESSAGES ==================== -->
+    <section id="view-inbox" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-20 px-4 pt-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-extrabold">Inbox & Messages</h2>
+        <span class="text-xs px-2.5 py-1 rounded-full bg-brandPink/20 text-brandPink font-semibold">Live</span>
+      </div>
+
+      <!-- Inbox Sub-Tabs (Activity vs Direct Chat) -->
+      <div class="grid grid-cols-2 gap-2 bg-[#161616] p-1 rounded-xl mb-4 border border-white/10">
+        <button onclick="switchInboxSubTab('activity')" id="itab-activity" class="py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition">
+          <i class="fa-solid fa-bell mr-1 text-brandCyan"></i> নোটিফিকেশন
+        </button>
+        <button onclick="switchInboxSubTab('messages')" id="itab-messages" class="py-2 rounded-lg text-gray-400 text-xs font-semibold transition">
+          <i class="fa-solid fa-paper-plane mr-1 text-brandPink"></i> ডাইরেক্ট মেসেজ
+        </button>
+      </div>
+
+      <!-- Activity List -->
+      <div id="notifications-list" class="space-y-3">
+        <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-[#161616] border border-white/5">
+          <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-brandCyan to-brandPink flex items-center justify-center text-black font-bold shrink-0">
+            <i class="fa-solid fa-bolt text-lg"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold">VibeTok Pro-তে স্বাগতম!</p>
+            <p class="text-xs text-gray-400">আপনাকে বোনাস হিসেবে <span class="text-brandGold font-bold">250 Vibe Coins</span> দেওয়া হয়েছে।</p>
+          </div>
+          <span class="text-[11px] text-gray-500">এখন</span>
+        </div>
+      </div>
+
+      <!-- Direct Messages Chat Box -->
+      <div id="dm-chat-panel" class="hidden flex flex-col h-[68vh] bg-[#141414] border border-white/10 rounded-2xl overflow-hidden">
+        <div class="p-3 bg-[#1b1b1b] border-b border-white/10 flex items-center gap-2.5">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NatureBangla" class="w-8 h-8 rounded-full bg-gray-800" />
+          <div>
+            <p class="text-xs font-bold">@nature_bangla <i class="fa-solid fa-circle-check text-brandCyan text-[10px]"></i></p>
+            <p class="text-[10px] text-emerald-400">● Online</p>
+          </div>
+        </div>
+        <div id="dm-messages-list" class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2.5 text-xs">
+          <div class="bg-white/10 rounded-2xl rounded-tl-none p-2.5 max-w-[80%]">
+            হ্যালো! VibeTok Pro-তে আপনাকে স্বাগতম। নতুন ভিডিও আপলোড করেছেন? 👋
+          </div>
+        </div>
+        <form onsubmit="sendDirectMessage(event)" class="p-2.5 bg-[#101010] border-t border-white/10 flex gap-2">
+          <input id="dm-input" type="text" required placeholder="মেসেজ লিখুন..." class="flex-1 bg-[#222] rounded-full px-3.5 py-2 text-xs text-white focus:outline-none" />
+          <button type="submit" class="w-8 h-8 rounded-full bg-brandPink text-white flex items-center justify-center">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: USER PROFILE ==================== -->
+    <section id="view-profile" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-24 pt-6 px-4">
+      <!-- Top Bar -->
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-1.5 bg-amber-500/15 border border-amber-400/25 px-3 py-1 rounded-full">
+          <i class="fa-solid fa-coins text-brandGold text-xs"></i>
+          <span id="profile-coin-badge" class="text-xs font-extrabold text-brandGold">250</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openEditProfileModal()" class="text-xs px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold transition">
+            <i class="fa-solid fa-pen-to-square mr-1"></i> এডিট প্রোফাইল
+          </button>
+          <button id="profile-logout-btn" onclick="handleLogout()" class="hidden text-xs px-3 py-1.5 rounded-xl bg-red-500/15 text-red-400 font-semibold transition">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Profile Avatar & Info -->
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="relative mb-3">
+          <img id="profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=GuestPro" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-2 border-brandPink p-0.5 bg-[#1a1a1a]" />
+          <span class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-brandCyan text-black flex items-center justify-center text-xs font-bold border-2 border-black">
+            <i class="fa-solid fa-check"></i>
+          </span>
+        </div>
+        <h3 id="profile-name" class="text-lg font-extrabold">@guest_creator</h3>
+        <p id="profile-bio" class="text-xs text-gray-400 mt-1 max-w-xs">VibeTok Pro ক্রিয়েটর • ভিডিও আপলোড, গিফট ও লাইক করতে যুক্ত থাকুন</p>
+
+        <button id="profile-login-cta" onclick="openAuthModal()" class="mt-3.5 px-6 py-2 rounded-xl bg-gradient-to-r from-brandPink to-rose-600 text-white text-xs font-bold shadow-lg shadow-brandPink/25">
+          লগইন বা একাউন্ট খুলুন
+        </button>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="grid grid-cols-3 gap-2 bg-[#151515] border border-white/10 rounded-2xl p-3.5 mb-5 text-center">
+        <div>
+          <p id="stat-following" class="text-base font-extrabold">1</p>
+          <p class="text-[11px] text-gray-400">Following</p>
+        </div>
+        <div class="border-x border-white/10">
+          <p id="stat-followers" class="text-base font-extrabold">1.4K</p>
+          <p class="text-[11px] text-gray-400">Followers</p>
+        </div>
+        <div>
+          <p id="stat-likes" class="text-base font-extrabold">0</p>
+          <p class="text-[11px] text-gray-400">Likes</p>
+        </div>
+      </div>
+
+      <!-- Profile Sub-Tabs (My Videos / Liked / Bookmarked) -->
+      <div class="flex border-b border-white/10 mb-4 text-xs">
+        <button onclick="switchProfileTab('uploaded')" id="ptab-uploaded" class="flex-1 py-2.5 font-bold text-white border-b-2 border-white">
+          <i class="fa-solid fa-video mr-1"></i> ভিডিও
+        </button>
+        <button onclick="switchProfileTab('liked')" id="ptab-liked" class="flex-1 py-2.5 font-medium text-gray-400">
+          <i class="fa-solid fa-heart mr-1"></i> লাইক
+        </button>
+        <button onclick="switchProfileTab('saved')" id="ptab-saved" class="flex-1 py-2.5 font-medium text-gray-400">
+          <i class="fa-solid fa-bookmark mr-1"></i> সেভড
+        </button>
+      </div>
+
+      <!-- Profile Videos Grid -->
+      <div id="profile-video-grid" class="grid grid-cols-3 gap-2">
+        <!-- Populated dynamically -->
+      </div>
+    </section>
+
+    <!-- ==================== BOTTOM NAVIGATION BAR ==================== -->
+    <nav class="absolute bottom-0 left-0 right-0 h-16 bg-black/95 backdrop-blur-lg border-t border-white/10 px-2 flex items-center justify-around z-30">
+      <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center justify-center w-14 text-white transition">
+        <i class="fa-solid fa-house text-lg"></i>
+        <span class="text-[10px] font-semibold mt-1">Home</span>
+      </button>
+
+      <button onclick="switchTab('discover')" id="nav-discover" class="flex flex-col items-center justify-center w-14 text-gray-500 hover:text-gray-300 transition">
+        <i class="fa-solid fa-compass text-lg"></i>
+        <span class="text-[10px] font-medium mt-1">Discover</span>
+      </button>
+
+      <!-- Center Upload (+) Button -->
+      <button onclick="openUploadModal()" aria-label="Upload Video" class="flex items-center justify-center px-2">
+        <div class="pro-plus-btn">
+          <i class="fa-solid fa-plus text-base"></i>
+        </div>
+      </button>
+
+      <button onclick="switchTab('inbox')" id="nav-inbox" class="relative flex flex-col items-center justify-center w-14 text-gray-500 hover:text-gray-300 transition">
+        <i class="fa-solid fa-message text-lg"></i>
+        <span id="inbox-dot" class="absolute top-1.5 right-3.5 w-2 h-2 rounded-full bg-brandPink"></span>
+        <span class="text-[10px] font-medium mt-1">Inbox</span>
+      </button>
+
+      <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center justify-center w-14 text-gray-500 hover:text-gray-300 transition">
+        <i class="fa-solid fa-user text-lg"></i>
+        <span class="text-[10px] font-medium mt-1">Profile</span>
+      </button>
+    </nav>
+
+    <!-- ==================== COMMENTS SLIDE-UP DRAWER ==================== -->
+    <div id="comments-drawer" class="hidden absolute inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs">
+      <div onclick="closeCommentsDrawer()" class="flex-1"></div>
+      <div class="bg-[#161616] border-t border-white/15 rounded-t-3xl h-[68%] flex flex-col shadow-2xl">
+        <div class="flex items-center justify-between px-5 py-3.5 border-b border-white/10">
+          <span class="w-6"></span>
+          <h4 id="comments-drawer-title" class="text-sm font-bold">0 কমেন্ট</h4>
+          <button onclick="closeCommentsDrawer()" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:text-white">
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+          </div>
+
+        <div id="comments-list" class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4"></div>
+
+        <form onsubmit="submitComment(event)" class="p-3 bg-[#101010] border-t border-white/10 flex items-center gap-2.5">
+          <img id="comment-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=GuestPro" alt="You" class="w-8 h-8 rounded-full bg-gray-800 shrink-0" />
+          <input id="comment-input" type="text" required placeholder="সুন্দর একটি কমেন্ট লিখুন..." class="flex-1 bg-[#222222] border border-white/10 rounded-full px-4 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-brandCyan" />
+          <button type="submit" class="w-9 h-9 rounded-full bg-brandPink text-white flex items-center justify-center hover:bg-rose-600 transition shrink-0">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== VIRTUAL GIFT DRAWER ==================== -->
+    <div id="gift-drawer" class="hidden absolute inset-0 z-50 flex flex-col justify-end bg-black/65">
+      <div onclick="closeGiftDrawer()" class="flex-1"></div>
+      <div class="bg-[#181818] border-t border-amber-400/25 rounded-t-3xl p-5 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-sm font-extrabold flex items-center gap-2">
+            <i class="fa-solid fa-gift text-brandGold"></i> ক্রিয়েটরকে গিফট পাঠান
+          </h4>
+          <span class="text-xs font-bold text-brandGold bg-amber-500/15 px-2.5 py-1 rounded-full">
+            ব্যালেন্স: <span id="gift-drawer-balance">250</span> Coins
+          </span>
+        </div>
+
+        <div class="grid grid-cols-4 gap-2.5 mb-4 text-center">
+          <button onclick="sendVirtualGift('Rose 🌹', 10)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+            <div class="text-2xl mb-1">🌹</div>
+            <p class="text-[11px] font-bold">Rose</p>
+            <p class="text-[10px] text-brandGold">10 Coins</p>
+          </button>
+          <button onclick="sendVirtualGift('Heart Fire 🔥', 50)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+            <div class="text-2xl mb-1">🔥</div>
+            <p class="text-[11px] font-bold">Fire</p>
+            <p class="text-[10px] text-brandGold">50 Coins</p>
+          </button>
+          <button onclick="sendVirtualGift('Crown 👑', 100)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+            <div class="text-2xl mb-1">👑</div>
+            <p class="text-[11px] font-bold">Crown</p>
+            <p class="text-[10px] text-brandGold">100 Coins</p>
+          </button>
+          <button onclick="sendVirtualGift('Rocket 🚀', 200)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+            <div class="text-2xl mb-1">🚀</div>
+            <p class="text-[11px] font-bold">Rocket</p>
+            <p class="text-[10px] text-brandGold">200 Coins</p>
+          </button>
+        </div>
+
+        <button onclick="rechargeCoins()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-extrabold text-xs">
+          + ১০০ ফ্রি বোনাস কয়েন সংগ্রহ করুন
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== LIVE STREAM MODAL ==================== -->
+    <div id="live-modal" class="hidden absolute inset-0 z-50 bg-black flex flex-col">
+      <div class="relative flex-1 bg-zinc-900 overflow-hidden">
+        <video src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4" autoplay loop muted playsinline class="w-full h-full object-cover opacity-80"></video>
+        <div class="absolute top-4 left-4 right-4 flex items-center justify-between">
+          <div class="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full">
+            <span class="px-2 py-0.5 rounded bg-red-600 text-[10px] font-extrabold">LIVE</span>
+            <span class="text-xs font-bold">@nature_bangla</span>
+            <span class="text-[11px] text-gray-300"><i class="fa-solid fa-eye mr-1"></i>1.2K</span>
+          </div>
+          <button onclick="closeLiveModal()" class="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div id="live-chat-feed" class="absolute bottom-16 left-4 right-16 space-y-1.5 text-xs max-h-40 overflow-y-auto no-scrollbar">
+          <div class="bg-black/50 px-3 py-1 rounded-xl w-fit"><span class="text-brandCyan font-bold">@rafi:</span> অসাধারণ লাইভ ভাই!</div>
+          <div class="bg-black/50 px-3 py-1 rounded-xl w-fit"><span class="text-brandPink font-bold">@sumaiya:</span> সাউন্ড একদম ক্লিয়ার ❤️</div>
+        </div>
+
+        <form onsubmit="sendLiveChat(event)" class="absolute bottom-3 left-3 right-3 flex gap-2">
+          <input id="live-chat-input" type="text" required placeholder="লাইভে কমেন্ট করুন..." class="flex-1 bg-black/70 border border-white/20 rounded-full px-4 py-2 text-xs text-white focus:outline-none" />
+          <button type="submit" class="px-4 py-2 rounded-full bg-brandPink text-xs font-bold">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== VIDEO UPLOAD MODAL ==================== -->
+    <div id="upload-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-5 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-extrabold flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-brandCyan"></span> নতুন ভিডিও আপলোড
+          </h3>
+          <button onclick="closeUploadModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 bg-black p-1 rounded-xl mb-4 border border-white/10">
+          <button type="button" onclick="setUploadMode('file')" id="mode-file-btn" class="py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition">
+            <i class="fa-solid fa-file-video mr-1 text-brandCyan"></i> ডিভাইস ফাইল
+          </button>
+          <button type="button" onclick="setUploadMode('url')" id="mode-url-btn" class="py-2 rounded-lg text-gray-400 text-xs font-semibold transition">
+            <i class="fa-solid fa-link mr-1 text-brandPink"></i> ভিডিও লিংক (URL)
+          </button>
+        </div>
+
+        <form onsubmit="handleVideoUpload(event)" class="space-y-3.5">
+          <div id="upload-file-group">
+            <label class="block w-full border-2 border-dashed border-white/20 hover:border-brandCyan rounded-2xl p-4 text-center cursor-pointer transition bg-black/40">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-brandCyan mb-1.5"></i>
+              <p id="selected-file-name" class="text-xs font-semibold text-gray-200">MP4 / WebM ভিডিও সিলেক্ট করুন</p>
+              <p class="text-[10px] text-gray-500 mt-0.5">সর্বোচ্চ ৫০ মেগাবাইট</p>
+              <input id="video-file-input" type="file" accept="video/mp4,video/webm,video/*" class="hidden" onchange="updateFileName(this)" />
+            </label>
+          </div>
+
+          <div id="upload-url-group" class="hidden">
+            <label class="text-xs text-gray-400 block mb-1">ডাইরেক্ট MP4 ভিডিও লিংক</label>
+            <input id="video-url-input" type="url" placeholder="https://example.com/video.mp4" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandCyan" />
+          </div>
+
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">ক্যাপশন ও হ্যাশট্যাগ</label>
+            <input id="video-caption-input" type="text" required placeholder="অসাধারণ একটি মুহূর্ত! #vibes #bangladesh" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandCyan" />
+          </div>
+
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">অডিও / মিউজিক নাম</label>
+            <input id="video-music-input" type="text" value="Original Sound - VibeTok Pro" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandCyan" />
+          </div>
+
+          <div id="upload-progress-wrap" class="hidden">
+            <div class="flex justify-between text-[11px] text-gray-300 mb-1">
+              <span id="upload-status-text">আপলোড হচ্ছে...</span>
+              <span id="upload-percent">0%</span>
+            </div>
+            <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+              <div id="upload-progress-bar" class="h-full bg-gradient-to-r from-brandCyan to-brandPink w-0 transition-all duration-200"></div>
+            </div>
+          </div>
+
+          <button id="upload-submit-btn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brandCyan to-brandPink text-black font-extrabold text-sm shadow-lg hover:opacity-95 transition">
+            পোস্ট করুন (Publish)
+          </button>
+        </form>
+                  </div>
+                  </div>
+
+    <!-- ==================== EDIT PROFILE MODAL ==================== -->
+    <div id="edit-profile-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-5 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-extrabold">প্রোফাইল এডিট করুন</h3>
+          <button onclick="closeEditProfileModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <form onsubmit="saveProfileChanges(event)" class="space-y-3">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">ইউজারনেম</label>
+            <input id="edit-username-input" type="text" required class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-sm text-white" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">বায়ো (Bio)</label>
+            <textarea id="edit-bio-input" rows="2" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-sm text-white"></textarea>
+          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-brandCyan text-black font-extrabold text-sm">সেভ করুন</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== AUTHENTICATION MODAL ==================== -->
+    <div id="auth-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-play text-lg text-brandPink"></i>
+            <h3 id="auth-modal-title" class="text-lg font-extrabold">VibeTok Pro লগইন</h3>
+          </div>
+          <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <button onclick="handleGoogleLogin()" type="button" class="w-full py-2.5 px-4 rounded-xl bg-white text-black font-bold text-sm flex items-center justify-center gap-2.5 hover:bg-gray-100 transition mb-4">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-4 h-4" />
+          <span>Google দিয়ে চালিয়ে যান</span>
+        </button>
+
+        <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+          <div id="auth-name-wrap" class="hidden">
+            <input id="auth-name" type="text" placeholder="আপনার নাম" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandPink" />
+          </div>
+          <div>
+            <input id="auth-email" type="email" required placeholder="ইমেইল এড্রেস" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandPink" />
+          </div>
+          <div>
+            <input id="auth-password" type="password" required minlength="6" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandPink" />
+          </div>
+
+          <button id="auth-submit-btn" type="submit" class="w-full py-2.5 rounded-xl bg-brandPink hover:bg-rose-600 text-white font-bold text-sm transition">
+            লগইন করুন
+          </button>
+        </form>
+
+        <p class="text-center text-xs text-gray-400 mt-4">
+          <span id="auth-switch-text">নতুন ইউজার?</span>
+          <button type="button" onclick="toggleAuthMode()" id="auth-switch-btn" class="text-brandCyan font-bold ml-1 hover:underline">একাউন্ট খুলুন</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== TOAST MESSAGE BOX ==================== -->
+    <div id="toast-box" class="pointer-events-none fixed top-16 left-1/2 -translate-x-1/2 z-[100] hidden">
+      <div class="bg-[#1f1f1f]/95 backdrop-blur-md border border-white/15 text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2 max-w-[340px]">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-brandCyan"></i>
+        <span id="toast-text">Notification</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== FIREBASE & APP LOGIC ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      updateProfile,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      doc,
+      updateDoc,
+      increment,
+      query,
+      orderBy,
+      onSnapshot,
+      serverTimestamp,
+      arrayUnion,
+      arrayRemove
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import {
+      getStorage,
+      ref,
+      uploadBytesResumable,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgAn4OehtWHwVtCp9ISdJDWHaOZKK3GFk",
+      authDomain: "tiktok-pro-46434.firebaseapp.com",
+      projectId: "tiktok-pro-46434",
+      storageBucket: "tiktok-pro-46434.firebasestorage.app",
+      messagingSenderId: "634109089305",
+      appId: "1:634109089305:web:85a8117ee997fd29a83c88",
+      measurementId: "G-91T9CD8ERJ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const DEFAULT_DEMO_VIDEOS = [
+      {
+        id: "demo_1",
+        username: "@nature_bangla",
+        displayName: "Nature Bangla",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=NatureBangla",
+        verified: true,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4",
+        caption: "সমুদ্রের ঢেউ আর বিকেলের শান্ত বাতাস 🌊✨ #nature #travel #bangladesh #vibes",
+        music: "Ocean Breeze - Chill LoFi Mix",
+        likesCount: 1420,
+        likedBy: [],
+        commentsCount: 2,
+        isDemo: true,
+        demoComments: [
+          { username: "@tanvir_dhaka", text: "অসাধারণ দৃশ্য ভাই! মনটা ভালো হয়ে গেল ❤️" },
+          { username: "@sadia_islam", text: "কক্সবাজারের কথা মনে পড়ে গেল 🌊" }
+        ]
+      },
+      {
+        id: "demo_2",
+        username: "@urban_explorer",
+        displayName: "Urban Explorer",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=UrbanExplorer",
+        verified: true,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4",
+        caption: "বসন্তের রঙিন বিকেল 🌼 জীবনের ছোট ছোট মুহূর্তগুলো উপভোগ করুন #vibes #nature #pro",
+        music: "Golden Hour - Acoustic Guitar",
+        likesCount: 895,
+        likedBy: [],
+        commentsCount: 1,
+        isDemo: true,
+        demoComments: [
+          { username: "@arif_pro", text: "ভিডিও কোয়ালিটি একদম ক্লিয়ার 🔥" }
+        ]
+      },
+      {
+        id: "demo_3",
+        username: "@night_rider_bd",
+        displayName: "Night Rider BD",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=NightRider",
+        verified: false,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4",
+        caption: "রাতের আকাশ আর নক্ষত্রের মেলা ✨🌌 #travel #night #space #vibetokpro",
+        music: "Midnight Galaxy - Synthwave",
+        likesCount: 3210,
+        likedBy: [],
+        commentsCount: 2,
+        isDemo: true,
+        demoComments: [
+          { username: "@mehedi_hasan", text: "ওয়াও! দারুণ এডিট করেছেন ভাই 👏" },
+          { username: "@nusrat_jahan", text: "মিউজিকটা অনেক সুন্দর 🎶" }
+        ]
+      },
+      {
+        id: "demo_4",
+        username: "@mountain_soul",
+        displayName: "Mountain Soul",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=MountainSoul",
+        verified: true,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4",
+        caption: "পাহাড়ি ঝর্ণার শীতল জলধারা 🏞️ প্রকৃতির কাছে ফিরে যাওয়া #travel #nature #bangladesh",
+        music: "Forest Rain - Natural Ambience",
+        likesCount: 2150,
+        likedBy: [],
+        commentsCount: 1,
+        isDemo: true,
+        demoComments: [
+          { username: "@sakib_al", text: "বান্দরবানের ঝর্ণার মতো লাগছে!" }
+        ]
+      }
+    ];
+
+    // App State
+    let currentUser = null;
+    let firestoreVideos = [];
+    let allVideos = [...DEFAULT_DEMO_VIDEOS];
+    let followedUsers = new Set(["@nature_bangla"]);
+    let localLikedIds = new Set();
+    let bookmarkedIds = new Set();
+    let userCoins = 250;
+    let playbackSpeed = 1;
+    let isMuted = true;
+    let currentFeedFilter = "foryou";
+    let currentProfileSubTab = "uploaded";
+    let activeCommentVideoId = null;
+    let activeGiftVideoId = null;
+    let commentUnsubscribe = null;
+    let isSignUpMode = false;
+    let uploadMode = "file";
+
+    // Splash Screen Boot Sequence
+    window.addEventListener("DOMContentLoaded", () => {
+      const bar = document.getElementById("splash-loader-bar");
+      const splash = document.getElementById("app-splash-screen");
+      setTimeout(() => { bar.style.width = "100%"; }, 80);
+      setTimeout(() => {
+        splash.style.opacity = "0";
+        setTimeout(() => splash.classList.add("hidden"), 500);
+      }, 1500);
+    });
+
+    // Toast Helper
+    window.showToast = function (message, type = "info") {
+      const box = document.getElementById("toast-box");
+      const text = document.getElementById("toast-text");
+      const icon = document.getElementById("toast-icon");
+
+      text.textContent = message;
+      icon.className =
+        type === "error"
+          ? "fa-solid fa-circle-exclamation text-brandPink"
+          : "fa-solid fa-circle-check text-brandCyan";
+
+      box.classList.remove("hidden");
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => box.classList.add("hidden"), 3200);
+    };
+
+    function pushInboxNotification(title, desc) {
+      const list = document.getElementById("notifications-list");
+      const item = document.createElement("div");
+      item.className = "flex items-center gap-3 p-3.5 rounded-2xl bg-[#161616] border border-white/5";
+      item.innerHTML = `
+        <div class="w-10 h-10 rounded-full bg-brandPink/20 text-brandPink flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div class="flex-1">
+          <p class="text-sm font-semibold">${escapeHtml(title)}</p>
+          <p class="text-xs text-gray-400">${escapeHtml(desc)}</p>
+        </div>
+        <span class="text-[11px] text-gray-500">এইমাত্র</span>
+      `;
+      list.prepend(item);
+      document.getElementById("inbox-dot").classList.remove("hidden");
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function formatCount(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+      if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+      return String(num || 0);
+    }
+
+    function updateCoinDisplays() {
+      document.getElementById("desk-coin-balance").textContent = `${userCoins} Coins`;
+      document.getElementById("profile-coin-badge").textContent = userCoins;
+      document.getElementById("gift-drawer-balance").textContent = userCoins;
+    }
+
+    window.rechargeCoins = () => {
+      userCoins += 100;
+        updateCoinDisplays();
+      showToast("+100 বোনাস Vibe Coins যুক্ত হয়েছে!");
+    };
+
+    // ==================== AUTHENTICATION ====================
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      updateUserUI();
+      renderProfileView();
+    });
+
+    function updateUserUI() {
+      const deskAvatar = document.getElementById("desk-avatar");
+      const deskUsername = document.getElementById("desk-username");
+      const deskEmail = document.getElementById("desk-email");
+      const deskAuthBtn = document.getElementById("desk-auth-btn");
+
+      const profAvatar = document.getElementById("profile-avatar");
+      const profName = document.getElementById("profile-name");
+      const profBio = document.getElementById("profile-bio");
+      const profLoginCta = document.getElementById("profile-login-cta");
+      const profLogoutBtn = document.getElementById("profile-logout-btn");
+      const commentAvatar = document.getElementById("comment-user-avatar");
+
+      if (currentUser) {
+        const displayName = currentUser.displayName || currentUser.email.split("@")[0];
+        const handle = "@" + displayName.toLowerCase().replace(/[^a-z0-9_]/g, "_");
+        const photo = currentUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`;
+
+        deskAvatar.src = photo;
+        deskUsername.textContent = displayName;
+        deskEmail.textContent = currentUser.email;
+        deskAuthBtn.textContent = "লগআউট করুন";
+        deskAuthBtn.onclick = handleLogout;
+
+        profAvatar.src = photo;
+        profName.textContent = handle;
+        profBio.textContent = `${displayName} • VibeTok Pro Verified Creator`;
+        profLoginCta.classList.add("hidden");
+        profLogoutBtn.classList.remove("hidden");
+        commentAvatar.src = photo;
+      } else {
+        const guestAvatar = "https://api.dicebear.com/7.x/avataaars/svg?seed=GuestPro";
+        deskAvatar.src = guestAvatar;
+        deskUsername.textContent = "Guest Creator";
+        deskEmail.textContent = "লগইন করে ভিডিও আপলোড করুন";
+        deskAuthBtn.textContent = "লগইন / সাইন আপ";
+        deskAuthBtn.onclick = openAuthModal;
+
+        profAvatar.src = guestAvatar;
+        profName.textContent = "@guest_creator";
+        profBio.textContent = "VibeTok Pro ক্রিয়েটর • ভিডিও আপলোড ও গিফট করতে যুক্ত থাকুন";
+        profLoginCta.classList.remove("hidden");
+        profLogoutBtn.classList.add("hidden");
+        commentAvatar.src = guestAvatar;
+      }
+    }
+
+    window.openAuthModal = () => document.getElementById("auth-modal").classList.remove("hidden");
+    window.closeAuthModal = () => document.getElementById("auth-modal").classList.add("hidden");
+
+    window.toggleAuthMode = () => {
+      isSignUpMode = !isSignUpMode;
+      document.getElementById("auth-modal-title").textContent = isSignUpMode ? "নতুন একাউন্ট খুলুন" : "VibeTok Pro লগইন";
+      document.getElementById("auth-name-wrap").classList.toggle("hidden", !isSignUpMode);
+      document.getElementById("auth-submit-btn").textContent = isSignUpMode ? "সাইন আপ করুন" : "লগইন করুন";
+      document.getElementById("auth-switch-text").textContent = isSignUpMode ? "আগে থেকেই একাউন্ট আছে?" : "নতুন ইউজার?";
+      document.getElementById("auth-switch-btn").textContent = isSignUpMode ? "লগইন করুন" : "একাউন্ট খুলুন";
+    };
+
+    window.handleGoogleLogin = async () => {
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        closeAuthModal();
+        showToast("Google লগইন সফল হয়েছে!");
+      } catch (err) {
+        showToast("Firebase Console-এ Google Sign-in চালু করুন।", "error");
+      }
+    };
+
+    window.handleEmailAuth = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value;
+      const name = document.getElementById("auth-name").value.trim();
+
+      try {
+        if (isSignUpMode) {
+          const cred = await createUserWithEmailAndPassword(auth, email, password);
+          if (name) await updateProfile(cred.user, { displayName: name });
+          showToast("অভিনন্দন! আপনার একাউন্ট তৈরি হয়েছে।");
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+          showToast("সফলভাবে লগইন হয়েছে!");
+        }
+        updateUserUI();
+        closeAuthModal();
+      } catch (err) {
+        showToast("লগইন ত্রুটি: ইমেইল বা পাসওয়ার্ড যাচাই করুন।", "error");
+      }
+    };
+
+    window.handleLogout = async () => {
+      await signOut(auth);
+      showToast("লগআউট সম্পন্ন হয়েছে।");
+    };
+
+    // ==================== FIRESTORE REAL-TIME SYNC ====================
+    function initFirestoreVideosListener() {
+      try {
+        const q = query(collection(db, "videos"), orderBy("createdAt", "desc"));
+        onSnapshot(
+          q,
+          (snapshot) => {
+            firestoreVideos = snapshot.docs.map((docSnap) => {
+              const d = docSnap.data();
+              return {
+                id: docSnap.id,
+                username: d.username || "@pro_user",
+                displayName: d.displayName || "Pro Creator",
+                avatar: d.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${docSnap.id}`,
+                verified: Boolean(d.verified),
+                videoUrl: d.videoUrl,
+                caption: d.caption || "",
+                music: d.music || "Original Sound - VibeTok Pro",
+                likesCount: d.likesCount || 0,
+                likedBy: Array.isArray(d.likedBy) ? d.likedBy : [],
+                commentsCount: d.commentsCount || 0,
+                uid: d.uid || null,
+                isDemo: false
+              };
+            });
+            allVideos = [...firestoreVideos, ...DEFAULT_DEMO_VIDEOS];
+            renderVideoFeed();
+            renderDiscoverGrid();
+            renderProfileView();
+          },
+          () => {
+            allVideos = [...DEFAULT_DEMO_VIDEOS];
+            renderVideoFeed();
+            renderDiscoverGrid();
+          }
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // ==================== RENDER VIDEO FEED ====================
+    function renderVideoFeed() {
+      const container = document.getElementById("video-feed-container");
+      const filtered =
+        currentFeedFilter === "following"
+          ? allVideos.filter((v) => followedUsers.has(v.username))
+          : allVideos;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="h-full w-full flex flex-col items-center justify-center text-center px-8">
+            <i class="fa-solid fa-user-group text-4xl text-gray-600 mb-3"></i>
+            <h3 class="text-base font-bold mb-1">এখনো কাউকে ফলো করেননি</h3>
+            <p class="text-xs text-gray-400 mb-4">ক্রিয়েটরদের ফলো করলে তাদের ভিডিও এখানে দেখতে পাবেন।</p>
+            <button onclick="setFeedFilter('foryou')" class="px-5 py-2 rounded-xl bg-brandPink text-xs font-bold">For You দেখুন</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered
+        .map((video) => {
+          const isLiked = currentUser
+            ? video.likedBy?.includes(currentUser.uid) || localLikedIds.has(video.id)
+            : localLikedIds.has(video.id);
+          const isSaved = bookmarkedIds.has(video.id);
+          const isFollowing = followedUsers.has(video.username);
+
+          return `
+          <article class="snap-card bg-black flex items-center justify-center overflow-hidden" data-video-id="${video.id}">
+            <video
+              id="vid-player-${video.id}"
+              src="${escapeHtml(video.videoUrl)}"
+              class="feed-video w-full h-full object-cover cursor-pointer"
+              loop
+              playsinline
+              ${isMuted ? "muted" : ""}
+              preload="metadata"
+              ontimeupdate="updateVideoProgress('${video.id}')"
+              onclick="handleVideoTap(event, '${video.id}')"
+              ondblclick="handleVideoDoubleTap(event, '${video.id}')"
+            ></video>
+
+            <!-- Play Overlay -->
+            <div id="play-overlay-${video.id}" class="pointer-events-none hidden absolute inset-0 flex items-center justify-center z-20">
+              <div class="w-16 h-16 rounded-full bg-black/50 backdrop-blur-xs flex items-center justify-center text-white text-2xl">
+                <i class="fa-solid fa-play ml-1"></i>
+              </div>
+            </div>
+
+            <!-- Right-Side Action Bar -->
+            <div class="absolute right-3 bottom-20 z-20 flex flex-col items-center gap-4">
+              <!-- Avatar + Follow -->
+              <div class="relative mb-1">
+                <img src="${escapeHtml(video.avatar)}" alt="${escapeHtml(video.username)}" class="w-11 h-11 rounded-full object-cover border-2 border-white bg-gray-900 shadow-lg" />
+                <button
+                  onclick="toggleFollow('${escapeHtml(video.username)}')"
+                  class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full ${isFollowing ? "bg-emerald-500 text-white" : "bg-brandPink text-white"} flex items-center justify-center text-[10px] font-bold shadow-md transition active:scale-90"
+                >
+                  <i class="fa-solid ${isFollowing ? "fa-check" : "fa-plus"}"></i>
+                </button>
+              </div>
+
+              <!-- Like Button -->
+              <button onclick="toggleLike('${video.id}')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-125">
+                  <i id="like-icon-${video.id}" class="fa-solid fa-heart text-[24px] ${isLiked ? "text-brandPink drop-shadow-[0_0_10px_rgba(255,0,80,0.85)]" : "text-white"} transition"></i>
+                </div>
+                <span id="like-count-${video.id}" class="text-[11px] font-bold mt-0.5 drop-shadow">${formatCount(video.likesCount)}</span>
+              </button>
+
+              <!-- Comments -->
+              <button onclick="openCommentsDrawer('${video.id}')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
+                  <i class="fa-solid fa-comment-dots text-[23px] text-white"></i>
+                </div>
+                <span id="comment-count-${video.id}" class="text-[11px] font-bold mt-0.5 drop-shadow">${formatCount(video.commentsCount)}</span>
+              </button>
+
+              <!-- Bookmark / Save -->
+              <button onclick="toggleBookmark('${video.id}')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
+                  <i id="bookmark-icon-${video.id}" class="fa-solid fa-bookmark text-[21px] ${isSaved ? "text-brandGold" : "text-white"}"></i>
+                </div>
+                <span class="text-[10px] font-bold mt-0.5 drop-shadow">Save</span>
+              </button>
+
+              <!-- Send Gift -->
+                            <button onclick="openGiftDrawer('${video.id}')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-amber-500/25 border border-amber-400/40 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
+                  <i class="fa-solid fa-gift text-[20px] text-brandGold"></i>
+                </div>
+                <span class="text-[10px] font-bold mt-0.5 text-brandGold drop-shadow">Gift</span>
+              </button>
+
+              <!-- Share -->
+              <button onclick="shareVideo('${video.id}', '${escapeHtml(video.username)}')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
+                  <i class="fa-solid fa-share text-[21px] text-white"></i>
+                </div>
+                <span class="text-[10px] font-bold mt-0.5 drop-shadow">Share</span>
+              </button>
+
+              <!-- Spinning Vinyl -->
+              <div onclick="toggleGlobalMute()" class="cursor-pointer">
+                <div id="vinyl-${video.id}" class="w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-900 via-zinc-700 to-zinc-900 p-1.5 border-2 border-white/20 shadow-xl animate-vinyl flex items-center justify-center">
+                  <img src="${escapeHtml(video.avatar)}" alt="Disc" class="w-full h-full rounded-full object-cover" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Left Metadata + Interactive Scrubber -->
+            <div class="absolute bottom-0 left-0 right-0 pt-14 pb-3 px-4 pr-16 video-gradient-bottom pointer-events-none z-10">
+              <div class="pointer-events-auto">
+                <div class="flex items-center gap-1.5 mb-1">
+                  <h3 class="font-extrabold text-[15px] text-white drop-shadow">${escapeHtml(video.username)}</h3>
+                  ${
+                    video.verified
+                      ? `<span class="w-4 h-4 rounded-full bg-brandCyan text-black flex items-center justify-center text-[9px] font-black"><i class="fa-solid fa-check"></i></span>`
+                      : `<span class="text-[10px] px-1.5 py-0.2 rounded bg-white/15 text-gray-200 font-semibold">PRO</span>`
+                  }
+                </div>
+
+                <p class="text-[13px] text-gray-100 leading-snug mb-2 line-clamp-2 drop-shadow">
+                  ${formatCaptionWithHashtags(video.caption)}
+                </p>
+
+                <div class="flex items-center gap-2 text-xs text-white/90 mb-2.5">
+                  <i class="fa-solid fa-music text-brandCyan text-xs"></i>
+                  <div class="ticker-wrap">
+                    <div class="ticker-move font-medium">
+                      ${escapeHtml(video.music)} &nbsp;&nbsp;&bull;&nbsp;&nbsp; ${escapeHtml(video.music)} &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Interactive Video Scrubber Bar -->
+                <input
+                  id="scrubber-${video.id}"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="0"
+                  oninput="seekVideo('${video.id}', this.value)"
+                  class="video-scrubber w-full cursor-pointer"
+                />
+              </div>
+            </div>
+          </article>
+        `;
+        })
+        .join("");
+
+      setupVideoIntersectionObserver();
+    }
+
+    function formatCaptionWithHashtags(caption) {
+      const safe = escapeHtml(caption);
+      return safe.replace(/(#[a-zA-Z0-9_\u0980-\u09FF]+)/g, '<span class="font-bold text-brandCyan">$1</span>');
+    }
+
+    // Video Progress & Scrubber
+    window.updateVideoProgress = (id) => {
+      const vid = document.getElementById(`vid-player-${id}`);
+      const bar = document.getElementById(`scrubber-${id}`);
+      if (vid && bar && vid.duration) {
+        bar.value = (vid.currentTime / vid.duration) * 100;
+      }
+    };
+
+    window.seekVideo = (id, pct) => {
+      const vid = document.getElementById(`vid-player-${id}`);
+      if (vid && vid.duration) {
+        vid.currentTime = (pct / 100) * vid.duration;
+      }
+    };
+
+    // Playback Speed Control (1x -> 1.5x -> 2x)
+    window.cyclePlaybackSpeed = () => {
+      const speeds = [1, 1.5, 2];
+      const nextIdx = (speeds.indexOf(playbackSpeed) + 1) % speeds.length;
+      playbackSpeed = speeds[nextIdx];
+      document.getElementById("speed-toggle-btn").textContent = `${playbackSpeed}x`;
+      document.querySelectorAll(".feed-video").forEach((v) => {
+        v.playbackRate = playbackSpeed;
+      });
+      showToast(`প্লেব্যাক স্পিড: ${playbackSpeed}x`);
+    };
+
+    // Auto-play visible video
+    function setupVideoIntersectionObserver() {
+      const videos = document.querySelectorAll(".feed-video");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const vid = entry.target;
+            const card = vid.closest(".snap-card");
+            const id = card?.dataset.videoId;
+            const overlay = document.getElementById(`play-overlay-${id}`);
+            const vinyl = document.getElementById(`vinyl-${id}`);
+
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.65) {
+              vid.muted = isMuted;
+              vid.playbackRate = playbackSpeed;
+              vid.play().catch(() => {});
+              if (overlay) overlay.classList.add("hidden");
+              if (vinyl) vinyl.classList.remove("paused-vinyl");
+            } else {
+              vid.pause();
+              if (vinyl) vinyl.classList.add("paused-vinyl");
+            }
+          });
+        },
+        { threshold: 0.65 }
+      );
+      videos.forEach((v) => observer.observe(v));
+    }
+
+    // Tap & Double Tap
+    let singleTapTimer = null;
+    window.handleVideoTap = (e, id) => {
+      clearTimeout(singleTapTimer);
+      singleTapTimer = setTimeout(() => {
+        const videoEl = e.target;
+        const overlay = document.getElementById(`play-overlay-${id}`);
+        const vinyl = document.getElementById(`vinyl-${id}`);
+        if (videoEl.paused) {
+          videoEl.play();
+          overlay?.classList.add("hidden");
+          vinyl?.classList.remove("paused-vinyl");
+        } else {
+          videoEl.pause();
+          overlay?.classList.remove("hidden");
+          vinyl?.classList.add("paused-vinyl");
+        }
+      }, 210);
+    };
+
+    window.handleVideoDoubleTap = (e, id) => {
+      clearTimeout(singleTapTimer);
+      const card = e.target.closest(".snap-card");
+      const rect = card.getBoundingClientRect();
+      const heart = document.createElement("i");
+      heart.className = "fa-solid fa-heart text-6xl text-brandPink double-tap-heart";
+      heart.style.left = `${e.clientX - rect.left}px`;
+      heart.style.top = `${e.clientY - rect.top}px`;
+      card.appendChild(heart);
+      setTimeout(() => heart.remove(), 900);
+
+      const video = allVideos.find((v) => v.id === id);
+      const alreadyLiked = currentUser
+        ? video?.likedBy?.includes(currentUser.uid) || localLikedIds.has(id)
+        : localLikedIds.has(id);
+      if (!alreadyLiked) toggleLike(id);
+    };
+
+    window.toggleGlobalMute = () => {
+      isMuted = !isMuted;
+      document.querySelectorAll(".feed-video").forEach((v) => { v.muted = isMuted; });
+      const icon = document.getElementById("global-mute-icon");
+      icon.className = isMuted ? "fa-solid fa-volume-xmark text-xs" : "fa-solid fa-volume-high text-xs text-brandCyan";
+      showToast(isMuted ? "সাউন্ড মিউট করা হয়েছে" : "সাউন্ড চালু করা হয়েছে");
+    };
+
+    window.toggleFollow = (username) => {
+      if (followedUsers.has(username)) {
+        followedUsers.delete(username);
+        showToast(`${username} কে আনফলো করা হয়েছে`);
+      } else {
+        followedUsers.add(username);
+        showToast(`${username} কে ফলো করেছেন!`);
+        pushInboxNotification("নতুন ফলোয়িং", `আপনি ${username} কে ফলো করেছেন।`);
+      }
+      renderVideoFeed();
+      renderProfileView();
+    };
+
+    window.toggleBookmark = (videoId) => {
+      const icon = document.getElementById(`bookmark-icon-${videoId}`);
+      if (bookmarkedIds.has(videoId)) {
+        bookmarkedIds.delete(videoId);
+        if (icon) icon.className = "fa-solid fa-bookmark text-[21px] text-white";
+        showToast("বুকমার্ক থেকে সরানো হয়েছে");
+      } else {
+        bookmarkedIds.add(videoId);
+        if (icon) icon.className = "fa-solid fa-bookmark text-[21px] text-brandGold";
+        showToast("ভিডিওটি প্রোফাইলে সেভ করা হয়েছে!");
+      }
+      renderProfileView();
+    };
+
+    window.toggleLike = async (videoId) => {
+      const video = allVideos.find((v) => v.id === videoId);
+      if (!video) return;
+
+      const isCurrentlyLiked = currentUser
+        ? video.likedBy?.includes(currentUser.uid) || localLikedIds.has(videoId)
+        : localLikedIds.has(videoId);
+
+      if (isCurrentlyLiked) {
+        localLikedIds.delete(videoId);
+        video.likesCount = Math.max(0, (video.likesCount || 1) - 1);
+        if (currentUser && video.likedBy) {
+          video.likedBy = video.likedBy.filter((uid) => uid !== currentUser.uid);
+        }
+      } else {
+        localLikedIds.add(videoId);
+        video.likesCount = (video.likesCount || 0) + 1;
+        if (currentUser) {
+          video.likedBy = [...(video.likedBy || []), currentUser.uid];
+        }
+      }
+
+      const icon = document.getElementById(`like-icon-${videoId}`);
+      const countEl = document.getElementById(`like-count-${videoId}`);
+      if (icon) {
+        icon.className = `fa-solid fa-heart text-[24px] ${!isCurrentlyLiked ? "text-brandPink drop-shadow-[0_0_10px_rgba(255,0,80,0.85)]" : "text-white"} transition`;
+      }
+      if (countEl) countEl.textContent = formatCount(video.likesCount);
+      renderProfileView();
+
+      if (!video.isDemo && currentUser) {
+        try {
+          await updateDoc(doc(db, "videos", videoId), {
+            likesCount: increment(isCurrentlyLiked ? -1 : 1),
+            likedBy: isCurrentlyLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+          });
+        } catch (err) {
+          console.warn(err.message);
+        }
+      }
+    };
+
+    window.shareVideo = (videoId, username) => {
+      const shareUrl = `${window.location.origin}${window.location.pathname}?video=${videoId}`;
+      navigator.clipboard?.writeText(shareUrl).catch(() => {});
+      showToast(`${username}-এর ভিডিও লিংক কপি হয়েছে!`);
+    };
+
+    // ==================== VIRTUAL GIFTING ====================
+    window.openGiftDrawer = (videoId) => {
+      activeGiftVideoId = videoId;
+      updateCoinDisplays();
+      document.getElementById("gift-drawer").classList.remove("hidden");
+    };
+
+    window.closeGiftDrawer = () => {
+      document.getElementById("gift-drawer").classList.add("hidden");
+    };
+
+    window.sendVirtualGift = (giftName, cost) => {
+      if (userCoins < cost) {
+        showToast("পর্যাপ্ত কয়েন নেই! নিচের বাটন থেকে ফ্রি কয়েন নিন।", "error");
+        return;
+      }
+      userCoins -= cost;
+      updateCoinDisplays();
+      const video = allVideos.find((v) => v.id === activeGiftVideoId);
+      const targetUser = video ? video.username : "Creator";
+      closeGiftDrawer();
+      showToast(`${targetUser}-কে ${giftName} পাঠানো হয়েছে!`);
+      pushInboxNotification("গিফট পাঠানো হয়েছে", `আপনি ${targetUser}-কে ${giftName} (${cost} Coins) উপহার দিয়েছেন।`);
+    };
+
+    // ==================== LIVE STREAM ====================
+    window.openLiveModal = () => document.getElementById("live-modal").classList.remove("hidden");
+    window.closeLiveModal = () => document.getElementById("live-modal").classList.add("hidden");
+
+    window.sendLiveChat = (e) => {
+      e.preventDefault();
+      const input = document.getElementById("live-chat-input");
+      const msg = input.value.trim();
+      if (!msg) return;
+      const feed = document.getElementById("live-chat-feed");
+      const div = document.createElement("div");
+      div.className = "bg-black/60 px-3 py-1 rounded-xl w-fit";
+      div.innerHTML = `<span class="text-brandGold font-bold">@you:</span> ${escapeHtml(msg)}`;
+      feed.appendChild(div);
+      feed.scrollTop = feed.scrollHeight;
+      input.value = "";
+    };
+
+    // ==================== COMMENTS DRAWER ====================
+    window.openCommentsDrawer = (videoId) => {
+      activeCommentVideoId = videoId;
+      document.getElementById("comments-drawer").classList.remove("hidden");
+      const video = allVideos.find((v) => v.id === videoId);
+      if (!video) return;
+
+      if (commentUnsubscribe) {
+        commentUnsubscribe();
+        commentUnsubscribe = null;
+      }
+
+      if (video.isDemo) {
+        renderCommentsList(video.demoComments || []);
+      } else {
+        const q = query(collection(db, "videos", videoId, "comments"), orderBy("createdAt", "asc"));
+        commentUnsubscribe = onSnapshot(q, (snap) => {
+          renderCommentsList(snap.docs.map((d) => d.data()));
+        });
+      }
+    };
+
+    window.closeCommentsDrawer = () => {
+      document.getElementById("comments-drawer").classList.add("hidden");
+      activeCommentVideoId = null;
+    };
+
+    function renderCommentsList(comments) {
+      document.getElementById("comments-drawer-title").textContent = `${comments.length} কমেন্ট`;
+      const container = document.getElementById("comments-list");
+      if (comments.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-gray-500 text-xs">এখনো কোনো কমেন্ট নেই। প্রথম কমেন্টটি আপনি করুন!</div>`;
+        return;
+      }
+      container.innerHTML = comments
+        .map(
+          (c) => `
+        <div class="flex items-start gap-3">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(c.username || "User")}" class="w-8 h-8 rounded-full bg-gray-800 shrink-0" />
+          <div class="flex-1 bg-white/5 rounded-2xl px-3.5 py-2">
+            <p class="text-xs font-bold text-gray-300">${escapeHtml(c.username || "@user")}</p>
+            <p class="text-sm text-white mt-0.5">${escapeHtml(c.text)}</p>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+        container.scrollTop = container.scrollHeight;
+    }
+
+    window.submitComment = async (e) => {
+      e.preventDefault();
+      if (!activeCommentVideoId) return;
+      const input = document.getElementById("comment-input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      const video = allVideos.find((v) => v.id === activeCommentVideoId);
+      const username = currentUser
+        ? "@" + (currentUser.displayName || currentUser.email.split("@")[0]).toLowerCase().replace(/\s+/g, "_")
+        : "@guest_user";
+      input.value = "";
+
+      if (video.isDemo) {
+        video.demoComments = [...(video.demoComments || []), { username, text }];
+        video.commentsCount = video.demoComments.length;
+        renderCommentsList(video.demoComments);
+        const countEl = document.getElementById(`comment-count-${video.id}`);
+        if (countEl) countEl.textContent = formatCount(video.commentsCount);
+        showToast("কমেন্ট যুক্ত হয়েছে!");
+      } else {
+        try {
+          await addDoc(collection(db, "videos", video.id, "comments"), {
+            username,
+            text,
+            uid: currentUser ? currentUser.uid : "guest",
+            createdAt: serverTimestamp()
+          });
+          await updateDoc(doc(db, "videos", video.id), { commentsCount: increment(1) });
+          showToast("কমেন্ট পোস্ট হয়েছে!");
+        } catch (err) {
+          showToast("কমেন্ট সেভ করতে Firestore Rules চেক করুন।", "error");
+        }
+      }
+    };
+
+    // ==================== VIDEO UPLOAD ====================
+    window.openUploadModal = () => document.getElementById("upload-modal").classList.remove("hidden");
+    window.closeUploadModal = () => {
+      document.getElementById("upload-modal").classList.add("hidden");
+      document.getElementById("upload-progress-wrap").classList.add("hidden");
+    };
+
+    window.setUploadMode = (mode) => {
+      uploadMode = mode;
+      document.getElementById("mode-file-btn").className =
+        mode === "file" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+      document.getElementById("mode-url-btn").className =
+        mode === "url" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+      document.getElementById("upload-file-group").classList.toggle("hidden", mode !== "file");
+      document.getElementById("upload-url-group").classList.toggle("hidden", mode !== "url");
+    };
+
+    window.updateFileName = (input) => {
+      const file = input.files?.[0];
+      document.getElementById("selected-file-name").textContent = file ? `নির্বাচিত: ${file.name}` : "MP4 / WebM ভিডিও সিলেক্ট করুন";
+    };
+
+    window.handleVideoUpload = async (e) => {
+      e.preventDefault();
+      const caption = document.getElementById("video-caption-input").value.trim();
+      const music = document.getElementById("video-music-input").value.trim() || "Original Sound - VibeTok Pro";
+      const submitBtn = document.getElementById("upload-submit-btn");
+      const progressWrap = document.getElementById("upload-progress-wrap");
+      const progressBar = document.getElementById("upload-progress-bar");
+      const progressPercent = document.getElementById("upload-percent");
+      const statusText = document.getElementById("upload-status-text");
+
+      const displayName = currentUser ? currentUser.displayName || currentUser.email.split("@")[0] : "Pro Creator";
+      const username = "@" + displayName.toLowerCase().replace(/[^a-z0-9_]/g, "_");
+      const avatar = currentUser?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`;
+
+      submitBtn.disabled = true;
+      try {
+        let finalVideoUrl = "";
+        if (uploadMode === "file") {
+          const file = document.getElementById("video-file-input").files?.[0];
+          if (!file) {
+            showToast("একটি ভিডিও ফাইল সিলেক্ট করুন।", "error");
+            submitBtn.disabled = false;
+            return;
+          }
+          progressWrap.classList.remove("hidden");
+          statusText.textContent = "Firebase Storage-এ আপলোড হচ্ছে...";
+          const storageRef = ref(storage, `videos/${Date.now()}_${file.name}`);
+          const uploadTask = uploadBytesResumable(storageRef, file);
+          finalVideoUrl = await new Promise((resolve, reject) => {
+            uploadTask.on(
+              "state_changed",
+              (snap) => {
+                const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+                progressBar.style.width = `${pct}%`;
+                progressPercent.textContent = `${pct}%`;
+              },
+              (err) => reject(err),
+              async () => resolve(await getDownloadURL(uploadTask.snapshot.ref))
+            );
+          });
+        } else {
+          finalVideoUrl = document.getElementById("video-url-input").value.trim();
+          if (!finalVideoUrl) {
+            showToast("সঠিক MP4 ভিডিও লিংক দিন।", "error");
+            submitBtn.disabled = false;
+            return;
+          }
+        }
+
+        await addDoc(collection(db, "videos"), {
+          username,
+          displayName,
+          avatar,
+          verified: Boolean(currentUser),
+          videoUrl: finalVideoUrl,
+          caption,
+          music,
+          likesCount: 0,
+          likedBy: [],
+          commentsCount: 0,
+          uid: currentUser ? currentUser.uid : "guest",
+          createdAt: serverTimestamp()
         });
 
-        async function seedDefaultVideos() {
-            const { db, collection, addDoc } = window.FB;
-            const defaultV = {
-                creatorName: 'Elena Vance', creatorHandle: '@elena', creatorAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4',
-                caption: 'Beautiful ocean waves synced via Firebase! 🌊✨ #nature', likes: 1420, comments: 42, shares: 120, createdAt: Date.now()
-            };
-            await addDoc(collection(db, "videos"), defaultV);
+        showToast("ভিডিও সফলভাবে পাবলিশ হয়েছে!");
+        closeUploadModal();
+        switchTab("home");
+      } catch (err) {
+        showToast("আপলোড ব্যর্থ: Firebase Storage/Firestore Rules যাচাই করুন।", "error");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    };
+
+    // ==================== NAVIGATION, INBOX & PROFILE ====================
+    window.switchTab = (tab) => {
+      ["home", "discover", "inbox", "profile"].forEach((v) => {
+        document.getElementById(`view-${v}`).classList.toggle("hidden", v !== tab);
+        const mBtn = document.getElementById(`nav-${v}`);
+        if (mBtn) {
+          mBtn.className =
+            v === tab
+              ? "relative flex flex-col items-center justify-center w-14 text-white transition"
+              : "relative flex flex-col items-center justify-center w-14 text-gray-500 hover:text-gray-300 transition";
         }
-
-        function loginWithGoogle() {
-            const { auth, googleProvider, signInWithPopup } = window.FB;
-            signInWithPopup(auth, googleProvider).catch(err => alert(err.message));
+        const dBtn = document.getElementById(`desk-nav-${v}`);
+        if (dBtn) {
+          dBtn.className =
+            v === tab
+              ? "w-full flex items-center gap-4 px-4 py-3 rounded-2xl bg-white/10 text-brandPink font-semibold transition"
+              : "w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition";
         }
+      });
+      if (tab === "inbox") document.getElementById("inbox-dot").classList.add("hidden");
+      if (tab === "discover") renderDiscoverGrid();
+      if (tab === "profile") renderProfileView();
+    };
 
-        function logout() {
-            const { auth, signOut } = window.FB;
-            signOut(auth);
-        }
+    window.switchInboxSubTab = (sub) => {
+      document.getElementById("itab-activity").className =
+        sub === "activity" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+      document.getElementById("itab-messages").className =
+        sub === "messages" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+      document.getElementById("notifications-list").classList.toggle("hidden", sub !== "activity");
+      document.getElementById("dm-chat-panel").classList.toggle("hidden", sub !== "messages");
+    };
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark');
-        }
+    window.sendDirectMessage = (e) => {
+      e.preventDefault();
+      const input = document.getElementById("dm-input");
+      const text = input.value.trim();
+      if (!text) return;
+      const list = document.getElementById("dm-messages-list");
+      const bubble = document.createElement("div");
+      bubble.className = "bg-brandPink text-white rounded-2xl rounded-tr-none p-2.5 max-w-[80%] ml-auto";
+      bubble.textContent = text;
+      list.appendChild(bubble);
+      list.scrollTop = list.scrollHeight;
+      input.value = "";
+    };
 
-        function switchFeed(tab) {
-            renderFeed();
-        }
+    window.openEditProfileModal = () => {
+      document.getElementById("edit-username-input").value = document.getElementById("profile-name").textContent;
+      document.getElementById("edit-bio-input").value = document.getElementById("profile-bio").textContent;
+      document.getElementById("edit-profile-modal").classList.remove("hidden");
+    };
+    window.closeEditProfileModal = () => document.getElementById("edit-profile-modal").classList.add("hidden");
 
-        function switchTab(tabId) {
-            const feed = document.getElementById('video-feed');
-            if (tabId === 'home') renderFeed();
-            else if (tabId === 'analytics') {
-                feed.innerHTML = `<div class="p-6 max-w-xl mx-auto w-full text-center"><h2 class="text-2xl font-black mb-4">Creator Studio</h2><div class="p-6 bg-slate-100 dark:bg-slate-900 rounded-3xl border"><span class="text-xs text-slate-400">Firebase Firestore Cloud Balance</span><h3 class="text-3xl font-black text-emerald-500 mt-2">$2,450.00</h3></div></div>`;
-            } else if (tabId === 'profile') {
-                feed.innerHTML = `<div class="p-6 max-w-md mx-auto text-center"><img src="${currentUser ? currentUser.photoURL : 'https://via.placeholder.com/100'}" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-rose-500"><h3 class="text-xl font-black">${currentUser ? currentUser.displayName : 'Guest User'}</h3><p class="text-xs text-slate-400">${currentUser ? currentUser.email : 'Please login with Google'}</p></div>`;
-            } else {
-                feed.innerHTML = `<div class="p-6 text-center"><h3 class="text-xl font-black">Discover Hub Active</h3></div>`;
-            }
-        }
+    window.saveProfileChanges = (e) => {
+      e.preventDefault();
+      const newName = document.getElementById("edit-username-input").value.trim();
+      const newBio = document.getElementById("edit-bio-input").value.trim();
+      document.getElementById("profile-name").textContent = newName.startsWith("@") ? newName : `@${newName}`;
+      document.getElementById("profile-bio").textContent = newBio;
+      closeEditProfileModal();
+      showToast("প্রোফাইল আপডেট হয়েছে!");
+    };
 
-        function renderFeed() {
-            const feedContainer = document.getElementById('video-feed');
-            feedContainer.innerHTML = '';
-            if(videosCache.length === 0) {
-                feedContainer.innerHTML = `<p class="text-xs text-slate-400">Loading Cloud Feed...</p>`;
-                return;
-            }
-            videosCache.forEach(video => {
-                const item = document.createElement('div');
-                item.className = 'snap-item relative w-full h-full flex items-center justify-center bg-black';
-                item.innerHTML = `
-                    <video class="w-full h-full object-cover cursor-pointer" loop playsinline src="${video.videoUrl}"></video>
-                    <div class="absolute right-3 bottom-20 flex flex-col items-center gap-5 z-20">
-                        <div class="w-12 h-12 rounded-full border-2 border-white overflow-hidden shadow-lg"><img src="${video.creatorAvatar || 'https://via.placeholder.com/50'}" class="w-full h-full object-cover"></div>
-                        <button onclick="likeVideo('${video.id}')" class="flex flex-col items-center text-white drop-shadow-md"><i class="fa-solid fa-heart text-3xl text-rose-500"></i><span class="text-xs font-black mt-1">${video.likes}</span></button>
-                        <button onclick="alert('Cloud Comments Drawer')" class="flex flex-col items-center text-white drop-shadow-md"><i class="fa-solid fa-comment-dots text-3xl"></i><span class="text-xs font-black mt-1">${video.comments}</span></button>
-                        <button onclick="alert('Shared via Firebase Link!')" class="flex flex-col items-center text-white drop-shadow-md"><i class="fa-solid fa-share text-3xl"></i><span class="text-xs font-black mt-1">${video.shares}</span></button>
-                    </div>
-                    <div class="absolute left-4 bottom-16 right-20 z-20 text-white drop-shadow-md">
-                        <h4 class="font-black text-base mb-1">${video.creatorHandle || '@creator'}</h4>
-                        <p class="text-xs text-slate-200 line-clamp-2 font-medium mb-3">${video.caption}</p>
-                    </div>
-                `;
-                const vidEl = item.querySelector('video');
-                vidEl.addEventListener('click', () => vidEl.paused ? vidEl.play() : vidEl.pause());
-                feedContainer.appendChild(item);
-            });
-            setupObserver();
-        }
+    window.setFeedFilter = (filter) => {
+      currentFeedFilter = filter;
+        const followingBtn = document.getElementById("tab-following");
+      const foryouBtn = document.getElementById("tab-foryou");
+      const indicator = document.getElementById("tab-indicator");
+      if (filter === "following") {
+        followingBtn.className = "text-white transition relative pb-1";
+        foryouBtn.className = "text-white/60 hover:text-white transition relative pb-1";
+        followingBtn.appendChild(indicator);
+      } else {
+        foryouBtn.className = "text-white transition relative pb-1";
+        followingBtn.className = "text-white/60 hover:text-white transition relative pb-1";
+        foryouBtn.appendChild(indicator);
+      }
+      renderVideoFeed();
+    };
 
-        async function likeVideo(id) {
-            const { db, doc, updateDoc, increment } = window.FB;
-            const videoRef = doc(db, "videos", id);
-            await updateDoc(videoRef, { likes: increment(1) });
-        }
+    window.filterByTag = (tag) => {
+      document.getElementById("discover-search").value = tag === "all" ? "" : tag;
+      renderDiscoverGrid();
+    };
 
-        function setupObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target.querySelector('video');
-                    if (video) entry.isIntersecting ? video.play().catch(() => {}) : video.pause();
-                });
-            }, { threshold: 0.6 });
-            document.querySelectorAll('.snap-item').forEach(item => observer.observe(item));
-        }
+    window.renderDiscoverGrid = () => {
+      const queryStr = (document.getElementById("discover-search")?.value || "").toLowerCase().trim();
+      const grid = document.getElementById("discover-grid");
+      const matches = allVideos.filter(
+        (v) =>
+          v.caption.toLowerCase().includes(queryStr) ||
+          v.username.toLowerCase().includes(queryStr) ||
+          v.music.toLowerCase().includes(queryStr)
+      );
 
-        function openUploadModal() { document.getElementById('upload-modal').classList.remove('hidden'); }
-        function closeUploadModal() { document.getElementById('upload-modal').classList.add('hidden'); }
-        function openLiveStudio() { alert('Live WebRTC Stream Studio Initialized.'); }
+      grid.innerHTML = matches
+        .map(
+          (v) => `
+        <div onclick="jumpToVideo('${v.id}')" class="relative aspect-[9/15] rounded-2xl overflow-hidden bg-[#181818] border border-white/10 cursor-pointer group">
+          <video src="${escapeHtml(v.videoUrl)}" muted preload="metadata" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></video>
+          <div class="absolute inset-0 video-gradient-bottom flex flex-col justify-end p-2.5">
+            <p class="text-[11px] text-white font-semibold line-clamp-2 mb-1">${escapeHtml(v.caption)}</p>
+            <div class="flex items-center justify-between text-[10px] text-gray-300">
+              <span class="truncate max-w-[95px]">${escapeHtml(v.username)}</span>
+              <span><i class="fa-solid fa-heart text-brandPink mr-0.5"></i>${formatCount(v.likesCount)}</span>
+            </div>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    };
 
-        async function handleVideoUpload() {
-            if(!currentUser) { alert('Please login with Google first!'); return; }
-            const { db, collection, addDoc } = window.FB;
-            const url = document.getElementById('upload-url-input').value.trim();
-            const caption = document.getElementById('upload-caption-input').value.trim();
-            
-            if(!url) { alert('Please enter a video URL'); return; }
+    window.jumpToVideo = (videoId) => {
+      switchTab("home");
+      setFeedFilter("foryou");
+      setTimeout(() => {
+        document.querySelector(`.snap-card[data-video-id="${videoId}"]`)?.scrollIntoView({ behavior: "smooth" });
+      }, 80);
+    };
 
-            await addDoc(collection(db, "videos"), {
-                creatorName: currentUser.displayName,
-                creatorHandle: '@' + currentUser.email.split('@')[0],
-                creatorAvatar: currentUser.photoURL,
-                videoUrl: url,
-                caption: caption || 'New viral post #fyp',
-                likes: 0, comments: 0, shares: 0,
-                createdAt: Date.now()
-            });
+    window.switchProfileTab = (subTab) => {
+      currentProfileSubTab = subTab;
+      ["uploaded", "liked", "saved"].forEach((t) => {
+        document.getElementById(`ptab-${t}`).className =
+          t === subTab ? "flex-1 py-2.5 font-bold text-white border-b-2 border-white" : "flex-1 py-2.5 font-medium text-gray-400";
+      });
+      renderProfileView();
+    };
 
-            closeUploadModal();
-            alert('Successfully published to Firebase Firestore Cloud!');
-        }
-    </script>
+    function renderProfileView() {
+      const likedVideos = allVideos.filter((v) =>
+        currentUser ? v.likedBy?.includes(currentUser.uid) || localLikedIds.has(v.id) : localLikedIds.has(v.id)
+      );
+      const savedVideos = allVideos.filter((v) => bookmarkedIds.has(v.id));
+      const myVideos = currentUser ? firestoreVideos.filter((v) => v.uid === currentUser.uid) : firestoreVideos.slice(0, 3);
+
+      document.getElementById("stat-following").textContent = followedUsers.size;
+      document.getElementById("stat-likes").textContent = likedVideos.length;
+
+      let listToShow = myVideos;
+      if (currentProfileSubTab === "liked") listToShow = likedVideos;
+      if (currentProfileSubTab === "saved") listToShow = savedVideos;
+
+      const grid = document.getElementById("profile-video-grid");
+      if (listToShow.length === 0) {
+        grid.innerHTML = `<div class="col-span-3 text-center py-10 text-gray-500 text-xs">এই তালিকায় এখনো কোনো ভিডিও নেই।</div>`;
+        return;
+      }
+
+      grid.innerHTML = listToShow
+        .map(
+          (v) => `
+        <div onclick="jumpToVideo('${v.id}')" class="relative aspect-[9/14] rounded-xl overflow-hidden bg-[#181818] border border-white/10 cursor-pointer">
+          <video src="${escapeHtml(v.videoUrl)}" muted preload="metadata" class="w-full h-full object-cover"></video>
+          <div class="absolute bottom-1.5 left-1.5 text-[10px] font-bold text-white drop-shadow flex items-center gap-1">
+            <i class="fa-solid fa-play text-[9px]"></i> ${formatCount(v.likesCount)}
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    }
+
+    // Boot Application
+    renderVideoFeed();
+    renderDiscoverGrid();
+    renderProfileView();
+    initFirestoreVideosListener();
+  </script>
 </body>
-                      </html>
-                      
+</html>
