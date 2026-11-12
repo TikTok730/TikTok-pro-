@@ -123,6 +123,25 @@
       filter: drop-shadow(0 4px 16px rgba(255, 0, 80, 0.8));
     }
 
+    /* Gift Burst Animation */
+    @keyframes giftBurst {
+      0% { transform: scale(0.3) translateY(40px); opacity: 0; }
+      40% { transform: scale(1.3) translateY(-10px); opacity: 1; }
+      80% { transform: scale(1.1) translateY(-20px); opacity: 1; }
+      100% { transform: scale(1.5) translateY(-60px); opacity: 0; }
+    }
+    .gift-burst-anim {
+      animation: giftBurst 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Video Color Filters */
+    .filter-normal { filter: none; }
+    .filter-cinematic { filter: contrast(1.18) saturate(1.25) brightness(0.95); }
+    .filter-vintage { filter: sepia(0.42) contrast(1.08) brightness(1.02); }
+    .filter-cyberpunk { filter: hue-rotate(310deg) saturate(1.75) contrast(1.2); }
+    .filter-bw { filter: grayscale(1) contrast(1.25); }
+    .filter-warm { filter: sepia(0.22) saturate(1.4) brightness(1.05); }
+
     /* Custom Pro Upload Button */
     .pro-plus-btn {
       position: relative;
@@ -188,10 +207,10 @@
     }
 
     .video-gradient-bottom {
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0) 100%);
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0) 100%);
     }
     .video-gradient-top {
-      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0) 100%);
     }
   </style>
 </head>
@@ -207,7 +226,7 @@
     <h1 class="text-3xl font-extrabold tracking-tight flex items-center gap-2">
       VibeTok <span class="text-xs px-2.5 py-0.5 rounded-full bg-gradient-to-r from-brandCyan to-brandPink text-black font-black uppercase">PRO</span>
     </h1>
-    <p class="text-xs text-gray-400 mt-2 tracking-widest uppercase">Create • Stream • Earn</p>
+    <p class="text-xs text-gray-400 mt-2 tracking-widest uppercase">Create • Duet • Stream • Earn</p>
     <div class="w-40 h-1 bg-white/10 rounded-full overflow-hidden mt-8">
       <div id="splash-loader-bar" class="h-full bg-gradient-to-r from-brandCyan to-brandPink w-0 transition-all duration-1000"></div>
     </div>
@@ -227,7 +246,7 @@
           <h1 class="text-xl font-extrabold tracking-tight flex items-center gap-1.5">
             VibeTok <span class="text-[11px] px-2 py-0.5 rounded-full bg-gradient-to-r from-brandCyan to-brandPink text-black font-extrabold uppercase">PRO</span>
           </h1>
-          <p class="text-[11px] text-gray-400">Next-Gen Short Video</p>
+          <p class="text-[11px] text-gray-400">Next-Gen Creator Studio</p>
         </div>
       </div>
 
@@ -239,23 +258,23 @@
         </button>
         <button onclick="switchTab('discover')" id="desk-nav-discover" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
           <i class="fa-solid fa-compass text-lg w-6"></i>
-          <span>Discover (এক্সপ্লোর)</span>
+          <span>Discover & Sounds</span>
         </button>
         <button onclick="openLiveModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
           <i class="fa-solid fa-tower-broadcast text-lg w-6 text-red-500"></i>
           <span>LIVE Streams (লাইভ)</span>
         </button>
         <button onclick="openUploadModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
-          <i class="fa-solid fa-cloud-arrow-up text-lg w-6 text-brandCyan"></i>
-          <span>Upload Video (আপলোড)</span>
+          <i class="fa-solid fa-wand-magic-sparkles text-lg w-6 text-brandCyan"></i>
+          <span>Creator Studio (+ আপলোড)</span>
         </button>
         <button onclick="switchTab('inbox')" id="desk-nav-inbox" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
           <i class="fa-solid fa-message text-lg w-6"></i>
           <span>Inbox & DM (মেসেজ)</span>
         </button>
         <button onclick="switchTab('profile')" id="desk-nav-profile" class="w-full flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/5 text-gray-300 font-medium transition">
-          <i class="fa-solid fa-user text-lg w-6"></i>
-          <span>Profile (প্রোফাইল)</span>
+          <i class="fa-solid fa-chart-line text-lg w-6"></i>
+          <span>Profile & Analytics</span>
         </button>
       </nav>
     </div>
@@ -327,37 +346,61 @@
         </div>
       </header>
 
+      <!-- Gift Burst Overlay -->
+      <div id="gift-burst-overlay" class="pointer-events-none hidden absolute inset-0 z-40 flex flex-col items-center justify-center">
+        <div id="gift-burst-emoji" class="text-7xl drop-shadow-2xl">👑</div>
+        <div id="gift-burst-label" class="mt-2 px-4 py-1 rounded-full bg-black/75 border border-brandGold/40 text-brandGold text-xs font-extrabold"></div>
+      </div>
+
       <!-- Snap Scrolling Feed Container -->
       <div id="video-feed-container" class="snap-feed no-scrollbar w-full h-full pb-16">
         <!-- Injected via JS -->
       </div>
     </section>
 
-    <!-- ==================== VIEW 2: DISCOVER / SEARCH ==================== -->
+    <!-- ==================== VIEW 2: DISCOVER & SOUND LIBRARY ==================== -->
     <section id="view-discover" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-20 px-4 pt-5">
-      <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center justify-between mb-3">
         <h2 class="text-xl font-extrabold">Discover <span class="text-brandCyan">Pro</span></h2>
-        <span class="text-xs text-gray-400">ট্রেন্ডিং ভিডিও ও সাউন্ড</span>
+        <span class="text-xs text-gray-400">ভিডিও ও ট্রেন্ডিং সাউন্ড</span>
       </div>
 
-      <!-- Search Input -->
-      <div class="relative mb-4">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-        <input id="discover-search" oninput="renderDiscoverGrid()" type="text" placeholder="হ্যাশট্যাগ, ক্রিয়েটর বা মিউজিক খুঁজুন..." class="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brandCyan transition" />
+      <!-- Discover Sub-Tabs -->
+      <div class="grid grid-cols-2 gap-2 bg-[#161616] p-1 rounded-xl mb-4 border border-white/10">
+        <button onclick="switchDiscoverSubTab('videos')" id="dtab-videos" class="py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition">
+          <i class="fa-solid fa-fire mr-1 text-brandPink"></i> ট্রেন্ডিং ভিডিও
+        </button>
+        <button onclick="switchDiscoverSubTab('sounds')" id="dtab-sounds" class="py-2 rounded-lg text-gray-400 text-xs font-semibold transition">
+          <i class="fa-solid fa-music mr-1 text-brandCyan"></i> সাউন্ড লাইব্রেরি
+        </button>
       </div>
 
-      <!-- Trending Hashtag Pills -->
-      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5">
-        <button onclick="filterByTag('all')" class="px-3.5 py-1.5 rounded-full bg-brandPink text-white text-xs font-semibold whitespace-nowrap">🔥 সব ভিডিও</button>
-        <button onclick="filterByTag('#nature')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#nature</button>
-        <button onclick="filterByTag('#travel')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#travel</button>
-        <button onclick="filterByTag('#vibes')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#vibes</button>
-        <button onclick="filterByTag('#bangladesh')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#bangladesh</button>
+      <!-- Discover Videos Panel -->
+      <div id="discover-videos-panel">
+        <div class="relative mb-4">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input id="discover-search" oninput="renderDiscoverGrid()" type="text" placeholder="হ্যাশট্যাগ, ক্রিয়েটর বা মিউজিক খুঁজুন..." class="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brandCyan transition" />
+        </div>
+
+        <!-- Trending Hashtag Pills -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar mb-5">
+          <button onclick="filterByTag('all')" class="px-3.5 py-1.5 rounded-full bg-brandPink text-white text-xs font-semibold whitespace-nowrap">🔥 সব ভিডিও</button>
+          <button onclick="filterByTag('#nature')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#nature</button>
+          <button onclick="filterByTag('#travel')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#travel</button>
+          <button onclick="filterByTag('#vibes')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#vibes</button>
+          <button onclick="filterByTag('#bangladesh')" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-gray-200 text-xs font-medium whitespace-nowrap">#bangladesh</button>
+        </div>
+
+        <div id="discover-grid" class="grid grid-cols-2 gap-3"></div>
       </div>
 
-      <!-- Video Thumbnail Grid -->
-      <div id="discover-grid" class="grid grid-cols-2 gap-3">
-        <!-- Populated dynamically -->
+      <!-- Trending Sound Library Panel -->
+      <div id="discover-sounds-panel" class="hidden space-y-3">
+        <div class="bg-gradient-to-r from-brandCyan/15 to-brandPink/15 border border-white/10 rounded-2xl p-3.5 mb-2">
+          <p class="text-xs font-bold text-white">Trending Audio Library</p>
+          <p class="text-[11px] text-gray-400">যেকোনো সাউন্ড সিলেক্ট করে সরাসরি নতুন ভিডিও তৈরি করুন</p>
+        </div>
+        <div id="sound-library-list" class="space-y-2.5"></div>
       </div>
     </section>
 
@@ -368,7 +411,7 @@
         <span class="text-xs px-2.5 py-1 rounded-full bg-brandPink/20 text-brandPink font-semibold">Live</span>
       </div>
 
-      <!-- Inbox Sub-Tabs (Activity vs Direct Chat) -->
+      <!-- Inbox Sub-Tabs -->
       <div class="grid grid-cols-2 gap-2 bg-[#161616] p-1 rounded-xl mb-4 border border-white/10">
         <button onclick="switchInboxSubTab('activity')" id="itab-activity" class="py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition">
           <i class="fa-solid fa-bell mr-1 text-brandCyan"></i> নোটিফিকেশন
@@ -403,7 +446,7 @@
         </div>
         <div id="dm-messages-list" class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2.5 text-xs">
           <div class="bg-white/10 rounded-2xl rounded-tl-none p-2.5 max-w-[80%]">
-            হ্যালো! VibeTok Pro-তে আপনাকে স্বাগতম। নতুন ভিডিও আপলোড করেছেন? 👋
+            হ্যালো! VibeTok Pro-তে আপনাকে স্বাগতম। নতুন ফিল্টার দিয়ে ভিডিও ট্রাই করেছেন? 👋
           </div>
         </div>
         <form onsubmit="sendDirectMessage(event)" class="p-2.5 bg-[#101010] border-t border-white/10 flex gap-2">
@@ -415,7 +458,7 @@
       </div>
     </section>
 
-    <!-- ==================== VIEW 4: USER PROFILE ==================== -->
+    <!-- ==================== VIEW 4: USER PROFILE & CREATOR ANALYTICS ==================== -->
     <section id="view-profile" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-24 pt-6 px-4">
       <!-- Top Bar -->
       <div class="flex items-center justify-between mb-5">
@@ -442,7 +485,7 @@
           </span>
         </div>
         <h3 id="profile-name" class="text-lg font-extrabold">@guest_creator</h3>
-        <p id="profile-bio" class="text-xs text-gray-400 mt-1 max-w-xs">VibeTok Pro ক্রিয়েটর • ভিডিও আপলোড, গিফট ও লাইক করতে যুক্ত থাকুন</p>
+        <p id="profile-bio" class="text-xs text-gray-400 mt-1 max-w-xs">VibeTok Pro ক্রিয়েটর • ভিডিও আপলোড, ডুয়েট, গিফট ও অ্যানালিটিক্স</p>
 
         <button id="profile-login-cta" onclick="openAuthModal()" class="mt-3.5 px-6 py-2 rounded-xl bg-gradient-to-r from-brandPink to-rose-600 text-white text-xs font-bold shadow-lg shadow-brandPink/25">
           লগইন বা একাউন্ট খুলুন
@@ -465,8 +508,8 @@
         </div>
       </div>
 
-      <!-- Profile Sub-Tabs (My Videos / Liked / Bookmarked) -->
-      <div class="flex border-b border-white/10 mb-4 text-xs">
+      <!-- Profile Sub-Tabs (Videos / Liked / Saved / Analytics) -->
+      <div class="flex border-b border-white/10 mb-4 text-[11px]">
         <button onclick="switchProfileTab('uploaded')" id="ptab-uploaded" class="flex-1 py-2.5 font-bold text-white border-b-2 border-white">
           <i class="fa-solid fa-video mr-1"></i> ভিডিও
         </button>
@@ -476,13 +519,74 @@
         <button onclick="switchProfileTab('saved')" id="ptab-saved" class="flex-1 py-2.5 font-medium text-gray-400">
           <i class="fa-solid fa-bookmark mr-1"></i> সেভড
         </button>
+        <button onclick="switchProfileTab('analytics')" id="ptab-analytics" class="flex-1 py-2.5 font-medium text-brandCyan">
+          <i class="fa-solid fa-chart-simple mr-1"></i> অ্যানালিটিক্স
+        </button>
       </div>
 
       <!-- Profile Videos Grid -->
-      <div id="profile-video-grid" class="grid grid-cols-3 gap-2">
-        <!-- Populated dynamically -->
+      <div id="profile-video-grid" class="grid grid-cols-3 gap-2"></div>
+
+      <!-- Creator Analytics Panel -->
+      <div id="profile-analytics-panel" class="hidden space-y-3">
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="bg-[#161616] border border-white/10 rounded-2xl p-3.5">
+            <p class="text-[11px] text-gray-400">মোট ভিডিও ভিউ (৭ দিন)</p>
+            <p class="text-lg font-extrabold text-white mt-1">24.8K <span class="text-[10px] text-emerald-400">+18.4%</span></p>
+          </div>
+          <div class="bg-[#161616] border border-white/10 rounded-2xl p-3.5">
+            <p class="text-[11px] text-gray-400">গড় ওয়াচ টাইম</p>
+            <p class="text-lg font-extrabold text-brandCyan mt-1">19.4s <span class="text-[10px] text-emerald-400">+6.2%</span></p>
+          </div>
+          <div class="bg-[#161616] border border-white/10 rounded-2xl p-3.5">
+            <p class="text-[11px] text-gray-400">প্রোফাইল ভিজিট</p>
+            <p class="text-lg font-extrabold text-brandPink mt-1">1,940</p>
+          </div>
+          <div class="bg-[#161616] border border-white/10 rounded-2xl p-3.5">
+            <p class="text-[11px] text-gray-400">গিফট আয় (Coins)</p>
+            <p class="text-lg font-extrabold text-brandGold mt-1">850 <i class="fa-solid fa-coins text-xs"></i></p>
+          </div>
+        </div>
+
+        <!-- Engagement Bar Chart -->
+        <div class="bg-[#161616] border border-white/10 rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-3">
+            <p class="text-xs font-bold">সাপ্তাহিক ভিউ পারফরম্যান্স</p>
+            <span class="text-[10px] text-brandCyan font-semibold">Last 7 Days</span>
+          </div>
+          <div class="flex items-end justify-between h-28 gap-2 pt-4 px-1">
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-brandCyan/40 rounded-t-md h-12"></div>
+              <span class="text-[9px] text-gray-400">শনি</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-brandCyan/60 rounded-t-md h-16"></div>
+              <span class="text-[9px] text-gray-400">রবি</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-brandCyan/50 rounded-t-md h-14"></div>
+              <span class="text-[9px] text-gray-400">সোম</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-brandPink/75 rounded-t-md h-20"></div>
+              <span class="text-[9px] text-gray-400">মঙ্গল</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-brandCyan/75 rounded-t-md h-16"></div>
+              <span class="text-[9px] text-gray-400">বুধ</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-gradient-to-t from-brandPink to-brandCyan rounded-t-md h-24"></div>
+              <span class="text-[9px] text-white font-bold">বৃহঃ</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-brandCyan rounded-t-md h-20"></div>
+              <span class="text-[9px] text-gray-400">শুক্র</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
+        </section>
 
     <!-- ==================== BOTTOM NAVIGATION BAR ==================== -->
     <nav class="absolute bottom-0 left-0 right-0 h-16 bg-black/95 backdrop-blur-lg border-t border-white/10 px-2 flex items-center justify-around z-30">
@@ -515,6 +619,40 @@
       </button>
     </nav>
 
+    <!-- ==================== DUET STUDIO MODAL ==================== -->
+    <div id="duet-modal" class="hidden absolute inset-0 z-50 bg-black flex flex-col">
+      <div class="p-4 flex items-center justify-between bg-zinc-950 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-brandPink text-[10px] font-black">DUET</span>
+          <span id="duet-target-user" class="text-xs font-bold text-gray-200">@creator</span>
+        </div>
+        <button onclick="closeDuetModal()" class="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Split Screen Duet Canvas -->
+      <div class="flex-1 grid grid-cols-2 gap-1 bg-black p-1">
+        <!-- Left: Original Video -->
+        <div class="relative rounded-2xl overflow-hidden bg-zinc-900 border border-white/10">
+          <video id="duet-left-video" loop muted autoplay playsinline class="w-full h-full object-cover"></video>
+          <span class="absolute bottom-2 left-2 bg-black/60 px-2 py-0.5 rounded text-[10px] font-bold">Original</span>
+        </div>
+        <!-- Right: Creator Reaction / Filter Preview -->
+        <div class="relative rounded-2xl overflow-hidden bg-zinc-900 border border-brandCyan/40 flex flex-col items-center justify-center">
+          <video id="duet-right-video" src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4" loop muted autoplay playsinline class="w-full h-full object-cover filter-cinematic"></video>
+          <span class="absolute bottom-2 right-2 bg-brandCyan text-black px-2 py-0.5 rounded text-[10px] font-extrabold">You (Duet)</span>
+        </div>
+      </div>
+
+      <div class="p-4 bg-zinc-950 border-t border-white/10 space-y-2.5">
+        <input id="duet-caption-input" type="text" placeholder="ডুয়েট ক্যাপশন লিখুন... #duet #vibetokpro" class="w-full bg-[#1b1b1b] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-brandCyan" />
+        <button onclick="publishDuetVideo()" class="w-full py-3 rounded-xl bg-gradient-to-r from-brandCyan to-brandPink text-black font-extrabold text-xs">
+          ডুয়েট ভিডিও পোস্ট করুন (Publish Duet)
+        </button>
+      </div>
+    </div>
+
     <!-- ==================== COMMENTS SLIDE-UP DRAWER ==================== -->
     <div id="comments-drawer" class="hidden absolute inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs">
       <div onclick="closeCommentsDrawer()" class="flex-1"></div>
@@ -525,7 +663,7 @@
           <button onclick="closeCommentsDrawer()" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:text-white">
             <i class="fa-solid fa-xmark text-xs"></i>
           </button>
-          </div>
+        </div>
 
         <div id="comments-list" class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4"></div>
 
@@ -553,22 +691,22 @@
         </div>
 
         <div class="grid grid-cols-4 gap-2.5 mb-4 text-center">
-          <button onclick="sendVirtualGift('Rose 🌹', 10)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+          <button onclick="sendVirtualGift('Rose', '🌹', 10)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
             <div class="text-2xl mb-1">🌹</div>
             <p class="text-[11px] font-bold">Rose</p>
             <p class="text-[10px] text-brandGold">10 Coins</p>
           </button>
-          <button onclick="sendVirtualGift('Heart Fire 🔥', 50)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+          <button onclick="sendVirtualGift('Fire', '🔥', 50)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
             <div class="text-2xl mb-1">🔥</div>
             <p class="text-[11px] font-bold">Fire</p>
             <p class="text-[10px] text-brandGold">50 Coins</p>
           </button>
-          <button onclick="sendVirtualGift('Crown 👑', 100)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+          <button onclick="sendVirtualGift('Crown', '👑', 100)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
             <div class="text-2xl mb-1">👑</div>
             <p class="text-[11px] font-bold">Crown</p>
             <p class="text-[10px] text-brandGold">100 Coins</p>
           </button>
-          <button onclick="sendVirtualGift('Rocket 🚀', 200)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
+          <button onclick="sendVirtualGift('Rocket', '🚀', 200)" class="p-3 rounded-2xl bg-white/5 hover:bg-white/15 border border-white/10 transition">
             <div class="text-2xl mb-1">🚀</div>
             <p class="text-[11px] font-bold">Rocket</p>
             <p class="text-[10px] text-brandGold">200 Coins</p>
@@ -608,50 +746,71 @@
       </div>
     </div>
 
-    <!-- ==================== VIDEO UPLOAD MODAL ==================== -->
-    <div id="upload-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-5 shadow-2xl">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-extrabold flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-brandCyan"></span> নতুন ভিডিও আপলোড
+    <!-- ==================== CREATOR STUDIO UPLOAD & FILTER MODAL ==================== -->
+    <div id="upload-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-5 shadow-2xl my-auto">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-base font-extrabold flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-brandCyan"></span> Creator Studio আপলোড
           </h3>
           <button onclick="closeUploadModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:text-white">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 bg-black p-1 rounded-xl mb-4 border border-white/10">
-          <button type="button" onclick="setUploadMode('file')" id="mode-file-btn" class="py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition">
+        <div class="grid grid-cols-2 gap-2 bg-black p-1 rounded-xl mb-3 border border-white/10">
+          <button type="button" onclick="setUploadMode('file')" id="mode-file-btn" class="py-1.5 rounded-lg bg-white/15 text-white text-xs font-bold transition">
             <i class="fa-solid fa-file-video mr-1 text-brandCyan"></i> ডিভাইস ফাইল
           </button>
-          <button type="button" onclick="setUploadMode('url')" id="mode-url-btn" class="py-2 rounded-lg text-gray-400 text-xs font-semibold transition">
-            <i class="fa-solid fa-link mr-1 text-brandPink"></i> ভিডিও লিংক (URL)
+          <button type="button" onclick="setUploadMode('url')" id="mode-url-btn" class="py-1.5 rounded-lg text-gray-400 text-xs font-semibold transition">
+            <i class="fa-solid fa-link mr-1 text-brandPink"></i> ভিডিও লিংক
           </button>
         </div>
 
-        <form onsubmit="handleVideoUpload(event)" class="space-y-3.5">
+        <form onsubmit="handleVideoUpload(event)" class="space-y-3">
           <div id="upload-file-group">
-            <label class="block w-full border-2 border-dashed border-white/20 hover:border-brandCyan rounded-2xl p-4 text-center cursor-pointer transition bg-black/40">
-              <i class="fa-solid fa-cloud-arrow-up text-2xl text-brandCyan mb-1.5"></i>
+            <label class="block w-full border-2 border-dashed border-white/20 hover:border-brandCyan rounded-2xl p-3 text-center cursor-pointer transition bg-black/40">
+              <i class="fa-solid fa-cloud-arrow-up text-xl text-brandCyan mb-1"></i>
               <p id="selected-file-name" class="text-xs font-semibold text-gray-200">MP4 / WebM ভিডিও সিলেক্ট করুন</p>
-              <p class="text-[10px] text-gray-500 mt-0.5">সর্বোচ্চ ৫০ মেগাবাইট</p>
               <input id="video-file-input" type="file" accept="video/mp4,video/webm,video/*" class="hidden" onchange="updateFileName(this)" />
             </label>
           </div>
 
           <div id="upload-url-group" class="hidden">
-            <label class="text-xs text-gray-400 block mb-1">ডাইরেক্ট MP4 ভিডিও লিংক</label>
-            <input id="video-url-input" type="url" placeholder="https://example.com/video.mp4" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandCyan" />
+            <input id="video-url-input" type="url" placeholder="https://example.com/video.mp4" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brandCyan" />
+          </div>
+
+          <!-- Pro Color Filter Selector -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs text-gray-400"><i class="fa-solid fa-wand-magic-sparkles text-brandCyan mr-1"></i> ভিডিও ফিল্টার</label>
+              <span id="selected-filter-label" class="text-[11px] font-bold text-brandCyan">Normal</span>
+            </div>
+            <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+              <button type="button" onclick="selectVideoFilter('filter-normal', 'Normal', this)" class="filter-pill px-3 py-1 rounded-lg bg-brandCyan text-black text-[11px] font-extrabold shrink-0">Normal</button>
+              <button type="button" onclick="selectVideoFilter('filter-cinematic', 'Cinematic', this)" class="filter-pill px-3 py-1 rounded-lg bg-white/10 text-gray-200 text-[11px] font-semibold shrink-0">Cinematic</button>
+              <button type="button" onclick="selectVideoFilter('filter-vintage', 'Vintage', this)" class="filter-pill px-3 py-1 rounded-lg bg-white/10 text-gray-200 text-[11px] font-semibold shrink-0">Vintage</button>
+              <button type="button" onclick="selectVideoFilter('filter-cyberpunk', 'Cyberpunk', this)" class="filter-pill px-3 py-1 rounded-lg bg-white/10 text-gray-200 text-[11px] font-semibold shrink-0">Cyberpunk</button>
+              <button type="button" onclick="selectVideoFilter('filter-bw', 'B&W Noir', this)" class="filter-pill px-3 py-1 rounded-lg bg-white/10 text-gray-200 text-[11px] font-semibold shrink-0">B&W</button>
+              <button type="button" onclick="selectVideoFilter('filter-warm', 'Warm Sunset', this)" class="filter-pill px-3 py-1 rounded-lg bg-white/10 text-gray-200 text-[11px] font-semibold shrink-0">Warm</button>
+            </div>
           </div>
 
           <div>
             <label class="text-xs text-gray-400 block mb-1">ক্যাপশন ও হ্যাশট্যাগ</label>
-            <input id="video-caption-input" type="text" required placeholder="অসাধারণ একটি মুহূর্ত! #vibes #bangladesh" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandCyan" />
+            <input id="video-caption-input" type="text" required placeholder="অসাধারণ একটি মুহূর্ত! #vibes #bangladesh" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brandCyan" />
           </div>
 
           <div>
-            <label class="text-xs text-gray-400 block mb-1">অডিও / মিউজিক নাম</label>
-            <input id="video-music-input" type="text" value="Original Sound - VibeTok Pro" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandCyan" />
+            <label class="text-xs text-gray-400 block mb-1">ট্রেন্ডিং সাউন্ড / মিউজিক</label>
+            <select id="video-music-select" onchange="syncMusicInput(this.value)" class="w-full bg-black border border-white/15 rounded-xl px-3 py-2 text-xs text-white mb-1.5 focus:outline-none focus:border-brandCyan">
+              <option value="Original Sound - VibeTok Pro">🎵 Original Sound - VibeTok Pro</option>
+              <option value="Ocean Breeze - Chill LoFi Mix">🌊 Ocean Breeze - Chill LoFi Mix</option>
+              <option value="Golden Hour - Acoustic Guitar">✨ Golden Hour - Acoustic Guitar</option>
+              <option value="Midnight Galaxy - Synthwave">🌌 Midnight Galaxy - Synthwave</option>
+              <option value="Dhaka Nights - Bangla Trap Beat">🔥 Dhaka Nights - Bangla Trap Beat</option>
+            </select>
+            <input id="video-music-input" type="text" value="Original Sound - VibeTok Pro" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-brandCyan" />
           </div>
 
           <div id="upload-progress-wrap" class="hidden">
@@ -664,12 +823,12 @@
             </div>
           </div>
 
-          <button id="upload-submit-btn" type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-brandCyan to-brandPink text-black font-extrabold text-sm shadow-lg hover:opacity-95 transition">
+          <button id="upload-submit-btn" type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-brandCyan to-brandPink text-black font-extrabold text-sm shadow-lg hover:opacity-95 transition">
             পোস্ট করুন (Publish)
           </button>
         </form>
-                  </div>
-                  </div>
+      </div>
+    </div>
 
     <!-- ==================== EDIT PROFILE MODAL ==================== -->
     <div id="edit-profile-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
@@ -678,7 +837,7 @@
           <h3 class="text-base font-extrabold">প্রোফাইল এডিট করুন</h3>
           <button onclick="closeEditProfileModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300">
             <i class="fa-solid fa-xmark"></i>
-          </button>
+             </button>
         </div>
         <form onsubmit="saveProfileChanges(event)" class="space-y-3">
           <div>
@@ -794,6 +953,14 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    const TRENDING_SOUNDS = [
+      { id: "snd_1", title: "Ocean Breeze - Chill LoFi Mix", artist: "VibeBeats BD", uses: "14.2K videos", duration: "0:30" },
+      { id: "snd_2", title: "Golden Hour - Acoustic Guitar", artist: "Acoustic Soul", uses: "9.8K videos", duration: "0:45" },
+      { id: "snd_3", title: "Midnight Galaxy - Synthwave", artist: "Neon Pulse", uses: "22.5K videos", duration: "0:28" },
+      { id: "snd_4", title: "Dhaka Nights - Bangla Trap Beat", artist: "DJ Rafi Official", uses: "31.0K videos", duration: "0:35" },
+      { id: "snd_5", title: "Forest Rain - Natural Ambience", artist: "Nature Bangla", uses: "6.4K videos", duration: "0:60" }
+    ];
+
     const DEFAULT_DEMO_VIDEOS = [
       {
         id: "demo_1",
@@ -804,6 +971,7 @@
         videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4",
         caption: "সমুদ্রের ঢেউ আর বিকেলের শান্ত বাতাস 🌊✨ #nature #travel #bangladesh #vibes",
         music: "Ocean Breeze - Chill LoFi Mix",
+        filterClass: "filter-cinematic",
         likesCount: 1420,
         likedBy: [],
         commentsCount: 2,
@@ -822,6 +990,7 @@
         videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4",
         caption: "বসন্তের রঙিন বিকেল 🌼 জীবনের ছোট ছোট মুহূর্তগুলো উপভোগ করুন #vibes #nature #pro",
         music: "Golden Hour - Acoustic Guitar",
+        filterClass: "filter-warm",
         likesCount: 895,
         likedBy: [],
         commentsCount: 1,
@@ -839,6 +1008,7 @@
         videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4",
         caption: "রাতের আকাশ আর নক্ষত্রের মেলা ✨🌌 #travel #night #space #vibetokpro",
         music: "Midnight Galaxy - Synthwave",
+        filterClass: "filter-normal",
         likesCount: 3210,
         likedBy: [],
         commentsCount: 2,
@@ -857,6 +1027,7 @@
         videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4",
         caption: "পাহাড়ি ঝর্ণার শীতল জলধারা 🏞️ প্রকৃতির কাছে ফিরে যাওয়া #travel #nature #bangladesh",
         music: "Forest Rain - Natural Ambience",
+        filterClass: "filter-cinematic",
         likesCount: 2150,
         likedBy: [],
         commentsCount: 1,
@@ -881,9 +1052,11 @@
     let currentProfileSubTab = "uploaded";
     let activeCommentVideoId = null;
     let activeGiftVideoId = null;
+    let activeDuetVideo = null;
     let commentUnsubscribe = null;
     let isSignUpMode = false;
     let uploadMode = "file";
+    let selectedFilterClass = "filter-normal";
 
     // Splash Screen Boot Sequence
     window.addEventListener("DOMContentLoaded", () => {
@@ -893,7 +1066,7 @@
       setTimeout(() => {
         splash.style.opacity = "0";
         setTimeout(() => splash.classList.add("hidden"), 500);
-      }, 1500);
+      }, 1400);
     });
 
     // Toast Helper
@@ -905,7 +1078,248 @@
       text.textContent = message;
       icon.className =
         type === "error"
-          ? "fa-solid fa-circle-exclamation text-brandPink"
+         </button>
+        </div>
+        <form onsubmit="saveProfileChanges(event)" class="space-y-3">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">ইউজারনেম</label>
+            <input id="edit-username-input" type="text" required class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-sm text-white" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">বায়ো (Bio)</label>
+            <textarea id="edit-bio-input" rows="2" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-sm text-white"></textarea>
+          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-brandCyan text-black font-extrabold text-sm">সেভ করুন</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ==================== AUTHENTICATION MODAL ==================== -->
+    <div id="auth-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-play text-lg text-brandPink"></i>
+            <h3 id="auth-modal-title" class="text-lg font-extrabold">VibeTok Pro লগইন</h3>
+          </div>
+          <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300 hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <button onclick="handleGoogleLogin()" type="button" class="w-full py-2.5 px-4 rounded-xl bg-white text-black font-bold text-sm flex items-center justify-center gap-2.5 hover:bg-gray-100 transition mb-4">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-4 h-4" />
+          <span>Google দিয়ে চালিয়ে যান</span>
+        </button>
+
+        <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+          <div id="auth-name-wrap" class="hidden">
+            <input id="auth-name" type="text" placeholder="আপনার নাম" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandPink" />
+          </div>
+          <div>
+            <input id="auth-email" type="email" required placeholder="ইমেইল এড্রেস" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandPink" />
+          </div>
+          <div>
+            <input id="auth-password" type="password" required minlength="6" placeholder="পাসওয়ার্ড (কমপক্ষে ৬ অক্ষর)" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-brandPink" />
+          </div>
+
+          <button id="auth-submit-btn" type="submit" class="w-full py-2.5 rounded-xl bg-brandPink hover:bg-rose-600 text-white font-bold text-sm transition">
+            লগইন করুন
+          </button>
+        </form>
+
+        <p class="text-center text-xs text-gray-400 mt-4">
+          <span id="auth-switch-text">নতুন ইউজার?</span>
+          <button type="button" onclick="toggleAuthMode()" id="auth-switch-btn" class="text-brandCyan font-bold ml-1 hover:underline">একাউন্ট খুলুন</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- ==================== TOAST MESSAGE BOX ==================== -->
+    <div id="toast-box" class="pointer-events-none fixed top-16 left-1/2 -translate-x-1/2 z-[100] hidden">
+      <div class="bg-[#1f1f1f]/95 backdrop-blur-md border border-white/15 text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2 max-w-[340px]">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-brandCyan"></i>
+        <span id="toast-text">Notification</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== FIREBASE & APP LOGIC ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      updateProfile,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      doc,
+      updateDoc,
+      increment,
+      query,
+      orderBy,
+      onSnapshot,
+      serverTimestamp,
+      arrayUnion,
+      arrayRemove
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import {
+      getStorage,
+      ref,
+      uploadBytesResumable,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgAn4OehtWHwVtCp9ISdJDWHaOZKK3GFk",
+      authDomain: "tiktok-pro-46434.firebaseapp.com",
+      projectId: "tiktok-pro-46434",
+      storageBucket: "tiktok-pro-46434.firebasestorage.app",
+      messagingSenderId: "634109089305",
+      appId: "1:634109089305:web:85a8117ee997fd29a83c88",
+      measurementId: "G-91T9CD8ERJ"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const TRENDING_SOUNDS = [
+      { id: "snd_1", title: "Ocean Breeze - Chill LoFi Mix", artist: "VibeBeats BD", uses: "14.2K videos", duration: "0:30" },
+      { id: "snd_2", title: "Golden Hour - Acoustic Guitar", artist: "Acoustic Soul", uses: "9.8K videos", duration: "0:45" },
+      { id: "snd_3", title: "Midnight Galaxy - Synthwave", artist: "Neon Pulse", uses: "22.5K videos", duration: "0:28" },
+      { id: "snd_4", title: "Dhaka Nights - Bangla Trap Beat", artist: "DJ Rafi Official", uses: "31.0K videos", duration: "0:35" },
+      { id: "snd_5", title: "Forest Rain - Natural Ambience", artist: "Nature Bangla", uses: "6.4K videos", duration: "0:60" }
+    ];
+
+    const DEFAULT_DEMO_VIDEOS = [
+      {
+        id: "demo_1",
+        username: "@nature_bangla",
+        displayName: "Nature Bangla",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=NatureBangla",
+        verified: true,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4",
+        caption: "সমুদ্রের ঢেউ আর বিকেলের শান্ত বাতাস 🌊✨ #nature #travel #bangladesh #vibes",
+        music: "Ocean Breeze - Chill LoFi Mix",
+        filterClass: "filter-cinematic",
+        likesCount: 1420,
+        likedBy: [],
+        commentsCount: 2,
+        isDemo: true,
+        demoComments: [
+          { username: "@tanvir_dhaka", text: "অসাধারণ দৃশ্য ভাই! মনটা ভালো হয়ে গেল ❤️" },
+          { username: "@sadia_islam", text: "কক্সবাজারের কথা মনে পড়ে গেল 🌊" }
+        ]
+      },
+      {
+        id: "demo_2",
+        username: "@urban_explorer",
+        displayName: "Urban Explorer",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=UrbanExplorer",
+        verified: true,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4",
+        caption: "বসন্তের রঙিন বিকেল 🌼 জীবনের ছোট ছোট মুহূর্তগুলো উপভোগ করুন #vibes #nature #pro",
+        music: "Golden Hour - Acoustic Guitar",
+        filterClass: "filter-warm",
+        likesCount: 895,
+        likedBy: [],
+        commentsCount: 1,
+        isDemo: true,
+        demoComments: [
+          { username: "@arif_pro", text: "ভিডিও কোয়ালিটি একদম ক্লিয়ার 🔥" }
+        ]
+      },
+      {
+        id: "demo_3",
+        username: "@night_rider_bd",
+        displayName: "Night Rider BD",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=NightRider",
+        verified: false,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4",
+        caption: "রাতের আকাশ আর নক্ষত্রের মেলা ✨🌌 #travel #night #space #vibetokpro",
+        music: "Midnight Galaxy - Synthwave",
+        filterClass: "filter-normal",
+        likesCount: 3210,
+        likedBy: [],
+        commentsCount: 2,
+        isDemo: true,
+        demoComments: [
+          { username: "@mehedi_hasan", text: "ওয়াও! দারুণ এডিট করেছেন ভাই 👏" },
+          { username: "@nusrat_jahan", text: "মিউজিকটা অনেক সুন্দর 🎶" }
+        ]
+      },
+      {
+        id: "demo_4",
+        username: "@mountain_soul",
+        displayName: "Mountain Soul",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=MountainSoul",
+        verified: true,
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waterfall-in-forest-2213-large.mp4",
+        caption: "পাহাড়ি ঝর্ণার শীতল জলধারা 🏞️ প্রকৃতির কাছে ফিরে যাওয়া #travel #nature #bangladesh",
+        music: "Forest Rain - Natural Ambience",
+        filterClass: "filter-cinematic",
+        likesCount: 2150,
+        likedBy: [],
+        commentsCount: 1,
+        isDemo: true,
+        demoComments: [
+          { username: "@sakib_al", text: "বান্দরবানের ঝর্ণার মতো লাগছে!" }
+        ]
+      }
+    ];
+
+    // App State
+    let currentUser = null;
+    let firestoreVideos = [];
+    let allVideos = [...DEFAULT_DEMO_VIDEOS];
+    let followedUsers = new Set(["@nature_bangla"]);
+    let localLikedIds = new Set();
+    let bookmarkedIds = new Set();
+    let userCoins = 250;
+    let playbackSpeed = 1;
+    let isMuted = true;
+    let currentFeedFilter = "foryou";
+    let currentProfileSubTab = "uploaded";
+    let activeCommentVideoId = null;
+    let activeGiftVideoId = null;
+    let activeDuetVideo = null;
+    let commentUnsubscribe = null;
+    let isSignUpMode = false;
+    let uploadMode = "file";
+    let selectedFilterClass = "filter-normal";
+
+    // Splash Screen Boot Sequence
+    window.addEventListener("DOMContentLoaded", () => {
+      const bar = document.getElementById("splash-loader-bar");
+      const splash = document.getElementById("app-splash-screen");
+      setTimeout(() => { bar.style.width = "100%"; }, 80);
+      setTimeout(() => {
+        splash.style.opacity = "0";
+        setTimeout(() => splash.classList.add("hidden"), 500);
+      }, 1400);
+    });
+
+    // Toast Helper
+    window.showToast = function (message, type = "info") {
+      const box = document.getElementById("toast-box");
+      const text = document.getElementById("toast-text");
+      const icon = document.getElementById("toast-icon");
+
+      text.textContent = message;
+      icon.className =
+        type === "error"
+        ? "fa-solid fa-circle-exclamation text-brandPink"
           : "fa-solid fa-circle-check text-brandCyan";
 
       box.classList.remove("hidden");
@@ -954,7 +1368,7 @@
 
     window.rechargeCoins = () => {
       userCoins += 100;
-        updateCoinDisplays();
+      updateCoinDisplays();
       showToast("+100 বোনাস Vibe Coins যুক্ত হয়েছে!");
     };
 
@@ -1005,7 +1419,7 @@
 
         profAvatar.src = guestAvatar;
         profName.textContent = "@guest_creator";
-        profBio.textContent = "VibeTok Pro ক্রিয়েটর • ভিডিও আপলোড ও গিফট করতে যুক্ত থাকুন";
+        profBio.textContent = "VibeTok Pro ক্রিয়েটর • ভিডিও আপলোড, ডুয়েট, গিফট ও অ্যানালিটিক্স";
         profLoginCta.classList.remove("hidden");
         profLogoutBtn.classList.add("hidden");
         commentAvatar.src = guestAvatar;
@@ -1078,8 +1492,10 @@
                 avatar: d.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${docSnap.id}`,
                 verified: Boolean(d.verified),
                 videoUrl: d.videoUrl,
+                duetUrl: d.duetUrl || null,
                 caption: d.caption || "",
                 music: d.music || "Original Sound - VibeTok Pro",
+                filterClass: d.filterClass || "filter-normal",
                 likesCount: d.likesCount || 0,
                 likedBy: Array.isArray(d.likedBy) ? d.likedBy : [],
                 commentsCount: d.commentsCount || 0,
@@ -1130,21 +1546,33 @@
             : localLikedIds.has(video.id);
           const isSaved = bookmarkedIds.has(video.id);
           const isFollowing = followedUsers.has(video.username);
+          const filterCls = video.filterClass || "filter-normal";
+
+          const mediaMarkup = video.duetUrl
+            ? `
+              <div class="w-full h-full grid grid-cols-2 bg-black cursor-pointer" onclick="handleVideoTap(event, '${video.id}')" ondblclick="handleVideoDoubleTap(event, '${video.id}')">
+                <video id="vid-player-${video.id}" src="${escapeHtml(video.videoUrl)}" class="feed-video w-full h-full object-cover ${filterCls}" loop playsinline ${isMuted ? "muted" : ""} preload="metadata" ontimeupdate="updateVideoProgress('${video.id}')"></video>
+                <video src="${escapeHtml(video.duetUrl)}" class="w-full h-full object-cover filter-cinematic border-l border-white/15" loop muted autoplay playsinline preload="metadata"></video>
+              </div>
+            `
+            : `
+              <video
+                id="vid-player-${video.id}"
+                src="${escapeHtml(video.videoUrl)}"
+                class="feed-video w-full h-full object-cover cursor-pointer ${filterCls}"
+                loop
+                playsinline
+                ${isMuted ? "muted" : ""}
+                preload="metadata"
+                ontimeupdate="updateVideoProgress('${video.id}')"
+                onclick="handleVideoTap(event, '${video.id}')"
+                ondblclick="handleVideoDoubleTap(event, '${video.id}')"
+              ></video>
+            `;
 
           return `
           <article class="snap-card bg-black flex items-center justify-center overflow-hidden" data-video-id="${video.id}">
-            <video
-              id="vid-player-${video.id}"
-              src="${escapeHtml(video.videoUrl)}"
-              class="feed-video w-full h-full object-cover cursor-pointer"
-              loop
-              playsinline
-              ${isMuted ? "muted" : ""}
-              preload="metadata"
-              ontimeupdate="updateVideoProgress('${video.id}')"
-              onclick="handleVideoTap(event, '${video.id}')"
-              ondblclick="handleVideoDoubleTap(event, '${video.id}')"
-            ></video>
+            ${mediaMarkup}
 
             <!-- Play Overlay -->
             <div id="play-overlay-${video.id}" class="pointer-events-none hidden absolute inset-0 flex items-center justify-center z-20">
@@ -1154,7 +1582,7 @@
             </div>
 
             <!-- Right-Side Action Bar -->
-            <div class="absolute right-3 bottom-20 z-20 flex flex-col items-center gap-4">
+            <div class="absolute right-3 bottom-20 z-20 flex flex-col items-center gap-3.5">
               <!-- Avatar + Follow -->
               <div class="relative mb-1">
                 <img src="${escapeHtml(video.avatar)}" alt="${escapeHtml(video.username)}" class="w-11 h-11 rounded-full object-cover border-2 border-white bg-gray-900 shadow-lg" />
@@ -1169,7 +1597,7 @@
               <!-- Like Button -->
               <button onclick="toggleLike('${video.id}')" class="flex flex-col items-center">
                 <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-125">
-                  <i id="like-icon-${video.id}" class="fa-solid fa-heart text-[24px] ${isLiked ? "text-brandPink drop-shadow-[0_0_10px_rgba(255,0,80,0.85)]" : "text-white"} transition"></i>
+                  <i id="like-icon-${video.id}" class="fa-solid fa-heart text-[23px] ${isLiked ? "text-brandPink drop-shadow-[0_0_10px_rgba(255,0,80,0.85)]" : "text-white"} transition"></i>
                 </div>
                 <span id="like-count-${video.id}" class="text-[11px] font-bold mt-0.5 drop-shadow">${formatCount(video.likesCount)}</span>
               </button>
@@ -1177,31 +1605,39 @@
               <!-- Comments -->
               <button onclick="openCommentsDrawer('${video.id}')" class="flex flex-col items-center">
                 <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
-                  <i class="fa-solid fa-comment-dots text-[23px] text-white"></i>
+                  <i class="fa-solid fa-comment-dots text-[22px] text-white"></i>
                 </div>
                 <span id="comment-count-${video.id}" class="text-[11px] font-bold mt-0.5 drop-shadow">${formatCount(video.commentsCount)}</span>
+              </button>
+
+              <!-- Duet Button -->
+              <button onclick="openDuetModal('${video.id}')" class="flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
+                  <i class="fa-solid fa-table-columns text-[19px] text-brandCyan"></i>
+                </div>
+                <span class="text-[10px] font-bold mt-0.5 drop-shadow">Duet</span>
               </button>
 
               <!-- Bookmark / Save -->
               <button onclick="toggleBookmark('${video.id}')" class="flex flex-col items-center">
                 <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
-                  <i id="bookmark-icon-${video.id}" class="fa-solid fa-bookmark text-[21px] ${isSaved ? "text-brandGold" : "text-white"}"></i>
+                  <i id="bookmark-icon-${video.id}" class="fa-solid fa-bookmark text-[20px] ${isSaved ? "text-brandGold" : "text-white"}"></i>
                 </div>
                 <span class="text-[10px] font-bold mt-0.5 drop-shadow">Save</span>
               </button>
 
               <!-- Send Gift -->
-                            <button onclick="openGiftDrawer('${video.id}')" class="flex flex-col items-center">
+              <button onclick="openGiftDrawer('${video.id}')" class="flex flex-col items-center">
                 <div class="w-10 h-10 rounded-full bg-amber-500/25 border border-amber-400/40 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
-                  <i class="fa-solid fa-gift text-[20px] text-brandGold"></i>
+                  <i class="fa-solid fa-gift text-[19px] text-brandGold"></i>
                 </div>
-                <span class="text-[10px] font-bold mt-0.5 text-brandGold drop-shadow">Gift</span>
+                             <span class="text-[10px] font-bold mt-0.5 text-brandGold drop-shadow">Gift</span>
               </button>
 
               <!-- Share -->
               <button onclick="shareVideo('${video.id}', '${escapeHtml(video.username)}')" class="flex flex-col items-center">
                 <div class="w-10 h-10 rounded-full bg-black/30 backdrop-blur-xs flex items-center justify-center transition active:scale-110">
-                  <i class="fa-solid fa-share text-[21px] text-white"></i>
+                  <i class="fa-solid fa-share text-[20px] text-white"></i>
                 </div>
                 <span class="text-[10px] font-bold mt-0.5 drop-shadow">Share</span>
               </button>
@@ -1224,6 +1660,7 @@
                       ? `<span class="w-4 h-4 rounded-full bg-brandCyan text-black flex items-center justify-center text-[9px] font-black"><i class="fa-solid fa-check"></i></span>`
                       : `<span class="text-[10px] px-1.5 py-0.2 rounded bg-white/15 text-gray-200 font-semibold">PRO</span>`
                   }
+                  ${video.duetUrl ? `<span class="text-[10px] px-1.5 py-0.5 rounded bg-brandPink/80 text-white font-bold">DUET</span>` : ""}
                 </div>
 
                 <p class="text-[13px] text-gray-100 leading-snug mb-2 line-clamp-2 drop-shadow">
@@ -1280,7 +1717,7 @@
       }
     };
 
-    // Playback Speed Control (1x -> 1.5x -> 2x)
+    // Playback Speed Control
     window.cyclePlaybackSpeed = () => {
       const speeds = [1, 1.5, 2];
       const nextIdx = (speeds.indexOf(playbackSpeed) + 1) % speeds.length;
@@ -1326,7 +1763,7 @@
     window.handleVideoTap = (e, id) => {
       clearTimeout(singleTapTimer);
       singleTapTimer = setTimeout(() => {
-        const videoEl = e.target;
+        const videoEl = document.getElementById(`vid-player-${id}`);
         const overlay = document.getElementById(`play-overlay-${id}`);
         const vinyl = document.getElementById(`vinyl-${id}`);
         if (videoEl.paused) {
@@ -1384,11 +1821,11 @@
       const icon = document.getElementById(`bookmark-icon-${videoId}`);
       if (bookmarkedIds.has(videoId)) {
         bookmarkedIds.delete(videoId);
-        if (icon) icon.className = "fa-solid fa-bookmark text-[21px] text-white";
+        if (icon) icon.className = "fa-solid fa-bookmark text-[20px] text-white";
         showToast("বুকমার্ক থেকে সরানো হয়েছে");
       } else {
         bookmarkedIds.add(videoId);
-        if (icon) icon.className = "fa-solid fa-bookmark text-[21px] text-brandGold";
+        if (icon) icon.className = "fa-solid fa-bookmark text-[20px] text-brandGold";
         showToast("ভিডিওটি প্রোফাইলে সেভ করা হয়েছে!");
       }
       renderProfileView();
@@ -1419,7 +1856,7 @@
       const icon = document.getElementById(`like-icon-${videoId}`);
       const countEl = document.getElementById(`like-count-${videoId}`);
       if (icon) {
-        icon.className = `fa-solid fa-heart text-[24px] ${!isCurrentlyLiked ? "text-brandPink drop-shadow-[0_0_10px_rgba(255,0,80,0.85)]" : "text-white"} transition`;
+        icon.className = `fa-solid fa-heart text-[23px] ${!isCurrentlyLiked ? "text-brandPink drop-shadow-[0_0_10px_rgba(255,0,80,0.85)]" : "text-white"} transition`;
       }
       if (countEl) countEl.textContent = formatCount(video.likesCount);
       renderProfileView();
@@ -1442,7 +1879,53 @@
       showToast(`${username}-এর ভিডিও লিংক কপি হয়েছে!`);
     };
 
-    // ==================== VIRTUAL GIFTING ====================
+    // ==================== DUET STUDIO ====================
+    window.openDuetModal = (videoId) => {
+      const video = allVideos.find((v) => v.id === videoId);
+      if (!video) return;
+      activeDuetVideo = video;
+      document.getElementById("duet-target-user").textContent = video.username;
+      document.getElementById("duet-left-video").src = video.videoUrl;
+      document.getElementById("duet-caption-input").value = `Duet with ${video.username} 🔥 #duet #vibetokpro`;
+      document.getElementById("duet-modal").classList.remove("hidden");
+    };
+
+    window.closeDuetModal = () => {
+      document.getElementById("duet-modal").classList.add("hidden");
+      activeDuetVideo = null;
+    };
+
+    window.publishDuetVideo = () => {
+      if (!activeDuetVideo) return;
+      const caption = document.getElementById("duet-caption-input").value.trim() || `Duet with ${activeDuetVideo.username}`;
+      const displayName = currentUser ? currentUser.displayName || currentUser.email.split("@")[0] : "Pro Creator";
+      const username = "@" + displayName.toLowerCase().replace(/[^a-z0-9_]/g, "_");
+
+      const newDuet = {
+        id: "duet_" + Date.now(),
+                username,
+        displayName,
+        avatar: currentUser?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`,
+        verified: true,
+        videoUrl: activeDuetVideo.videoUrl,
+        duetUrl: "https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4",
+        caption,
+        music: activeDuetVideo.music,
+        filterClass: "filter-cinematic",
+        likesCount: 1,
+        likedBy: [],
+        commentsCount: 0,
+        isDemo: true,
+        demoComments: []
+      };
+
+      allVideos.unshift(newDuet);
+      closeDuetModal();
+      renderVideoFeed();
+      showToast("ডুয়েট ভিডিও ফিডে পাবলিশ হয়েছে!");
+    };
+
+    // ==================== VIRTUAL GIFTING WITH BURST ANIMATION ====================
     window.openGiftDrawer = (videoId) => {
       activeGiftVideoId = videoId;
       updateCoinDisplays();
@@ -1453,7 +1936,7 @@
       document.getElementById("gift-drawer").classList.add("hidden");
     };
 
-    window.sendVirtualGift = (giftName, cost) => {
+    window.sendVirtualGift = (giftName, emoji, cost) => {
       if (userCoins < cost) {
         showToast("পর্যাপ্ত কয়েন নেই! নিচের বাটন থেকে ফ্রি কয়েন নিন।", "error");
         return;
@@ -1463,8 +1946,20 @@
       const video = allVideos.find((v) => v.id === activeGiftVideoId);
       const targetUser = video ? video.username : "Creator";
       closeGiftDrawer();
-      showToast(`${targetUser}-কে ${giftName} পাঠানো হয়েছে!`);
-      pushInboxNotification("গিফট পাঠানো হয়েছে", `আপনি ${targetUser}-কে ${giftName} (${cost} Coins) উপহার দিয়েছেন।`);
+
+      // Trigger Fullscreen Gift Burst
+      const overlay = document.getElementById("gift-burst-overlay");
+      const emojiEl = document.getElementById("gift-burst-emoji");
+      const labelEl = document.getElementById("gift-burst-label");
+      emojiEl.textContent = emoji;
+      labelEl.textContent = `Sent ${giftName} to ${targetUser}!`;
+      overlay.classList.remove("hidden");
+      overlay.classList.remove("gift-burst-anim");
+      void overlay.offsetWidth;
+      overlay.classList.add("gift-burst-anim");
+      setTimeout(() => overlay.classList.add("hidden"), 1650);
+
+      pushInboxNotification("গিফট পাঠানো হয়েছে", `আপনি ${targetUser}-কে ${giftName} ${emoji} (${cost} Coins) উপহার দিয়েছেন।`);
     };
 
     // ==================== LIVE STREAM ====================
@@ -1532,7 +2027,7 @@
       `
         )
         .join("");
-        container.scrollTop = container.scrollHeight;
+      container.scrollTop = container.scrollHeight;
     }
 
     window.submitComment = async (e) => {
@@ -1571,19 +2066,38 @@
       }
     };
 
-    // ==================== VIDEO UPLOAD ====================
+    // ==================== VIDEO UPLOAD & FILTERS ====================
     window.openUploadModal = () => document.getElementById("upload-modal").classList.remove("hidden");
     window.closeUploadModal = () => {
       document.getElementById("upload-modal").classList.add("hidden");
       document.getElementById("upload-progress-wrap").classList.add("hidden");
     };
 
+    window.selectVideoFilter = (cls, label, btn) => {
+      selectedFilterClass = cls;
+      document.getElementById("selected-filter-label").textContent = label;
+      document.querySelectorAll(".filter-pill").forEach((el) => {
+        el.className = "filter-pill px-3 py-1 rounded-lg bg-white/10 text-gray-200 text-[11px] font-semibold shrink-0";
+      });
+      btn.className = "filter-pill px-3 py-1 rounded-lg bg-brandCyan text-black text-[11px] font-extrabold shrink-0";
+    };
+
+    window.syncMusicInput = (val) => {
+      document.getElementById("video-music-input").value = val;
+    };
+
+    window.useSoundForVideo = (soundTitle) => {
+      openUploadModal();
+      document.getElementById("video-music-input").value = soundTitle;
+      showToast(`সাউন্ড সিলেক্ট হয়েছে: ${soundTitle}`);
+    };
+
     window.setUploadMode = (mode) => {
       uploadMode = mode;
       document.getElementById("mode-file-btn").className =
-        mode === "file" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+        mode === "file" ? "py-1.5 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-1.5 rounded-lg text-gray-400 text-xs font-semibold transition";
       document.getElementById("mode-url-btn").className =
-        mode === "url" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+        mode === "url" ? "py-1.5 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-1.5 rounded-lg text-gray-400 text-xs font-semibold transition";
       document.getElementById("upload-file-group").classList.toggle("hidden", mode !== "file");
       document.getElementById("upload-url-group").classList.toggle("hidden", mode !== "url");
     };
@@ -1595,7 +2109,7 @@
 
     window.handleVideoUpload = async (e) => {
       e.preventDefault();
-      const caption = document.getElementById("video-caption-input").value.trim();
+            const caption = document.getElementById("video-caption-input").value.trim();
       const music = document.getElementById("video-music-input").value.trim() || "Original Sound - VibeTok Pro";
       const submitBtn = document.getElementById("upload-submit-btn");
       const progressWrap = document.getElementById("upload-progress-wrap");
@@ -1650,6 +2164,7 @@
           videoUrl: finalVideoUrl,
           caption,
           music,
+          filterClass: selectedFilterClass,
           likesCount: 0,
           likedBy: [],
           commentsCount: 0,
@@ -1667,7 +2182,7 @@
       }
     };
 
-    // ==================== NAVIGATION, INBOX & PROFILE ====================
+    // ==================== NAVIGATION, DISCOVER, INBOX & PROFILE ====================
     window.switchTab = (tab) => {
       ["home", "discover", "inbox", "profile"].forEach((v) => {
         document.getElementById(`view-${v}`).classList.toggle("hidden", v !== tab);
@@ -1687,9 +2202,43 @@
         }
       });
       if (tab === "inbox") document.getElementById("inbox-dot").classList.add("hidden");
-      if (tab === "discover") renderDiscoverGrid();
+      if (tab === "discover") {
+        renderDiscoverGrid();
+        renderSoundLibrary();
+      }
       if (tab === "profile") renderProfileView();
     };
+
+    window.switchDiscoverSubTab = (sub) => {
+      document.getElementById("dtab-videos").className =
+        sub === "videos" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+      document.getElementById("dtab-sounds").className =
+        sub === "sounds" ? "py-2 rounded-lg bg-white/15 text-white text-xs font-bold transition" : "py-2 rounded-lg text-gray-400 text-xs font-semibold transition";
+      document.getElementById("discover-videos-panel").classList.toggle("hidden", sub !== "videos");
+      document.getElementById("discover-sounds-panel").classList.toggle("hidden", sub !== "sounds");
+    };
+
+    function renderSoundLibrary() {
+      const container = document.getElementById("sound-library-list");
+      container.innerHTML = TRENDING_SOUNDS.map(
+        (s) => `
+        <div class="flex items-center justify-between p-3 rounded-2xl bg-[#161616] border border-white/10">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brandCyan to-brandPink flex items-center justify-center text-black shrink-0">
+              <i class="fa-solid fa-music text-base"></i>
+            </div>
+            <div class="overflow-hidden">
+              <p class="text-xs font-bold text-white truncate">${escapeHtml(s.title)}</p>
+              <p class="text-[11px] text-gray-400">${escapeHtml(s.artist)} • ${s.uses}</p>
+            </div>
+          </div>
+          <button onclick="useSoundForVideo('${escapeHtml(s.title)}')" class="px-3 py-1.5 rounded-xl bg-brandPink text-white text-[11px] font-bold shrink-0 hover:bg-rose-600 transition">
+            Use Sound
+          </button>
+        </div>
+      `
+      ).join("");
+    }
 
     window.switchInboxSubTab = (sub) => {
       document.getElementById("itab-activity").className =
@@ -1733,7 +2282,7 @@
 
     window.setFeedFilter = (filter) => {
       currentFeedFilter = filter;
-        const followingBtn = document.getElementById("tab-following");
+      const followingBtn = document.getElementById("tab-following");
       const foryouBtn = document.getElementById("tab-foryou");
       const indicator = document.getElementById("tab-indicator");
       if (filter === "following") {
@@ -1767,7 +2316,7 @@
         .map(
           (v) => `
         <div onclick="jumpToVideo('${v.id}')" class="relative aspect-[9/15] rounded-2xl overflow-hidden bg-[#181818] border border-white/10 cursor-pointer group">
-          <video src="${escapeHtml(v.videoUrl)}" muted preload="metadata" class="w-full h-full object-cover group-hover:scale-105 transition duration-300"></video>
+          <video src="${escapeHtml(v.videoUrl)}" muted preload="metadata" class="w-full h-full object-cover ${v.filterClass || "filter-normal"} group-hover:scale-105 transition duration-300"></video>
           <div class="absolute inset-0 video-gradient-bottom flex flex-col justify-end p-2.5">
             <p class="text-[11px] text-white font-semibold line-clamp-2 mb-1">${escapeHtml(v.caption)}</p>
             <div class="flex items-center justify-between text-[10px] text-gray-300">
@@ -1791,9 +2340,13 @@
 
     window.switchProfileTab = (subTab) => {
       currentProfileSubTab = subTab;
-      ["uploaded", "liked", "saved"].forEach((t) => {
+      ["uploaded", "liked", "saved", "analytics"].forEach((t) => {
         document.getElementById(`ptab-${t}`).className =
-          t === subTab ? "flex-1 py-2.5 font-bold text-white border-b-2 border-white" : "flex-1 py-2.5 font-medium text-gray-400";
+          t === subTab
+            ? "flex-1 py-2.5 font-bold text-white border-b-2 border-white"
+            : t === "analytics"
+              ? "flex-1 py-2.5 font-medium text-brandCyan"
+              : "flex-1 py-2.5 font-medium text-gray-400";
       });
       renderProfileView();
     };
@@ -1808,11 +2361,22 @@
       document.getElementById("stat-following").textContent = followedUsers.size;
       document.getElementById("stat-likes").textContent = likedVideos.length;
 
+      const grid = document.getElementById("profile-video-grid");
+      const analyticsPanel = document.getElementById("profile-analytics-panel");
+
+      if (currentProfileSubTab === "analytics") {
+        grid.classList.add("hidden");
+        analyticsPanel.classList.remove("hidden");
+        return;
+      }
+
+      analyticsPanel.classList.add("hidden");
+      grid.classList.remove("hidden");
+
       let listToShow = myVideos;
       if (currentProfileSubTab === "liked") listToShow = likedVideos;
       if (currentProfileSubTab === "saved") listToShow = savedVideos;
 
-      const grid = document.getElementById("profile-video-grid");
       if (listToShow.length === 0) {
         grid.innerHTML = `<div class="col-span-3 text-center py-10 text-gray-500 text-xs">এই তালিকায় এখনো কোনো ভিডিও নেই।</div>`;
         return;
@@ -1822,7 +2386,7 @@
         .map(
           (v) => `
         <div onclick="jumpToVideo('${v.id}')" class="relative aspect-[9/14] rounded-xl overflow-hidden bg-[#181818] border border-white/10 cursor-pointer">
-          <video src="${escapeHtml(v.videoUrl)}" muted preload="metadata" class="w-full h-full object-cover"></video>
+          <video src="${escapeHtml(v.videoUrl)}" muted preload="metadata" class="w-full h-full object-cover ${v.filterClass || "filter-normal"}"></video>
           <div class="absolute bottom-1.5 left-1.5 text-[10px] font-bold text-white drop-shadow flex items-center gap-1">
             <i class="fa-solid fa-play text-[9px]"></i> ${formatCount(v.likesCount)}
           </div>
@@ -1835,8 +2399,10 @@
     // Boot Application
     renderVideoFeed();
     renderDiscoverGrid();
+    renderSoundLibrary();
     renderProfileView();
     initFirestoreVideosListener();
   </script>
 </body>
 </html>
+                                                                </button>
