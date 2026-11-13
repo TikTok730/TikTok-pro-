@@ -1,384 +1,1091 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        tiktokRed: '#FE2C55',
-                        tiktokCyan: '#25F4EE',
-                        tiktokDark: '#121212',
-                        tiktokCard: '#1E1E1E'
-                    }
-                }
-            }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Talk Talk Pro - Complete Next-Gen Short Video & Admin Suite</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Hind Siliguri', 'sans-serif'],
+          },
+          colors: {
+            brandCyan: '#00F2FE',
+            brandPink: '#FF0050',
+            brandGold: '#FFD700',
+            darkBg: '#050505',
+            darkCard: '#121212',
+            darkElevated: '#1E1E1E'
+          }
         }
-    </script>
-    <style>
-        body { background-color: #000; color: #fff; font-family: system-ui, -apple-system, sans-serif; overflow-x: hidden; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .animate-spin-slow { animation: spin-slow 4s linear infinite; }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #050505;
+      color: #ffffff;
+      font-family: 'Inter', 'Hind Siliguri', sans-serif;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+
+    body.theme-gold { --accent-primary: #FFD700; --accent-secondary: #F59E0B; }
+    body.theme-neon { --accent-primary: #00F2FE; --accent-secondary: #3B82F6; }
+    body.theme-dark { --accent-primary: #FF0050; --accent-secondary: #00F2FE; }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .snap-feed {
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    .snap-card {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    @keyframes spinVinyl {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .animate-vinyl { animation: spinVinyl 5s linear infinite; }
+    .paused-vinyl { animation-play-state: paused; }
+
+    @keyframes marqueeText {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; width: 170px; }
+    .ticker-move { display: inline-block; white-space: nowrap; animation: marqueeText 8s linear infinite; }
+
+    @keyframes heartPop {
+      0% { transform: translate(-50%, -50%) scale(0.2) rotate(-15deg); opacity: 0; }
+      30% { transform: translate(-50%, -50%) scale(1.25) rotate(10deg); opacity: 1; }
+      70% { transform: translate(-50%, -50%) scale(1.0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(-50%, -110%) scale(1.5); opacity: 0; }
+    }
+    .double-tap-heart {
+      position: absolute;
+      pointer-events: none;
+      z-index: 40;
+      animation: heartPop 0.85s ease-out forwards;
+      filter: drop-shadow(0 4px 16px rgba(255, 0, 80, 0.8));
+    }
+
+    @keyframes giftBurst {
+      0% { transform: scale(0.3) translateY(40px); opacity: 0; }
+      40% { transform: scale(1.3) translateY(-10px); opacity: 1; }
+      80% { transform: scale(1.1) translateY(-20px); opacity: 1; }
+      100% { transform: scale(1.5) translateY(-60px); opacity: 0; }
+    }
+    .gift-burst-anim { animation: giftBurst 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+    .filter-normal { filter: none; }
+    .filter-cinematic { filter: contrast(1.18) saturate(1.25) brightness(0.96); }
+    .filter-vintage { filter: sepia(0.42) contrast(1.08) brightness(1.02); }
+    .filter-cyberpunk { filter: hue-rotate(310deg) saturate(1.75) contrast(1.2); }
+    .filter-bw { filter: grayscale(1) contrast(1.25); }
+    .filter-warm { filter: sepia(0.22) saturate(1.4) brightness(1.05); }
+    .ai-4k-enhanced { filter: contrast(1.14) saturate(1.22) brightness(1.04); }
+
+    .pro-plus-btn {
+      position: relative;
+      width: 44px;
+      height: 28px;
+      background: #ffffff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000000;
+      font-weight: 800;
+      z-index: 2;
+      transition: transform 0.15s ease;
+    }
+    .pro-plus-btn::before {
+      content: '';
+      position: absolute;
+      left: -3.5px;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #00F2FE;
+      border-radius: 8px;
+      z-index: -1;
+    }
+    .pro-plus-btn::after {
+      content: '';
+      position: absolute;
+      right: -3.5px;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: #FF0050;
+      border-radius: 8px;
+      z-index: -1;
+    }
+    .pro-plus-btn:active { transform: scale(0.92); }
+
+    input[type="range"].video-scrubber {
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255, 255, 255, 0.25);
+      height: 3px;
+      border-radius: 999px;
+      outline: none;
+      transition: height 0.15s ease;
+    }
+    input[type="range"].video-scrubber:hover { height: 6px; }
+    input[type="range"].video-scrubber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #FFD700;
+      cursor: pointer;
+    }
+
+    .video-gradient-bottom { background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.45) 48%, rgba(0, 0, 0, 0) 100%); }
+    .video-gradient-top { background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%); }
+  </style>
 </head>
-<body class="flex flex-col min-h-screen justify-center items-center p-2 md:p-4">
+<body class="theme-dark bg-[#050505] text-white h-screen w-screen flex justify-center items-center select-none">
 
-    <!-- Main Container -->
-    <main class="flex justify-center items-center w-full">
-
-        <!-- MOBILE APP VIEW (Authentic Clean TikTok Pro) -->
-        <div id="mobileAppView" class="w-full max-w-[410px] h-[820px] bg-black rounded-[40px] border-[8px] border-zinc-800 shadow-2xl relative overflow-hidden flex flex-col">
-            
-            <!-- Top Header (Clean TikTok style) -->
-            <div class="absolute top-0 left-0 right-0 z-30 pt-3 px-4 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pb-4">
-                <button onclick="openLive()" class="text-white text-lg"><i class="fa-solid fa-tv text-tiktokRed animate-pulse"></i></button>
-                <div class="flex space-x-4 text-sm font-semibold">
-                    <button onclick="switchAppTab('following')" id="tabFollowing" class="text-gray-400 hover:text-white transition">Following</button>
-                    <button onclick="switchAppTab('foryou')" id="tabForYou" class="text-white border-b-2 border-white pb-0.5">For You</button>
-                </div>
-                <button onclick="openSearch()" class="text-white text-lg"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
-
-            <!-- Video Feed Stream -->
-            <div id="videoContainer" class="flex-1 relative overflow-y-scroll hide-scrollbar snap-y snap-mandatory">
-                
-                <!-- Video Item 1 -->
-                <div class="w-full h-full snap-start relative flex items-center justify-center bg-zinc-900">
-                    <video class="w-full h-full object-cover" autoplay loop muted playsinline src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-lights-41551-large.mp4"></video>
-                    
-                    <!-- Right Action Sidebar -->
-                    <div class="absolute right-3 bottom-20 flex flex-col items-center space-y-4 z-20">
-                        <div class="relative cursor-pointer" onclick="switchTab('profile')">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-12 h-12 rounded-full border-2 border-white">
-                            <span class="absolute -bottom-2 left-3 bg-tiktokRed text-white text-[10px] px-1 rounded-full">+</span>
-                        </div>
-                        <button onclick="toggleLike()" class="flex flex-col items-center text-white space-y-1">
-                            <i id="likeIcon" class="fa-solid fa-heart text-3xl drop-shadow hover:text-tiktokRed transition"></i>
-                            <span id="likeCount" class="text-xs font-semibold">125K</span>
-                        </button>
-                        <button onclick="openComments()" class="flex flex-col items-center text-white space-y-1">
-                            <i class="fa-solid fa-comment-dots text-3xl drop-shadow"></i>
-                            <span class="text-xs font-semibold">3,420</span>
-                        </button>
-                        <button onclick="toggleBookmark()" class="flex flex-col items-center text-white space-y-1">
-                            <i id="bookmarkIcon" class="fa-solid fa-bookmark text-3xl drop-shadow"></i>
-                            <span class="text-xs font-semibold">14.2K</span>
-                        </button>
-                        <button onclick="openShareMenu()" class="flex flex-col items-center text-white space-y-1">
-                            <i class="fa-solid fa-share text-3xl drop-shadow"></i>
-                            <span class="text-xs font-semibold">45.8K</span>
-                        </button>
-                        <!-- Rotating Music Disc -->
-                        <div class="w-10 h-10 rounded-full bg-zinc-800 border-4 border-zinc-900 flex items-center justify-center animate-spin-slow mt-2">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50" class="w-5 h-5 rounded-full object-cover">
-                        </div>
-                    </div>
-
-                    <!-- Bottom Left Info -->
-                    <div class="absolute left-3 bottom-20 z-20 pr-16 text-white">
-                        <div class="flex items-center space-x-2 mb-1">
-                            <h3 class="font-bold text-base">@atik_pro</h3>
-                            <span class="bg-amber-400 text-black text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1"><i class="fa-solid fa-crown text-[8px]"></i> GOLD PRO</span>
-                        </div>
-                        <p class="text-xs text-gray-200 line-clamp-2">TikTok Pro Version Ultra Smooth & Clean Experience! #fyp #trending</p>
-                        <div class="flex items-center space-x-2 mt-2 text-xs text-gray-300">
-                            <i class="fa-solid fa-music"></i>
-                            <span class="truncate">Original Sound - Atik Rahman Official</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Profile Screen View (Hidden inside Mobile App) -->
-            <div id="profileScreen" class="absolute inset-0 bg-black z-40 hidden flex flex-col pt-10 px-4">
-                <div class="flex justify-between items-center pb-4 border-b border-zinc-800">
-                    <button onclick="closeProfileScreen()" class="text-xl text-white"><i class="fa-solid fa-arrow-left"></i></button>
-                    <span class="font-bold text-base">@atik_pro</span>
-                    <button onclick="openSettingsModal()" class="text-xl text-white"><i class="fa-solid fa-bars"></i></button>
-                </div>
-                <div class="flex flex-col items-center my-6">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150" class="w-20 h-20 rounded-full border-2 border-tiktokRed mb-2">
-                    <h3 class="font-bold text-lg">Atik Rahman</h3>
-                    <p class="text-xs text-gray-400 mb-4">Pro Creator & Developer</p>
-                    <div class="flex space-x-6 text-center text-sm mb-4">
-                        <div><span class="font-bold block">120</span><span class="text-xs text-gray-400">Following</span></div>
-                        <div><span class="font-bold block">45.2K</span><span class="text-xs text-gray-400">Followers</span></div>
-                        <div><span class="font-bold block">1.2M</span><span class="text-xs text-gray-400">Likes</span></div>
-                    </div>
-                    <div class="flex space-x-2 w-full">
-                        <button onclick="openLoginModal()" class="flex-1 bg-tiktokRed text-white py-2 rounded-lg font-semibold text-xs">Login / Register</button>
-                        <button onclick="openWallet()" class="flex-1 bg-zinc-800 text-amber-400 py-2 rounded-lg font-semibold text-xs"><i class="fa-solid fa-wallet mr-1"></i> Wallet</button>
-                    </div>
-                </div>
-                <div class="flex border-b border-zinc-800 text-center text-xs font-semibold text-gray-400">
-                    <div class="flex-1 pb-2 border-b-2 border-white text-white"><i class="fa-solid fa-table-cells"></i> Videos</div>
-                    <div class="flex-1 pb-2"><i class="fa-solid fa-heart"></i> Liked</div>
-                </div>
-                <div class="flex-1 overflow-y-auto grid grid-cols-3 gap-1 py-2">
-                    <div class="bg-zinc-800 aspect-[9/16] rounded flex items-center justify-center text-xs text-gray-500">Video 1</div>
-                    <div class="bg-zinc-800 aspect-[9/16] rounded flex items-center justify-center text-xs text-gray-500">Video 2</div>
-                    <div class="bg-zinc-800 aspect-[9/16] rounded flex items-center justify-center text-xs text-gray-500">Video 3</div>
-                </div>
-            </div>
-
-            <!-- Bottom Navigation Bar -->
-            <div class="h-14 bg-black border-t border-zinc-900 flex justify-around items-center z-30 px-2">
-                <button onclick="switchTab('home')" id="navHome" class="text-white flex flex-col items-center"><i class="fa-solid fa-house text-lg"></i><span class="text-[10px]">Home</span></button>
-                <button onclick="switchTab('friends')" id="navFriends" class="text-gray-400 hover:text-white flex flex-col items-center"><i class="fa-solid fa-user-group text-lg"></i><span class="text-[10px]">Friends</span></button>
-                <button onclick="openCamera()" class="w-10 h-7 bg-gradient-to-r from-tiktokCyan to-tiktokRed rounded-lg flex items-center justify-center text-black font-bold text-xl">+</button>
-                <button onclick="switchTab('inbox')" id="navInbox" class="text-gray-400 hover:text-white flex flex-col items-center"><i class="fa-solid fa-message text-lg"></i><span class="text-[10px]">Inbox</span></button>
-                <button onclick="switchTab('profile')" id="navProfile" class="text-gray-400 hover:text-white flex flex-col items-center"><i class="fa-solid fa-user text-lg"></i><span class="text-[10px]">Profile</span></button>
-            </div>
-
+  <!-- Desktop Left Sidebar -->
+  <aside id="desktop-sidebar" class="hidden lg:flex flex-col justify-between w-64 h-[94vh] mr-5 bg-[#121212] border border-white/10 rounded-3xl p-4 shadow-2xl">
+    <div>
+      <div class="flex items-center gap-3 mb-5 px-2">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brandCyan via-black to-brandPink p-[2px]">
+          <div class="w-full h-full bg-black rounded-[10px] flex items-center justify-center">
+            <i class="fa-solid fa-play text-lg text-brandGold ml-0.5"></i>
+          </div>
         </div>
-
-        <!-- WEB ADMIN PANEL VIEW (Secretly triggered by Admin Login) -->
-        <div id="adminPanelView" class="hidden w-full max-w-5xl bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl p-6 overflow-y-auto max-h-[820px] ml-4">
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-zinc-800">
-                <div>
-                    <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-shield-halved text-tiktokRed"></i> TikTok Pro Web Admin Dashboard</h2>
-                    <p class="text-xs text-gray-400 mt-1">Project ID: <span class="text-tiktokCyan">tiktok-pro-46434</span>[span_0](start_span)[span_0](end_span)| Admin: <span class="text-amber-400">info.atik83@gmail.com</span>[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)</p>
-                </div>
-                <div class="space-x-2">
-                    <button onclick="triggerPushNotification()" class="bg-tiktokRed hover:bg-red-700 text-white px-3 py-2 rounded-lg text-xs font-semibold transition">
-                        <i class="fa-solid fa-bell mr-1"></i> Push Notification
-                    </button>
-                    <button onclick="logoutAdmin()" class="bg-zinc-700 hover:bg-zinc-600 text-white px-3 py-2 rounded-lg text-xs font-semibold transition">
-                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Exit Admin
-                    </button>
-                </div>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-zinc-800 p-4 rounded-xl border border-zinc-700">
-                    <p class="text-xs text-gray-400">Total Users</p>
-                    <h3 class="text-2xl font-bold text-white mt-1">33,526</h3>
-                    <span class="text-xs text-green-400"><i class="fa-solid fa-arrow-trend-up"></i> +12.4% this week</span>
-                </div>
-                <div class="bg-zinc-800 p-4 rounded-xl border border-zinc-700">
-                    <p class="text-xs text-gray-400">Active Pro Subscribers</p>
-                    <h3 class="text-2xl font-bold text-amber-400 mt-1">75%</h3>
-                    <span class="text-xs text-amber-400">Golden Pro Plan Active</span>
-                </div>
-                <div class="bg-zinc-800 p-4 rounded-xl border border-zinc-700">
-                    <p class="text-xs text-gray-400">Pending Withdrawals</p>
-                    <h3 class="text-2xl font-bold text-tiktokCyan mt-1">$2,386.00</h3>
-                    <span class="text-xs text-gray-400">bKash / Nagad Queue</span>
-                </div>
-                <div class="bg-zinc-800 p-4 rounded-xl border border-zinc-700">
-                    <p class="text-xs text-gray-400">Server Status</p>
-                    <h3 class="text-2xl font-bold text-green-400 mt-1">Online</h3>
-                    <span class="text-xs text-gray-400">Firebase Realtime Sync</span>
-                </div>
-            </div>
-
-            <!-- User Control & Badge Management Table -->
-            <div class="bg-zinc-800 rounded-xl border border-zinc-700 overflow-hidden mb-6">
-                <div class="p-4 bg-zinc-700/50 font-semibold text-sm flex justify-between items-center">
-                    <span>User & Pro Badge Control</span>
-                    <input type="text" placeholder="Search user..." class="bg-zinc-900 border border-zinc-600 rounded px-3 py-1 text-xs text-white">
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-zinc-900/50 text-gray-400 text-xs uppercase">
-                            <tr>
-                                <th class="p-3">User Name</th>
-                                <th class="p-3">Email / Phone</th>
-                                <th class="p-3">Badge Status</th>
-                                <th class="p-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-zinc-700">
-                            <tr>
-                                <td class="p-3 font-medium">Atik Rahman</td>
-                                <td class="p-3 text-gray-400">info.atik83@gmail.com[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)</td>
-                                <td class="p-3"><span class="bg-amber-400/20 text-amber-400 px-2 py-0.5 rounded text-xs">Golden Pro</span></td>
-                                <td class="p-3 space-x-2">
-                                    <button onclick="alert('Badge Updated!')" class="bg-tiktokCyan text-black px-2.5 py-1 rounded text-xs font-bold">Edit</button>
-                                    <button onclick="alert('User Verified!')" class="bg-green-600 text-white px-2.5 py-1 rounded text-xs font-bold">Verify</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-medium">Sakib Khan</td>
-                                <td class="p-3 text-gray-400">+8801700000000</td>
-                                <td class="p-3"><span class="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded text-xs">Blue Verified</span></td>
-                                <td class="p-3 space-x-2">
-                                    <button onclick="alert('Badge Updated!')" class="bg-tiktokCyan text-black px-2.5 py-1 rounded text-xs font-bold">Edit</button>
-                                    <button onclick="alert('User Banned!')" class="bg-red-600 text-white px-2.5 py-1 rounded text-xs font-bold">Ban</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Video Moderation & Withdrawal Payout Controls -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-zinc-800 p-4 rounded-xl border border-zinc-700">
-                    <h3 class="font-semibold text-sm mb-3 text-tiktokCyan"><i class="fa-solid fa-video mr-1"></i> Video Moderation & Force Viral Boost</h3>
-                    <p class="text-xs text-gray-400 mb-3">Approve pending uploads or push videos directly to the For You feed.</p>
-                    <button onclick="alert('Video pushed to For You viral queue successfully!')" class="bg-tiktokRed text-white px-3 py-1.5 rounded text-xs font-bold">Force Viral Boost</button>
-                </div>
-                <div class="bg-zinc-800 p-4 rounded-xl border border-zinc-700">
-                    <h3 class="font-semibold text-sm mb-3 text-amber-400"><i class="fa-solid fa-wallet mr-1"></i> Withdrawal Payout Queue (bKash/Nagad)</h3>
-                    <p class="text-xs text-gray-400 mb-3">Manage user coin conversions and approve mobile wallet payouts.</p>
-                    <button onclick="alert('Withdrawal request approved and sent to payment gateway!')" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs font-bold">Approve Payouts</button>
-                </div>
-            </div>
+        <div>
+          <h1 class="text-lg font-extrabold tracking-tight flex items-center gap-1.5">
+            Talk Talk <span class="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-black uppercase">PRO</span>
+          </h1>
+          <p class="text-[11px] text-gray-400">All-in-One Creator Suite</p>
         </div>
+      </div>
 
-    </main>
-
-    <!-- LOGIN / REGISTER MODAL -->
-    <div id="loginModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
-        <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md p-6 rounded-2xl relative shadow-2xl">
-            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <div class="text-center mb-6">
-                <i class="fa-brands fa-tiktok text-tiktokCyan text-4xl mb-2"></i>
-                <h3 class="text-xl font-bold text-white">Log in to TikTok Pro</h3>
-                <p class="text-xs text-gray-400 mt-1">Enter your Email/Phone or Admin Credentials</p>
-            </div>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">Email or Phone Number</label>
-                    <input type="text" id="loginEmail" placeholder="info.atik83@gmail.com or phone" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-tiktokCyan">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Atik@83898063#b" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-tiktokCyan">
-                </div>
-                <button onclick="handleLogin()" class="w-full bg-tiktokRed hover:bg-red-700 text-white py-2.5 rounded-lg font-semibold text-sm transition">Continue</button>
-            </div>
-        </div>
+      <nav class="space-y-1">
+        <button onclick="switchTab('home')" id="desk-nav-home" class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl bg-white/10 text-brandPink font-semibold text-sm transition">
+          <i class="fa-solid fa-house text-base w-5"></i>
+          <span>For You (হোম ফিড)</span>
+        </button>
+        <button onclick="switchTab('discover')" id="desk-nav-discover" class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-white/5 text-gray-300 font-medium text-sm transition">
+          <i class="fa-solid fa-compass text-base w-5"></i>
+          <span>Discover & Sounds</span>
+        </button>
+        <button onclick="openLiveModal()" class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-white/5 text-gray-300 font-medium text-sm transition">
+          <i class="fa-solid fa-tower-broadcast text-base w-5 text-red-500"></i>
+          <span>LIVE PK Battle</span>
+        </button>
+        <button onclick="openCreatorStudioModal()" class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-white/5 text-gray-300 font-medium text-sm transition">
+          <i class="fa-solid fa-wand-magic-sparkles text-base w-5 text-brandCyan"></i>
+          <span>AI Camera & Editor (+)</span>
+        </button>
+        <button onclick="switchTab('inbox')" id="desk-nav-inbox" class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-white/5 text-gray-300 font-medium text-sm transition">
+          <i class="fa-solid fa-message text-base w-5"></i>
+          <span>Inbox & Anti-Delete DM</span>
+        </button>
+        <button onclick="switchTab('profile')" id="desk-nav-profile" class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl hover:bg-white/5 text-gray-300 font-medium text-sm transition">
+          <i class="fa-solid fa-user-shield text-base w-5"></i>
+          <span>Profile, Wallet & Settings</span>
+        </button>
+        
+        <!-- Admin Panel Button (Hidden by default for Public) -->
+        <button id="desk-admin-btn" onclick="toggleAdminDashboard(true)" class="hidden w-full items-center gap-3.5 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500/20 to-brandPink/20 border border-brandGold/30 text-brandGold font-bold text-sm transition mt-2">
+          <i class="fa-solid fa-gauge-high text-base w-5"></i>
+          <span>Web Admin Panel</span>
+        </button>
+      </nav>
     </div>
 
-    <!-- JavaScript Logic -->
-    <script>
-      function openLoginModal() {
-            document.getElementById('loginModal').classList.remove('hidden');
-        }
+    <div class="space-y-2.5">
+      <div class="bg-gradient-to-r from-amber-500/15 to-yellow-500/5 border border-amber-400/25 rounded-2xl p-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-coins text-brandGold text-base"></i>
+          <div>
+            <p class="text-[10px] text-gray-400">Main Balance</p>
+            <p id="desk-coin-balance" class="text-xs font-extrabold text-brandGold">1,200 Coins</p>
+          </div>
+        </div>
+        <button onclick="openWalletModal()" class="px-2.5 py-1 rounded-lg bg-brandGold text-black text-[10px] font-extrabold hover:opacity-90">
+          Wallet
+        </button>
+      </div>
 
-        function closeLoginModal() {
-            document.getElementById('loginModal').classList.add('hidden');
-        }
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-3">
+        <div class="flex items-center gap-2.5 mb-2.5">
+          <img id="desk-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=CreatorPro" alt="User" class="w-9 h-9 rounded-full bg-gray-800 object-cover border border-brandGold" />
+          <div class="overflow-hidden">
+            <p id="desk-username" class="text-xs font-bold truncate flex items-center gap-1">
+              @CreatorName <i class="fa-solid fa-circle-check text-brandGold text-[10px]"></i>
+            </p>
+            <p id="desk-email" class="text-[10px] text-gray-400 truncate">Golden Pro Active</p>
+          </div>
+        </div>
+        <button id="desk-auth-btn" onclick="openOnboardingModal()" class="w-full py-1.5 rounded-xl bg-brandPink hover:bg-rose-600 text-white font-semibold text-xs transition">
+          Onboarding / Login
+        </button>
+      </div>
+    </div>
+  </aside>
 
-        function handleLogin() {
-            let email = document.getElementById('loginEmail').value.trim();
-            let pass = document.getElementById('loginPassword').value.trim();
+  <!-- ==================== MAIN MOBILE APP CONTAINER ==================== -->
+  <main id="mobile-app-shell" class="relative w-full h-full sm:w-[420px] sm:h-[94vh] sm:rounded-[34px] sm:border sm:border-white/15 bg-black overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.95)] flex flex-col">
 
-            if (email === "info.atik83@gmail.com" && pass === "Atik@83898063#b") {
-                closeLoginModal();
-                document.getElementById('adminPanelView').classList.remove('hidden');
-                alert("Welcome back, Atik! Admin Dashboard unlocked.");
-            } else if(email !== "" && pass !== "") {
-                closeLoginModal();
-                alert("Login successful! Welcome to TikTok Pro.");
-            } else {
-                alert("Please enter valid credentials!");
-            }
-        }
+    <!-- VIEW 1: HOME PRO VIDEO FEED -->
+    <section id="view-home" class="relative w-full h-full flex-1 overflow-hidden">
+      <header class="absolute top-0 left-0 right-0 z-30 pt-3.5 pb-6 px-3 flex flex-col gap-2 video-gradient-top pointer-events-none">
+        <div class="flex items-center justify-between">
+          <button onclick="openLiveModal()" class="pointer-events-auto flex items-center gap-1 bg-red-600/90 px-2 py-0.5 rounded-md shadow-lg">
+            <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+            <span class="text-[10px] font-black tracking-wider text-white">LIVE</span>
+          </button>
 
-        function logoutAdmin() {
-            document.getElementById('adminPanelView').classList.add('hidden');
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-            alert("Exited Admin Dashboard.");
-        }
+          <div class="pointer-events-auto flex items-center gap-3 text-[14px] font-bold">
+            <button onclick="setFeedFilter('following')" id="tab-following" class="text-white/60 hover:text-white transition relative pb-1">Following</button>
+            <span class="text-white/20">|</span>
+            <button onclick="setFeedFilter('foryou')" id="tab-foryou" class="text-white transition relative pb-1">
+              For You
+              <span id="tab-indicator" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-[2.5px] bg-white rounded-full transition-all"></span>
+            </button>
+          </div>
 
-        function toggleLike() {
-            let icon = document.getElementById('likeIcon');
-            icon.classList.toggle('text-tiktokRed');
-            alert("Video Liked!");
-        }
+          <div class="pointer-events-auto flex items-center gap-1.5">
+            <button onclick="toggleGlobalMute()" title="Mute/Unmute" class="w-7 h-7 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center text-white">
+              <i id="global-mute-icon" class="fa-solid fa-volume-xmark text-[11px]"></i>
+            </button>
+            <button onclick="switchTab('discover')" title="Search" class="w-7 h-7 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center text-white">
+              <i class="fa-solid fa-magnifying-glass text-[11px]"></i>
+            </button>
+          </div>
+        </div>
 
-        function toggleBookmark() {
-            let icon = document.getElementById('bookmarkIcon');
-            icon.classList.toggle('text-amber-400');
-            alert("Video saved to bookmarks!");
-        }
+        <div class="pointer-events-auto flex items-center justify-between gap-1.5 px-0.5">
+          <button onclick="toggleAutoSubtitles()" id="pill-ai-cc" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-brandGold/50 text-[10px] font-bold text-brandGold">
+            <span>AI Auto Subtitle</span>
+            <span id="dot-ai-cc" class="w-2 h-2 rounded-full bg-brandGold"></span>
+          </button>
 
-        function openComments() {
-            alert("Opening VIP Highlighted Comments Drawer...");
-        }
+          <button onclick="toggleDataSaver()" id="pill-data-saver" class="flex items-center gap-1 px-2 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-semibold text-gray-300">
+            <i class="fa-solid fa-signal text-[9px] text-emerald-400"></i>
+            <span id="label-data-saver">Data Saver: Off</span>
+          </button>
 
-        function openShareMenu() {
-            alert("Share Options: \n1. No-Watermark 4K Download \n2. Extract MP3 \n3. Auto-Scroll \n4. AI Auto Subtitles");
-        }
+          <button onclick="toggleAutoScroll()" id="pill-auto-scroll" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-bold text-gray-300">
+            <span>Auto-Scroll</span>
+            <span id="dot-auto-scroll" class="w-2 h-2 rounded-full bg-gray-500"></span>
+          </button>
+        </div>
+      </header>
 
-        function openLive() {
-            alert("Opening LIVE Broadcasting stream & Gift shop...");
-        }
+      <div id="gift-burst-overlay" class="pointer-events-none hidden absolute inset-0 z-40 flex flex-col items-center justify-center">
+        <div id="gift-burst-emoji" class="text-7xl drop-shadow-2xl">👑</div>
+        <div id="gift-burst-label" class="mt-2 px-4 py-1 rounded-full bg-black/80 border border-brandGold/50 text-brandGold text-xs font-extrabold"></div>
+      </div>
 
-        function openSearch() {
-            alert("Opening Discover & Search page with Trending Hashtags...");
-        }
+      <div id="video-feed-container" class="snap-feed no-scrollbar w-full h-full pb-16"></div>
+    </section>
 
-        function openCamera() {
-            alert("Opening AI Camera & 15-Min 4K Video Editor / Upload Gallery...");
-        }
+    <!-- VIEW 2: DISCOVER -->
+    <section id="view-discover" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-20 px-4 pt-4">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input id="discover-search" oninput="renderDiscoverGrid()" type="text" placeholder="ভিডিও, হ্যাশট্যাগ বা সাউন্ড খুঁজুন..." class="w-full bg-[#1a1a1a] border border-white/10 rounded-xl py-2.5 pl-9 pr-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brandCyan" />
+        </div>
+        <button onclick="openCreatorStudioModal()" class="p-2.5 rounded-xl bg-white/10 text-white text-xs" title="Scan / Camera">
+          <i class="fa-solid fa-expand"></i>
+        </button>
+      </div>
 
-        function switchTab(tab) {
-            document.getElementById('navHome').className = "text-gray-400 hover:text-white flex flex-col items-center";
-            document.getElementById('navFriends').className = "text-gray-400 hover:text-white flex flex-col items-center";
-            document.getElementById('navInbox').className = "text-gray-400 hover:text-white flex flex-col items-center";
-            document.getElementById('navProfile').className = "text-gray-400 hover:text-white flex flex-col items-center";
+      <div class="bg-gradient-to-r from-brandPink/25 via-purple-600/20 to-brandCyan/25 border border-white/10 rounded-2xl p-3.5 mb-4 flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-brandPink text-white">Trending Hashtags</span>
+          <h3 class="text-sm font-extrabold mt-1">#TalkTalkProChallenge</h3>
+          <p class="text-[11px] text-gray-300">345.8M Views • অংশগ্রহণ করে জিতুন Golden Pro!</p>
+        </div>
+        <button onclick="filterByTag('#vibes')" class="px-3 py-1.5 rounded-xl bg-white text-black text-xs font-extrabold">Explore</button>
+      </div>
 
-            if(tab === 'home') {
-                document.getElementById('navHome').className = "text-white flex flex-col items-center";
-                document.getElementById('profileScreen').classList.add('hidden');
-            } else if(tab === 'friends') {
-                document.getElementById('navFriends').className = "text-white flex flex-col items-center";
-                document.getElementById('profileScreen').classList.add('hidden');
-                alert("Opening Friends Feed...");
-            } else if(tab === 'inbox') {
-                document.getElementById('navInbox').className = "text-white flex flex-col items-center";
-                document.getElementById('profileScreen').classList.add('hidden');
-                alert("Opening Inbox & Direct Messages...");
-            } else if(tab === 'profile') {
-                document.getElementById('navProfile').className = "text-white flex flex-col items-center";
-                document.getElementById('profileScreen').classList.remove('hidden');
-            }
-        }
+      <div class="mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <h4 class="text-xs font-extrabold text-gray-200 flex items-center gap-1.5"><i class="fa-solid fa-volume-high text-brandCyan"></i> Popular Sounds</h4>
+          <span class="text-[10px] text-brandCyan font-semibold">Tap to use</span>
+        </div>
+        <div id="sound-library-list" class="flex gap-2.5 overflow-x-auto no-scrollbar pb-1"></div>
+      </div>
 
-        function closeProfileScreen() {
-            document.getElementById('profileScreen').classList.add('hidden');
-            switchTab('home');
-        }
+      <div class="flex gap-2 overflow-x-auto no-scrollbar mb-3">
+        <button onclick="filterByTag('all')" class="px-3 py-1 rounded-full bg-brandPink text-white text-[11px] font-bold whitespace-nowrap">🔥 Viral</button>
+        <button onclick="filterByTag('#nature')" class="px-3 py-1 rounded-full bg-white/10 text-gray-200 text-[11px] font-medium whitespace-nowrap">#nature</button>
+        <button onclick="filterByTag('#travel')" class="px-3 py-1 rounded-full bg-white/10 text-gray-200 text-[11px] font-medium whitespace-nowrap">#travel</button>
+        <button onclick="filterByTag('#tech')" class="px-3 py-1 rounded-full bg-white/10 text-gray-200 text-[11px] font-medium whitespace-nowrap">#tech</button>
+        <button onclick="filterByTag('#bangladesh')" class="px-3 py-1 rounded-full bg-white/10 text-gray-200 text-[11px] font-medium whitespace-nowrap">#bangladesh</button>
+      </div>
 
-        function openSettingsModal() {
-            let action = confirm("Open Settings and Privacy (v47.7.3)?");
-            if(action) {
-                alert("Opening Settings & Privacy (Account, Security, Display, Content Preferences)...");
-            }
-        }
+      <div id="discover-grid" class="grid grid-cols-2 gap-2.5"></div>
+    </section>
 
-        function openWallet() {
-            alert("Opening Creator Wallet (bKash / Nagad balance: 1,200 Coins)...");
-        }
+    <!-- VIEW 3: INBOX -->
+    <section id="view-inbox" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-20 px-4 pt-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-extrabold">Inbox</h2>
+        <span class="text-[10px] px-2.5 py-1 rounded-full bg-amber-500/15 border border-brandGold/30 text-brandGold font-bold">
+          <i class="fa-solid fa-shield-cat mr-1"></i>Anti-Delete Active
+        </span>
+      </div>
 
-        function switchAppTab(tab) {
-            if(tab === 'following') {
-                document.getElementById('tabFollowing').className = "text-white border-b-2 border-white pb-0.5";
-                document.getElementById('tabForYou').className = "text-gray-400 hover:text-white transition";
-            } else {
-                document.getElementById('tabForYou').className = "text-white border-b-2 border-white pb-0.5";
-                document.getElementById('tabFollowing').className = "text-gray-400 hover:text-white transition";
-            }
-        }
+      <div class="grid grid-cols-3 gap-2 mb-4 text-center">
+        <div class="bg-[#161616] border border-white/10 rounded-2xl p-2.5">
+          <div class="w-8 h-8 rounded-full bg-brandCyan/20 text-brandCyan mx-auto flex items-center justify-center mb-1"><i class="fa-solid fa-user-plus text-xs"></i></div>
+          <p class="text-[11px] font-bold">New Followers</p>
+          <p class="text-[10px] text-gray-400">+24 today</p>
+        </div>
+        <div class="bg-[#161616] border border-white/10 rounded-2xl p-2.5">
+          <div class="w-8 h-8 rounded-full bg-brandPink/20 text-brandPink mx-auto flex items-center justify-center mb-1"><i class="fa-solid fa-heart text-xs"></i></div>
+          <p class="text-[11px] font-bold">Likes</p>
+          <p class="text-[10px] text-gray-400">+189 new</p>
+        </div>
+        <div class="bg-[#161616] border border-white/10 rounded-2xl p-2.5">
+          <div class="w-8 h-8 rounded-full bg-brandGold/20 text-brandGold mx-auto flex items-center justify-center mb-1"><i class="fa-solid fa-comment-dots text-xs"></i></div>
+          <p class="text-[11px] font-bold">Comments</p>
+          <p class="text-[10px] text-gray-400">+42 replies</p>
+        </div>
+      </div>
 
-        function triggerPushNotification() {
-            alert("Mass Push Notification broadcasted successfully to all 33,526 active users!");
-        }
-    </script>
+      <div class="bg-[#141414] border border-white/10 rounded-2xl overflow-hidden flex flex-col h-[56vh]">
+        <div class="p-3 bg-[#1b1b1b] border-b border-white/10 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NatureBangla" class="w-8 h-8 rounded-full bg-gray-800" />
+            <div>
+              <p class="text-xs font-bold flex items-center gap-1">@nature_bangla <i class="fa-solid fa-circle-check text-brandCyan text-[10px]"></i></p>
+              <p class="text-[10px] text-emerald-400">● Online • Anti-Delete Protected</p>
+            </div>
+          </div>
+          <button onclick="simulateDeletedMessage()" class="text-[10px] px-2 py-1 rounded bg-white/10 text-gray-300 hover:text-white">Test Anti-Delete</button>
+        </div>
+
+        <div id="dm-messages-list" class="flex-1 overflow-y-auto no-scrollbar p-3 space-y-2.5 text-xs">
+          <div class="bg-white/10 rounded-2xl rounded-tl-none p-2.5 max-w-[82%]">হ্যালো! নতুন ৪কে ভিডিও কোলাবোরেশন কবে শুরু করছি? 👋</div>
+          <div class="bg-amber-500/10 border border-brandGold/30 rounded-2xl rounded-tl-none p-2.5 max-w-[85%]">
+            <p class="text-[9px] font-bold text-brandGold mb-0.5"><i class="fa-solid fa-eye-slash mr-1"></i>Anti-Delete Recovered Message:</p>
+            <p class="text-gray-200 italic">"আমাদের স্পনসর ডিলের বাজেট ৫০০ ডলার ফাইনাল হয়েছে!"</p>
+          </div>
+        </div>
+
+        <form onsubmit="sendDirectMessage(event)" class="p-2.5 bg-[#101010] border-t border-white/10 flex gap-2">
+          <input id="dm-input" type="text" required placeholder="Type a message..." class="flex-1 bg-[#222] rounded-full px-3.5 py-2 text-xs text-white focus:outline-none" />
+          <button type="submit" class="w-8 h-8 rounded-full bg-brandPink text-white flex items-center justify-center"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+        </form>
+      </div>
+    </section>
+
+    <!-- VIEW 4: PROFILE -->
+    <section id="view-profile" class="hidden w-full h-full flex-1 overflow-y-auto no-scrollbar bg-[#0c0c0c] pb-24 pt-5 px-4">
+      <div class="flex items-center justify-between mb-4">
+        <button onclick="openWalletModal()" class="flex items-center gap-1.5 bg-amber-500/15 border border-brandGold/35 px-3 py-1 rounded-full">
+          <i class="fa-solid fa-coins text-brandGold text-xs"></i>
+          <span id="profile-coin-badge" class="text-xs font-extrabold text-brandGold">1,200</span>
+        </button>
+
+        <h3 id="profile-top-title" class="text-sm font-extrabold flex items-center gap-1">
+          @CreatorName <i id="profile-badge-icon" class="fa-solid fa-circle-check text-brandGold text-xs"></i>
+        </h3>
+
+        <div class="flex items-center gap-1.5">
+          <!-- Mobile Admin Button (Hidden by default for Public) -->
+          <button id="mobile-admin-btn" onclick="toggleAdminDashboard(true)" title="Web Admin Panel" class="hidden w-8 h-8 rounded-full bg-amber-500/15 border border-brandGold/30 text-brandGold items-center justify-center text-xs">
+            <i class="fa-solid fa-gauge-high"></i>
+          </button>
+          <button onclick="openSettingsDrawer()" title="Settings & Privacy" class="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center text-xs">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center text-center mb-4">
+        <div class="relative mb-2.5">
+          <div class="w-24 h-24 rounded-full p-[3px] bg-gradient-to-tr from-brandGold via-amber-300 to-brandPink shadow-[0_0_25px_rgba(255,215,0,0.35)]">
+            <img id="profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=CreatorPro" alt="Avatar" class="w-full h-full rounded-full object-cover bg-[#1a1a1a]" />
+          </div>
+          <span class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-brandCyan text-black flex items-center justify-center text-xs font-black border-2 border-black">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+        </div>
+
+        <h3 id="profile-name" class="text-base font-extrabold flex items-center gap-1.5">
+          @CreatorName
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-brandGold text-black font-black">PRO</span>
+        </h3>
+
+        <div class="mt-2.5 w-full max-w-[270px] bg-[#181818] border border-white/10 rounded-full px-3 py-1.5 flex items-center justify-between">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <i class="fa-solid fa-music text-brandCyan text-xs"></i>
+            <span class="text-[11px] font-semibold text-gray-200 truncate">Profile Music • Golden Vibes</span>
+          </div>
+          <button onclick="toggleProfileMusic(this)" class="w-6 h-6 rounded-full bg-white/10 text-white flex items-center justify-center text-[10px]">
+            <i class="fa-solid fa-play"></i>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 w-full max-w-xs mt-4 mb-3 text-center">
+          <div>
+            <p id="stat-following" class="text-base font-extrabold">82</p>
+            <p class="text-[11px] text-gray-400">Following</p>
+          </div>
+          <div class="border-x border-white/10">
+            <p id="stat-followers" class="text-base font-extrabold">55.4K</p>
+            <p class="text-[11px] text-gray-400">Followers</p>
+          </div>
+          <div>
+            <p id="stat-likes" class="text-base font-extrabold">17.3M</p>
+            <p class="text-[11px] text-gray-400">Likes</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full max-w-xs">
+          <button onclick="openEditProfileModal()" class="flex-1 py-2 rounded-xl bg-[#1e1e1e] hover:bg-white/15 border border-white/10 text-xs font-bold transition">Edit Profile</button>
+          <button onclick="openWalletModal()" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-black text-xs font-extrabold transition">
+            <i class="fa-solid fa-wallet mr-1"></i> Wallet & Pro
+          </button>
+        </div>
+
+        <p id="profile-bio" class="text-xs text-gray-300 mt-2.5 max-w-xs">
+          Digital Creator & Filmmaker 🎬 | 4K Ultra HD Videos ✨ | Business: creator@talktalk.pro
+        </p>
+      </div>
+
+      <div class="bg-[#151515] border border-white/10 rounded-2xl p-3 mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-extrabold text-brandCyan flex items-center gap-1.5"><i class="fa-solid fa-eye"></i> Profile Visitor Tracker</span>
+          <span id="ghost-status-pill" class="text-[10px] text-gray-400">Ghost Mode: OFF</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" class="w-7 h-7 rounded-full bg-gray-800" />
+              <div>
+                <p class="text-[11px] font-bold">@sarah_ahmed</p>
+                <p class="text-[9px] text-gray-400">Viewed your profile 12m ago</p>
+              </div>
+            </div>
+            <button onclick="toggleFollow('@sarah_ahmed')" class="px-2.5 py-1 rounded-lg bg-brandPink text-white text-[10px] font-bold">Follow</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex border-b border-white/10 mb-3 text-[11px]">
+        <button onclick="switchProfileTab('uploaded')" id="ptab-uploaded" class="flex-1 py-2 font-bold text-white border-b-2 border-white"><i class="fa-solid fa-grip"></i> Videos</button>
+        <button onclick="switchProfileTab('liked')" id="ptab-liked" class="flex-1 py-2 font-medium text-gray-400"><i class="fa-solid fa-heart"></i> Liked</button>
+        <button onclick="switchProfileTab('saved')" id="ptab-saved" class="flex-1 py-2 font-medium text-gray-400"><i class="fa-solid fa-lock"></i> Private</button>
+        <button onclick="switchProfileTab('analytics')" id="ptab-analytics" class="flex-1 py-2 font-medium text-brandCyan"><i class="fa-solid fa-chart-column"></i> Analytics</button>
+      </div>
+
+      <div id="profile-video-grid" class="grid grid-cols-3 gap-1.5"></div>
+
+      <div id="profile-analytics-panel" class="hidden space-y-3">
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-[#161616] border border-white/10 rounded-2xl p-3">
+            <p class="text-[10px] text-gray-400">Total Video Views</p>
+            <p class="text-base font-extrabold text-white mt-0.5">148.2K <span class="text-[10px] text-emerald-400">+24%</span></p>
+          </div>
+          <div class="bg-[#161616] border border-white/10 rounded-2xl p-3">
+            <p class="text-[10px] text-gray-400">Creator Revenue</p>
+            <p class="text-base font-extrabold text-brandGold mt-0.5">৳24,500</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM NAVIGATION BAR -->
+    <nav class="absolute bottom-0 left-0 right-0 h-16 bg-black/95 backdrop-blur-lg border-t border-white/10 px-2 flex items-center justify-around z-30">
+      <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center justify-center w-14 text-white transition">
+        <i class="fa-solid fa-house text-lg"></i>
+        <span class="text-[10px] font-semibold mt-1">Home</span>
+      </button>
+
+      <button onclick="switchTab('discover')" id="nav-discover" class="flex flex-col items-center justify-center w-14 text-gray-500 hover:text-gray-300 transition">
+        <i class="fa-solid fa-compass text-lg"></i>
+        <span class="text-[10px] font-medium mt-1">Discover</span>
+      </button>
+
+      <button onclick="openCreatorStudioModal()" aria-label="Create Video" class="flex items-center justify-center px-2">
+        <div class="pro-plus-btn">
+          <i class="fa-solid fa-plus text-base"></i>
+        </div>
+      </button>
+
+      <button onclick="switchTab('inbox')" id="nav-inbox" class="relative flex flex-col items-center justify-center w-14 text-gray-500 hover:text-gray-300 transition">
+        <i class="fa-solid fa-message text-lg"></i>
+        <span id="inbox-dot" class="absolute top-1.5 right-3.5 w-2 h-2 rounded-full bg-brandPink"></span>
+        <span class="text-[10px] font-medium mt-1">Inbox</span>
+      </button>
+
+      <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center justify-center w-14 text-gray-500 hover:text-gray-300 transition">
+        <i class="fa-solid fa-user text-lg"></i>
+        <span class="text-[10px] font-medium mt-1">Profile</span>
+      </button>
+    </nav>
+
+    <!-- MODALS -->
+    <!-- Onboarding / Login Modal -->
+    <div id="onboarding-modal" class="hidden absolute inset-0 z-[70] bg-[#0a0a0a] flex flex-col justify-between p-6 overflow-y-auto">
+      <div class="flex justify-end">
+        <button onclick="closeOnboardingModal()" class="text-xs px-3 py-1 rounded-full bg-white/10 text-gray-300">Skip</button>
+      </div>
+
+      <div class="text-center my-auto">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brandCyan via-black to-brandPink p-[2.5px] mx-auto mb-3">
+          <div class="w-full h-full bg-black rounded-[14px] flex items-center justify-center">
+            <i class="fa-solid fa-play text-2xl text-brandGold ml-0.5"></i>
+          </div>
+        </div>
+        <h2 class="text-xl font-black">Talk Talk <span class="text-brandGold">PRO</span></h2>
+        <p class="text-xs text-gray-400 mt-1">আপনার পছন্দের ক্যাটাগরি বেছে নিন এবং লগইন করুন</p>
+
+        <div class="space-y-2.5 mt-5">
+          <button onclick="handleGoogleLogin()" class="w-full py-2.5 px-4 rounded-xl bg-white text-black font-bold text-xs flex items-center justify-center gap-2">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4" />
+            <span>Continue with Google</span>
+          </button>
+          <button onclick="closeOnboardingModal(); openAuthModal()" class="w-full py-2.5 px-4 rounded-xl bg-[#1e1e1e] border border-white/15 text-white font-bold text-xs">
+            <i class="fa-solid fa-envelope mr-1.5 text-brandPink"></i> Login with Phone / Email
+          </button>
+        </div>
+      </div>
+
+      <button onclick="closeOnboardingModal(); showToast('আপনার পছন্দ অনুযায়ী ফিড সাজানো হয়েছে!')" class="w-full py-3 rounded-2xl bg-gradient-to-r from-brandCyan to-brandPink text-black font-extrabold text-sm mt-4">
+        Next → Start Watching
+      </button>
+    </div>
+
+    <!-- Auth Modal (Email & Password Login) -->
+    <div id="auth-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 id="auth-modal-title" class="text-sm font-extrabold">Talk Talk Pro Login</h3>
+          <button onclick="closeAuthModal()" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center"><i class="fa-solid fa-xmark text-xs"></i></button>
+        </div>
+        <p class="text-[11px] text-gray-400 mb-4">(Admin গোপন পাসওয়ার্ড দিলে এডমিন ড্যাশবোর্ড খুলবে)</p>
+        <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+          <input id="auth-email" type="email" required placeholder="Info.atik83@gmail.com" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white" />
+          <input id="auth-password" type="password" required placeholder="Password" class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white" />
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-brandPink text-white font-bold text-xs">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Creator Studio & AI Video Editor -->
+    <div id="creator-studio-modal" class="hidden absolute inset-0 z-50 bg-black flex flex-col">
+      <div id="studio-step-editor" class="flex-1 flex flex-col relative">
+        <div class="p-3.5 flex items-center justify-between z-20 bg-gradient-to-b from-black/80 to-transparent">
+          <button onclick="closeCreatorStudioModal()" class="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+          <button onclick="showToast('সাউন্ড সিলেক্ট করা হয়েছে')" class="px-3.5 py-1.5 rounded-full bg-black/70 border border-white/15 text-xs font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-music text-brandCyan"></i> Add Sound
+          </button>
+          <button onclick="toggle4KExport(this)" id="btn-4k-export" class="px-2.5 py-1 rounded-full bg-brandGold text-black text-[10px] font-black">4K Export: ON</button>
+        </div>
+
+        <div class="relative flex-1 bg-zinc-900 overflow-hidden flex items-center justify-center">
+          <video id="studio-preview-video" src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4" autoplay loop muted playsinline class="w-full h-full object-cover filter-normal"></video>
+        </div>
+
+        <div class="p-4 bg-black flex items-center justify-around border-t border-white/10">
+          <button onclick="goToPublishStep()" class="w-16 h-16 rounded-full border-4 border-white p-1 flex items-center justify-center">
+            <div class="w-full h-full rounded-full bg-brandPink flex items-center justify-center text-[10px] font-black">NEXT</div>
+          </button>
+        </div>
+      </div>
+
+      <div id="studio-step-publish" class="hidden flex-1 flex flex-col bg-[#111111] p-4 overflow-y-auto">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+          <button onclick="backToEditorStep()" class="text-xs text-gray-300"><i class="fa-solid fa-arrow-left mr-1"></i> Back</button>
+          <h3 class="text-sm font-extrabold">Post & Publish</h3>
+        </div>
+        <form onsubmit="publishStudioVideo(event)" class="space-y-3.5 flex-1 flex flex-col">
+          <textarea id="publish-caption-input" rows="4" required placeholder="ক্যাপশন ও #হ্যাশট্যাগ লিখুন..." class="w-full bg-[#1b1b1b] border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none"></textarea>
+          <button type="submit" class="mt-auto py-3 rounded-xl bg-brandPink text-white font-extrabold text-xs shadow-lg">Post</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Shop Drawer -->
+    <div id="shop-drawer" class="hidden absolute inset-0 z-50 flex flex-col justify-end bg-black/60">
+      <div onclick="closeShopDrawer()" class="flex-1"></div>
+      <div class="bg-white text-black rounded-t-3xl p-5 shadow-2xl">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-black uppercase tracking-wider text-brandPink"><i class="fa-solid fa-cart-shopping"></i> Talk Talk Shop</span>
+          <button onclick="closeShopDrawer()" class="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-gray-700"><i class="fa-solid fa-xmark text-xs"></i></button>
+        </div>
+        <h4 id="shop-prod-name" class="text-sm font-extrabold text-gray-900">Pro Smart Watch</h4>
+        <p id="shop-prod-price" class="text-base font-black text-brandPink mt-1">$29.00</p>
+        <button onclick="closeShopDrawer(); showToast('অর্ডার সফল হয়েছে!')" class="w-full mt-3 py-3 rounded-xl bg-brandPink text-white font-extrabold text-sm">Buy Now</button>
+      </div>
+    </div>
+
+    <!-- Comments Drawer -->
+    <div id="comments-drawer" class="hidden absolute inset-0 z-50 flex flex-col justify-end bg-black/65">
+      <div onclick="closeCommentsDrawer()" class="flex-1"></div>
+      <div class="bg-[#161616] border-t border-white/15 rounded-t-3xl h-[70%] flex flex-col shadow-2xl">
+        <div class="flex items-center justify-between px-5 py-3.5 border-b border-white/10">
+          <h4 class="text-sm font-bold">Comments</h4>
+          <button onclick="closeCommentsDrawer()" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-gray-300"><i class="fa-solid fa-xmark text-xs"></i></button>
+        </div>
+        <div id="comments-list" class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-3"></div>
+        <form onsubmit="submitComment(event)" class="p-3 bg-[#0e0e0e] border-t border-white/10 flex items-center gap-2">
+          <input id="comment-input" type="text" required placeholder="Add a comment..." class="flex-1 bg-[#222] border border-white/10 rounded-full px-4 py-2 text-xs text-white focus:outline-none" />
+          <button type="submit" class="w-9 h-9 rounded-full bg-brandPink text-white flex items-center justify-center"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Safety Report Modal -->
+    <div id="safety-report-modal" class="hidden absolute inset-0 z-50 flex flex-col justify-end bg-black/65">
+      <div onclick="closeSafetyReportModal()" class="flex-1"></div>
+      <div class="bg-[#181818] border-t border-white/15 rounded-t-3xl p-5 space-y-3">
+        <h4 class="text-sm font-extrabold text-center mb-2">Safety & Report Menu</h4>
+        <button onclick="closeSafetyReportModal(); showToast('রিপোর্ট করা হয়েছে 🚩')" class="w-full p-3.5 rounded-2xl bg-white/5 text-left text-xs font-bold text-red-400">Report Video</button>
+        <button onclick="closeSafetyReportModal(); showToast('ব্লক করা হয়েছে 🚫')" class="w-full p-3.5 rounded-2xl bg-white/5 text-left text-xs font-bold text-white">Block User</button>
+      </div>
+    </div>
+
+    <!-- Wallet Modal -->
+    <div id="wallet-modal" class="hidden absolute inset-0 z-50 bg-[#0d0d0d] flex flex-col p-4 overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+        <button onclick="closeWalletModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-left"></i></button>
+        <h3 class="text-sm font-extrabold">Wallet & Pro Membership</h3>
+        <i class="fa-solid fa-wallet text-brandGold"></i>
+      </div>
+      <div class="bg-gradient-to-br from-zinc-900 to-black border border-brandGold/40 rounded-3xl p-4 mb-4">
+        <p class="text-[11px] text-gray-400">Main Balance</p>
+        <p class="text-2xl font-black text-white mt-1">1,200 Coins</p>
+        <p class="text-xs text-brandGold font-bold mt-1">≃ BDT 12,000.00</p>
+      </div>
+      <button onclick="closeWalletModal(); showToast('উইথড্র রিকোয়েস্ট পাঠানো হয়েছে!')" class="mt-auto w-full py-3 rounded-2xl bg-white text-black font-black text-sm">Withdraw Now</button>
+    </div>
+
+    <!-- Settings Drawer -->
+    <div id="settings-drawer" class="hidden absolute inset-0 z-50 bg-[#0d0d0d] flex flex-col p-4 overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+        <button onclick="closeSettingsDrawer()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-left"></i></button>
+        <h3 class="text-sm font-extrabold">Settings and privacy</h3>
+        <span class="w-8"></span>
+      </div>
+      <button onclick="closeSettingsDrawer(); handleLogout()" class="w-full py-3 mt-4 rounded-2xl bg-brandPink text-white font-extrabold text-xs">Log Out</button>
+    </div>
+
+    <!-- Live PK Battle Modal -->
+    <div id="live-modal" class="hidden absolute inset-0 z-50 bg-black flex flex-col">
+      <div class="p-3 bg-zinc-950 flex items-center justify-between border-b border-white/10">
+        <span class="text-xs font-bold text-brandGold">LIVE PK Battle</span>
+        <button onclick="closeLiveModal()" class="w-7 h-7 rounded-full bg-white/10 text-white flex items-center justify-center"><i class="fa-solid fa-xmark text-xs"></i></button>
+      </div>
+      <div class="relative flex-1 grid grid-cols-2 gap-0.5 bg-black">
+        <video src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4" autoplay loop muted playsinline class="w-full h-full object-cover"></video>
+        <video src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4" autoplay loop muted playsinline class="w-full h-full object-cover"></video>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="hidden absolute inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+      <div class="bg-[#161616] border border-white/15 rounded-3xl w-full max-w-sm p-5">
+        <h3 class="text-sm font-extrabold mb-3">Edit Profile</h3>
+        <form onsubmit="saveProfileChanges(event)" class="space-y-3">
+          <input id="edit-username-input" type="text" required class="w-full bg-black border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white" />
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-brandGold text-black font-extrabold text-xs">Save Changes</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast-box" class="pointer-events-none fixed top-14 left-1/2 -translate-x-1/2 z-[120] hidden">
+      <div class="bg-[#1f1f1f]/95 backdrop-blur-md border border-white/15 text-white px-4 py-2.5 rounded-2xl shadow-2xl text-xs font-semibold flex items-center gap-2 max-w-[340px]">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-brandGold"></i>
+        <span id="toast-text">Notification</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ==================== WEB ADMIN PANEL (Protected) ==================== -->
+  <section id="admin-dashboard-overlay" class="hidden fixed inset-0 z-[90] bg-[#09090b] text-white overflow-y-auto p-4 sm:p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-4 bg-[#141417] border border-white/10 rounded-3xl p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brandGold to-brandPink flex items-center justify-center text-black font-black">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div>
+            <h2 class="text-lg font-black flex items-center gap-2">Talk Talk Pro <span class="text-xs px-2 py-0.5 rounded bg-brandGold text-black">WEB ADMIN PANEL</span></h2>
+            <p class="text-xs text-gray-400">Authenticated Admin Control Suite</p>
+          </div>
+        </div>
+        <button onclick="toggleAdminDashboard(false)" class="px-4 py-2 rounded-xl bg-white text-black font-extrabold text-xs hover:bg-gray-200 transition">
+          <i class="fa-solid fa-mobile-screen mr-1.5"></i> Back to App Preview
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="bg-[#141417] border border-white/10 rounded-2xl p-4">
+          <p class="text-xs text-gray-400">Total Users</p>
+          <p class="text-2xl font-black text-white mt-1">33,526</p>
+        </div>
+        <div class="bg-[#141417] border border-white/10 rounded-2xl p-4">
+          <p class="text-xs text-gray-400">Active Pro Subscribers</p>
+          <p class="text-2xl font-black text-brandGold mt-1">75%</p>
+        </div>
+        <div class="bg-[#141417] border border-white/10 rounded-2xl p-4">
+          <p class="text-xs text-gray-400">Pending Withdrawals</p>
+          <p class="text-2xl font-black text-brandPink mt-1">$3,386.00</p>
+        </div>
+        <div class="bg-[#141417] border border-white/10 rounded-2xl p-4">
+          <p class="text-xs text-gray-400">Pro Subscription Price</p>
+          <p class="text-2xl font-black text-brandCyan mt-1">৳499 / mo</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div class="bg-[#141417] border border-white/10 rounded-3xl p-5">
+          <h3 class="text-sm font-extrabold mb-3">User & Pro Badge Control</h3>
+          <div id="admin-users-list" class="space-y-2.5 text-xs"></div>
+        </div>
+        <div class="bg-[#141417] border border-white/10 rounded-3xl p-5">
+          <h3 class="text-sm font-extrabold mb-3">Video Moderation & Boost Control</h3>
+          <div id="admin-videos-list" class="space-y-2.5 text-xs"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SCRIPT & AUTH LOGIC ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgAn4OehtWHwVtCp9ISdJDWHaOZKK3GFk",
+      authDomain: "talktalk-pro.firebaseapp.com",
+      projectId: "talktalk-pro",
+      storageBucket: "talktalk-pro.firebasestorage.app",
+      messagingSenderId: "634109089305",
+      appId: "1:634109089305:web:85a8117ee997fd29a83c88"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ADMIN_EMAIL = "Info.atik83@gmail.com";
+    const ADMIN_PASS = "Atik@83898063#r";
+
+    let allVideos = [
+      {
+        id: "demo_1",
+        username: "@ CreatorName",
+        badgeType: "gold",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=CreatorPro",
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4",
+        caption: "সমুদ্রের ঢেউ আর বিকেলের সোনালী আলো ✨ #nature #talktalkpro",
+        aiSubtitle: "🌊 প্রকৃতির এই শান্ত মুহূর্তগুলো...",
+        music: "Dandelions - Ruth B.",
+        filterClass: "filter-cinematic",
+        likesCount: 125800,
+        commentsCount: 3,
+        demoComments: [{ username: "@atiker", text: "অদৃশ্য সুন্দর!", isVip: true }]
+      }
+    ];
+
+    let adminUsers = [
+      { id: "u1", name: "Risha", handle: "@risha_bd", badge: "gold", status: "Active", plan: "Golden Pro" },
+      { id: "u2", name: "Geham", handle: "@geham_vlog", badge: "blue", status: "Active", plan: "Pro Monthly" }
+    ];
+
+    let currentUser = null;
+    let isMuted = true;
+    let showAiSubtitles = true;
+    let autoScrollEnabled = false;
+    let currentFeedFilter = "foryou";
+      let activeCommentVideoId = null;
+
+    window.showToast = function (message, type = "info") {
+      const box = document.getElementById("toast-box");
+      const text = document.getElementById("toast-text");
+      const icon = document.getElementById("toast-icon");
+      text.textContent = message;
+      icon.className = type === "error" ? "fa-solid fa-circle-exclamation text-brandPink" : "fa-solid fa-circle-check text-brandGold";
+      box.classList.remove("hidden");
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => box.classList.add("hidden"), 3000);
+    };
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function checkAdminAccess(email, isManualAdmin = false) {
+      const deskAdminBtn = document.getElementById("desk-admin-btn");
+      const mobileAdminBtn = document.getElementById("mobile-admin-btn");
+      
+      if (isManualAdmin || (email && email.toLowerCase() === ADMIN_EMAIL.toLowerCase())) {
+        if (deskAdminBtn) { deskAdminBtn.classList.remove("hidden"); deskAdminBtn.classList.add("flex"); }
+        if (mobileAdminBtn) { mobileAdminBtn.classList.remove("hidden"); mobileAdminBtn.classList.add("flex"); }
+      } else {
+        if (deskAdminBtn) { deskAdminBtn.classList.add("hidden"); deskAdminBtn.classList.remove("flex"); }
+        if (mobileAdminBtn) { mobileAdminBtn.classList.add("hidden"); mobileAdminBtn.classList.remove("flex"); }
+      }
+    }
+
+    window.openOnboardingModal = () => document.getElementById("onboarding-modal").classList.remove("hidden");
+    window.closeOnboardingModal = () => document.getElementById("onboarding-modal").classList.add("hidden");
+    window.openAuthModal = () => document.getElementById("auth-modal").classList.remove("hidden");
+    window.closeAuthModal = () => document.getElementById("auth-modal").classList.add("hidden");
+
+    window.handleGoogleLogin = async () => {
+      try {
+        const res = await signInWithPopup(auth, new GoogleAuthProvider());
+        currentUser = res.user;
+        checkAdminAccess(currentUser.email);
+        closeOnboardingModal();
+        showToast("Google লগইন সফল হয়েছে!");
+      } catch {
+        closeOnboardingModal();
+        showToast("লগইন সম্পন্ন হয়েছে!");
+      }
+    };
+
+    window.handleEmailAuth = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value;
+
+      // Exact matching check for hidden admin dashboard unlock
+      if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
+        checkAdminAccess(null, true);
+        closeAuthModal();
+        toggleAdminDashboard(true);
+        showToast("👑 Talk Talk Pro অ্যাডমিন ড্যাশবোর্ড আনলক করা হয়েছে!");
+        return;
+      }
+
+      try {
+        const res = await signInWithEmailAndPassword(auth, email, password);
+        currentUser = res.user;
+        checkAdminAccess(currentUser.email);
+        closeAuthModal();
+        showToast("সফলভাবে লগইন হয়েছে!");
+      } catch {
+        showToast("ভুল ইমেইল অথবা পাসওয়ার্ড!", "error");
+      }
+    };
+
+    window.handleLogout = async () => {
+      await signOut(auth).catch(() => {});
+      currentUser = null;
+      checkAdminAccess(null);
+      toggleAdminDashboard(false);
+      showToast("লগআউট সম্পন্ন হয়েছে।");
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) checkAdminAccess(user.email);
+    });
+
+    window.toggleAutoSubtitles = () => {
+      showAiSubtitles = !showAiSubtitles;
+      document.getElementById("dot-ai-cc").className = showAiSubtitles ? "w-2 h-2 rounded-full bg-brandGold" : "w-2 h-2 rounded-full bg-gray-500";
+      renderVideoFeed();
+      showToast(showAiSubtitles ? "AI Subtitle On" : "AI Subtitle Off");
+    };
+
+    window.toggleDataSaver = () => { showToast("Data Saver Toggled"); };
+    window.toggleAutoScroll = () => {
+      autoScrollEnabled = !autoScrollEnabled;
+      document.getElementById("dot-auto-scroll").className = autoScrollEnabled ? "w-2 h-2 rounded-full bg-brandGold" : "w-2 h-2 rounded-full bg-gray-500";
+      showToast(autoScrollEnabled ? "Auto-Scroll On" : "Auto-Scroll Off");
+    };
+
+    window.toggleGlobalMute = () => {
+      isMuted = !isMuted;
+      document.querySelectorAll(".feed-video").forEach((v) => { v.muted = isMuted; });
+      document.getElementById("global-mute-icon").className = isMuted ? "fa-solid fa-volume-xmark text-[11px]" : "fa-solid fa-volume-high text-[11px] text-brandGold";
+    };
+
+    function renderVideoFeed() {
+      const container = document.getElementById("video-feed-container");
+      container.innerHTML = allVideos.map((video) => `
+        <article class="snap-card bg-black flex items-center justify-center overflow-hidden" data-video-id="${video.id}">
+          <video id="vid-player-${video.id}" src="${escapeHtml(video.videoUrl)}" class="feed-video w-full h-full object-cover cursor-pointer" playsinline loop muted preload="metadata"></video>
+          <div class="absolute right-2.5 bottom-16 z-20 flex flex-col items-center gap-2.5">
+            <button onclick="toggleLike('${video.id}')" class="flex flex-col items-center">
+              <i class="fa-solid fa-heart text-[22px] text-white"></i>
+              <span class="text-[10px] font-bold mt-0.5">${video.likesCount}</span>
+            </button>
+            <button onclick="openCommentsDrawer('${video.id}')" class="flex flex-col items-center">
+              <i class="fa-solid fa-comment-dots text-[21px] text-white"></i>
+              <span class="text-[10px] font-bold mt-0.5">${video.commentsCount}</span>
+            </button>
+          </div>
+          <div class="absolute bottom-0 left-0 right-0 pt-14 pb-2.5 px-3.5 pr-16 video-gradient-bottom pointer-events-none z-10">
+            <h3 class="font-extrabold text-[14px] text-white">${escapeHtml(video.username)}</h3>
+            <p class="text-[12px] text-gray-100">${escapeHtml(video.caption)}</p>
+          </div>
+        </article>
+      `).join("");
+      setupVideoIntersectionObserver();
+    }
+
+    function setupVideoIntersectionObserver() {
+      const videos = document.querySelectorAll(".feed-video");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const vid = entry.target;
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.65) {
+            vid.muted = isMuted;
+            vid.play().catch(() => {});
+          } else {
+            vid.pause();
+          }
+        });
+      }, { threshold: 0.65 });
+      videos.forEach((v) => observer.observe(v));
+    }
+
+    window.openCommentsDrawer = (id) => {
+      activeCommentVideoId = id;
+      document.getElementById("comments-drawer").classList.remove("hidden");
+      const vid = allVideos.find(v => v.id === id);
+      document.getElementById("comments-list").innerHTML = (vid.demoComments || []).map(c => `
+        <div class="p-3 bg-white/5 rounded-2xl">
+          <p class="text-xs font-extrabold">${escapeHtml(c.username)}</p>
+          <p class="text-xs text-gray-200">${escapeHtml(c.text)}</p>
+        </div>
+      `).join("");
+    };
+    window.closeCommentsDrawer = () => document.getElementById("comments-drawer").classList.add("hidden");
+
+    window.submitComment = (e) => {
+      e.preventDefault();
+      const input = document.getElementById("comment-input");
+      const text = input.value.trim();
+      if(!text) return;
+      const vid = allVideos.find(v => v.id === activeCommentVideoId);
+      vid.demoComments.unshift({ username: "@CreatorName", text });
+      vid.commentsCount++;
+      input.value = "";
+      openCommentsDrawer(activeCommentVideoId);
+      showToast("কমেন্ট যোগ হয়েছে!");
+    };
+
+    window.openCreatorStudioModal = () => document.getElementById("creator-studio-modal").classList.remove("hidden");
+    window.closeCreatorStudioModal = () => document.getElementById("creator-studio-modal").classList.add("hidden");
+    window.goToPublishStep = () => { document.getElementById("studio-step-editor").classList.add("hidden"); document.getElementById("studio-step-publish").classList.remove("hidden"); };
+    window.backToEditorStep = () => { document.getElementById("studio-step-publish").classList.add("hidden"); document.getElementById("studio-step-editor").classList.remove("hidden"); };
+    
+    window.publishStudioVideo = async (e) => {
+      e.preventDefault();
+      const caption = document.getElementById("publish-caption-input").value.trim();
+      allVideos.unshift({
+        id: "pro_" + Date.now(),
+        username: "@CreatorName",
+        badgeType: "gold",
+        avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=CreatorPro",
+        videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4",
+        caption,
+        likesCount: 1,
+        commentsCount: 0,
+        demoComments: []
+      });
+      closeCreatorStudioModal();
+      renderVideoFeed();
+      showToast("ভিডিও পাবলিশ হয়েছে!");
+    };
+
+    window.openWalletModal = () => document.getElementById("wallet-modal").classList.remove("hidden");
+    window.closeWalletModal = () => document.getElementById("wallet-modal").classList.add("hidden");
+    window.openSettingsDrawer = () => document.getElementById("settings-drawer").classList.remove("hidden");
+    window.closeSettingsDrawer = () => document.getElementById("settings-drawer").classList.add("hidden");
+    window.openSafetyReportModal = () => document.getElementById("safety-report-modal").classList.remove("hidden");
+    window.closeSafetyReportModal = () => document.getElementById("safety-report-modal").classList.add("hidden");
+    window.openLiveModal = () => document.getElementById("live-modal").classList.remove("hidden");
+    window.closeLiveModal = () => document.getElementById("live-modal").classList.add("hidden");
+    window.openEditProfileModal = () => document.getElementById("edit-profile-modal").classList.remove("hidden");
+    window.closeEditProfileModal = () => document.getElementById("edit-profile-modal").classList.add("hidden");
+
+    window.saveProfileChanges = (e) => {
+      e.preventDefault();
+      closeEditProfileModal();
+      showToast("প্রোফাইল আপডেট হয়েছে!");
+    };
+
+    window.switchTab = (tab) => {
+      ["home", "discover", "inbox", "profile"].forEach((v) => {
+        document.getElementById(`view-${v}`).classList.toggle("hidden", v !== tab);
+      });
+    };
+
+    window.setFeedFilter = (filter) => { currentFeedFilter = filter; renderVideoFeed(); };
+
+    // Admin Dashboard Toggle & Render
+    window.toggleAdminDashboard = (show) => {
+      document.getElementById("admin-dashboard-overlay").classList.toggle("hidden", !show);
+      if (show) renderAdminDashboard();
+    };
+
+    function renderAdminDashboard() {
+      document.getElementById("admin-users-list").innerHTML = adminUsers.map((u) => `
+        <div class="flex items-center justify-between bg-black/50 border border-white/10 rounded-xl p-2.5">
+          <p class="font-bold text-white truncate max-w-[200px]">${escapeHtml(v.caption)}</p>
+          <button onclick="showToast('ভিডিও বুস্ট করা হয়েছে')" class="px-2.5 py-1 rounded bg-brandPink text-white font-extrabold">Boost</button>
+        </div>
+      `).join("");
+    }
+
+    renderVideoFeed();
+  </script>
 </body>
 </html>
+          
