@@ -1,0 +1,3642 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>মজালো বিডি — MojaLo BD (Ultra-Pro TikTok Edition)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <!-- Google Fonts: Inter & Hind Siliguri -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <!-- Firebase SDK (Compat v10 for Seamless Single-File Cloud Storage, Firestore & FCM) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Hind Siliguri', 'sans-serif'],
+            bengali: ['Hind Siliguri', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            tiktokPink: '#FE2C55',
+            tiktokCyan: '#25F4EE',
+            bkashPink: '#E2136E',
+            nagadOrange: '#F6921E',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      background-color: #050508; color: #ffffff;
+      font-family: 'Inter', 'Hind Siliguri', sans-serif;
+      overflow: hidden; user-select: none;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .snap-feed {
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100dvh;
+    }
+    .snap-item {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      height: 100dvh;
+      width: 100%;
+      position: relative;
+    }
+    @keyframes spinDisc {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-disc { animation: spinDisc 5s linear infinite; }
+    @keyframes floatGift {
+      0% { transform: translateY(20px) scale(0.7); opacity: 0; }
+      20% { opacity: 1; transform: translateY(0) scale(1.1); }
+      80% { opacity: 1; transform: translateY(-90px) scale(1); }
+      100% { opacity: 0; transform: translateY(-140px) scale(0.8); }
+    }
+    .gift-float { animation: floatGift 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    @keyframes pulse3D {
+      0%, 100% { transform: perspective(600px) rotateY(-8deg) scale(1); }
+      50% { transform: perspective(600px) rotateY(8deg) scale(1.06); }
+    }
+    .logo-3d { animation: pulse3D 2.6s ease-in-out infinite; }
+    @keyframes doubleTapBurst {
+      0% { transform: translate(-50%, -50%) scale(0.2) rotate(-15deg); opacity: 0; }
+      35% { transform: translate(-50%, -50%) scale(1.25) rotate(6deg); opacity: 1; }
+      70% { transform: translate(-50%, -50%) scale(1.0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(-50%, -65%) scale(1.35); opacity: 0; }
+    }
+    .heart-burst {
+      animation: doubleTapBurst 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .glass-panel {
+      background: rgba(15, 16, 24, 0.85);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .gradient-border {
+      background: linear-gradient(135deg, #25F4EE 0%, #FE2C55 100%);
+    }
+    input[type="range"].video-scrubber {
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255,255,255,0.25);
+      height: 3px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    input[type="range"].video-scrubber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #FE2C55;
+      box-shadow: 0 0 8px rgba(254,44,85,0.8);
+    }
+  </style>
+</head>
+<body class="bg-[#050508] text-white antialiased">
+
+  <!-- ==================== 1. 3.5s 3D SPLASH SCREEN ==================== -->
+  <div id="splashScreen" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-br from-[#07070d] via-[#12091c] to-[#050508] transition-opacity duration-500">
+    <div class="relative flex flex-col items-center">
+      <div class="w-28 h-28 rounded-3xl gradient-border p-[3px] shadow-[0_0_50px_rgba(254,44,85,0.45)] logo-3d">
+        <div class="w-full h-full bg-[#0b0b12] rounded-[21px] flex items-center justify-center relative overflow-hidden">
+          <i class="fa-solid fa-play text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-[#25F4EE] to-[#FE2C55]"></i>
+          <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-[#FE2C55]/20 rounded-full blur-md"></div>
+        </div>
+      </div>
+      <h1 class="mt-6 text-3xl font-black tracking-tight bg-gradient-to-r from-[#25F4EE] via-white to-[#FE2C55] bg-clip-text text-transparent">
+        মজালো বিডি
+      </h1>
+      <p class="text-xs uppercase tracking-[0.28em] text-gray-400 mt-1 font-semibold">MojaLo BD • Ultra-Pro</p>
+      <div class="w-48 h-1.5 bg-white/10 rounded-full overflow-hidden mt-7">
+        <div id="splashBar" class="h-full bg-gradient-to-r from-[#25F4EE] to-[#FE2C55] w-0 transition-all duration-[3200ms] ease-out"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== GLOBAL TOAST NOTIFICATION ==================== -->
+  <div id="toastBox" class="fixed top-14 left-1/2 -translate-x-1/2 z-[10000] pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-3">
+    <div id="toastMsg" class="px-4 py-2.5 rounded-full glass-panel shadow-2xl text-xs font-semibold text-white flex items-center gap-2 border border-white/15">
+      <i class="fa-solid fa-circle-check text-[#25F4EE]"></i>
+      <span>বার্তা</span>
+    </div>
+  </div>
+
+  <!-- ==================== GLOBAL SITE NOTICE BANNER ==================== -->
+  <div id="globalNoticeBanner" class="hidden fixed top-0 left-0 right-0 z-[70] bg-gradient-to-r from-[#FE2C55] via-pink-600 to-purple-700 text-white text-[11px] font-semibold py-1 px-3 text-center shadow-lg">
+    <span id="globalNoticeText">🎉 মজালো বিডি-তে স্বাগতম! লাইভ স্ট্রিমিং ও গিফটিং এখন চালু।</span>
+  </div>
+
+  <!-- ==================== DESKTOP + MOBILE RESPONSIVE LAYOUT WRAPPER ==================== -->
+  <div class="w-full h-[100dvh] flex justify-center bg-[#040407]">
+
+    <!-- DESKTOP LEFT SIDEBAR (Visible on lg+ screens for authentic TikTok Web Experience) -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 h-full border-r border-white/10 bg-[#07070c] p-4 shrink-0">
+      <div class="space-y-4">
+        <div class="flex items-center gap-2.5 px-2 pt-1">
+          <div class="w-9 h-9 rounded-xl gradient-border p-[2px]">
+            <div class="w-full h-full bg-[#0b0b12] rounded-[10px] flex items-center justify-center">
+              <i class="fa-solid fa-play text-sm text-[#FE2C55]"></i>
+            </div>
+          </div>
+          <div>
+            <h1 class="text-lg font-black tracking-tight bg-gradient-to-r from-[#25F4EE] to-[#FE2C55] bg-clip-text text-transparent">মজালো বিডি</h1>
+            <p class="text-[10px] text-gray-400">TikTok Web Edition</p>
+          </div>
+        </div>
+
+        <nav class="space-y-1 text-sm font-bold">
+          <button onclick="switchMainTab('home'); switchFeedTab('foryou');" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-white transition">
+            <i class="fa-solid fa-house text-[#FE2C55] w-5"></i> <span>ফর ইউ (For You)</span>
+          </button>
+          <button onclick="switchMainTab('home'); switchFeedTab('following');" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-gray-300 transition">
+            <i class="fa-solid fa-user-group text-[#25F4EE] w-5"></i> <span>ফলোয়িং</span>
+          </button>
+          <button onclick="switchMainTab('discover')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-gray-300 transition">
+            <i class="fa-solid fa-compass w-5"></i> <span>ডিসকভার ও ট্রেন্ডিং</span>
+          </button>
+          <button onclick="openLiveHub()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-gray-300 transition">
+            <i class="fa-solid fa-tower-broadcast text-rose-500 w-5"></i> <span>লাইভ স্ট্রিম</span>
+          </button>
+          <button onclick="openCreatorStudio('normal')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-gray-300 transition">
+            <i class="fa-solid fa-square-plus text-emerald-400 w-5"></i> <span>ভিডিও আপলোড</span>
+          </button>
+          <button onclick="switchMainTab('inbox')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-gray-300 transition">
+            <i class="fa-solid fa-comment-dots w-5"></i> <span>ইনবক্স ও মেসেজ</span>
+          </button>
+          <button onclick="switchMainTab('profile')" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/10 text-gray-300 transition">
+            <i class="fa-solid fa-user w-5"></i> <span>আমার প্রোফাইল</span>
+          </button>
+        </nav>
+
+        <div class="pt-3 border-t border-white/10">
+          <p class="text-[11px] font-bold text-gray-400 px-2 mb-2">জনপ্রিয় ক্রিয়েটরস</p>
+          <div id="desktopSuggestedCreators" class="space-y-1.5"></div>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-2xl bg-white/[0.04] border border-white/10 text-[11px] text-gray-400 space-y-1.5">
+        <div class="font-bold text-white flex items-center justify-between">
+          <span>সাউন্ড ও কীবোর্ড টিপস</span>
+          <i class="fa-solid fa-keyboard text-[#25F4EE]"></i>
+        </div>
+        <p>• ↑ / ↓ বাটন চেপে ভিডিও পরিবর্তন করুন</p>
+        <p>• Space চেপে Play/Pause ও M চেপে Mute</p>
+      </div>
+    </aside>
+
+    <!-- ==================== MAIN APP SHELL ==================== -->
+    <div id="appShell" class="relative w-full max-w-[480px] h-[100dvh] bg-[#07070c] overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.9)] border-x border-white/5">
+
+      <!-- ==================== VIEW 1: HOME VERTICAL SNAP FEED ==================== -->
+      <section id="view-home" class="app-view w-full h-full relative">
+        <!-- Top Header Tabs -->
+        <header id="homeTopHeader" class="absolute top-3 left-0 right-0 z-30 flex items-center justify-between px-4 pt-1">
+          <button onclick="openLiveHub()" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/45 backdrop-blur-md border border-white/15 text-[11px] font-bold text-white active:scale-95 transition">
+            <span class="w-2 h-2 rounded-full bg-[#FE2C55] animate-ping"></span>
+            <span>LIVE</span>
+          </button>
+
+          <div class="flex items-center gap-4 text-sm font-bold">
+            <button onclick="switchFeedTab('following')" id="tab-following" class="text-white/60 hover:text-white transition">ফলোয়িং</button>
+            <button onclick="switchFeedTab('foryou')" id="tab-foryou" class="text-white relative pb-1">
+              ফর ইউ
+              <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-white rounded-full"></span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <!-- Global Sound Mute/Unmute Toggle Button -->
+            <button onclick="toggleGlobalAudioMute()" id="globalMuteBtn" title="সাউন্ড অন/অফ করুন" class="w-8 h-8 rounded-full bg-black/55 backdrop-blur-md border border-white/20 flex items-center justify-center text-amber-300 active:scale-95">
+              <i id="globalMuteIcon" class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+            <button onclick="openNotifications()" class="relative w-8 h-8 rounded-full bg-black/45 backdrop-blur-md border border-white/15 flex items-center justify-center text-white active:scale-95">
+              <i class="fa-regular fa-bell text-sm"></i>
+              <span id="notifBadge" class="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#FE2C55] text-[10px] font-bold flex items-center justify-center">3</span>
+            </button>
+            <button onclick="switchMainTab('discover')" class="w-8 h-8 rounded-full bg-black/45 backdrop-blur-md border border-white/15 flex items-center justify-center text-white active:scale-95">
+              <i class="fa-solid fa-magnifying-glass text-xs"></i>
+            </button>
+          </div>
+        </header>
+
+        <!-- Vertical Video Container -->
+        <div id="videoFeedContainer" class="snap-feed w-full h-full no-scrollbar"></div>
+      </section>
+
+      <!-- ==================== VIEW 2: DISCOVER & TRENDING ==================== -->
+      <section id="view-discover" class="app-view hidden w-full h-full overflow-y-auto no-scrollbar pb-24 pt-4 px-4 bg-[#07070c]">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="flex-1 flex items-center bg-white/10 rounded-full px-3.5 py-2.5 border border-white/10">
+            <i class="fa-solid fa-magnifying-glass text-gray-400 text-xs mr-2.5"></i>
+            <input id="discoverSearchInput" oninput="filterDiscover(this.value)" type="text" placeholder="ক্রিয়েটর, হ্যাশট্যাগ বা গান খুঁজুন..." class="bg-transparent text-xs text-white placeholder-gray-400 focus:outline-none w-full" />
+          </div>
+          <button onclick="openLiveHub()" class="px-3 py-2.5 rounded-full bg-gradient-to-r from-[#FE2C55] to-pink-600 text-xs font-bold flex items-center gap-1.5 shadow-lg">
+            <i class="fa-solid fa-tower-broadcast"></i> লাইভ
+          </button>
+        </div>
+
+        <!-- Trending Banner -->
+        <div class="rounded-2xl p-4 bg-gradient-to-r from-[#1a1033] via-[#2b1038] to-[#12263a] border border-white/10 mb-5 relative overflow-hidden">
+          <div class="relative z-10">
+            <span class="px-2 py-0.5 rounded-md bg-[#FE2C55] text-[10px] font-extrabold uppercase">Trending Challenge</span>
+            <h2 class="text-lg font-extrabold mt-1.5">#মজালো_বাংলাদেশ ২০২৬</h2>
+            <p class="text-xs text-gray-300 mt-0.5">সেরা ক্রিয়েটরদের জন্য থাকছে বোনাস কয়েন ও ব্লু ব্যাজ!</p>
+            <button onclick="openCreatorStudio('normal')" class="mt-3 px-4 py-1.5 rounded-full bg-white text-black text-xs font-bold active:scale-95 transition">এখনই অংশ নিন</button>
+          </div>
+          <i class="fa-solid fa-fire text-7xl text-white/5 absolute -right-2 -bottom-2"></i>
+        </div>
+
+        <!-- Hashtag Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-3" id="hashtagBar">
+          <button onclick="filterByTag('all')" class="px-3 py-1.5 rounded-full bg-[#FE2C55] text-white text-xs font-bold whitespace-nowrap">সব ট্রেন্ডিং</button>
+          <button onclick="filterByTag('#মজালো_বিডি')" class="px-3 py-1.5 rounded-full bg-white/10 text-gray-200 text-xs font-semibold whitespace-nowrap">#মজালো_বিডি</button>
+          <button onclick="filterByTag('#ঢাকা_ভাইবস')" class="px-3 py-1.5 rounded-full bg-white/10 text-gray-200 text-xs font-semibold whitespace-nowrap">#ঢাকা_ভাইবস</button>
+          <button onclick="filterByTag('#কমেডি_কিং')" class="px-3 py-1.5 rounded-full bg-white/10 text-gray-200 text-xs font-semibold whitespace-nowrap">#কমেডি_কিং</button>
+          <button onclick="filterByTag('#গান_ও_সুর')" class="px-3 py-1.5 rounded-full bg-white/10 text-gray-200 text-xs font-semibold whitespace-nowrap">#গান_ও_সুর</button>
+        </div>
+
+        <!-- Trending Grid -->
+        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center justify-between">
+          <span>জনপ্রিয় ভিডিওসমূহ</span>
+          <span id="discoverCount" class="text-[#25F4EE]">০ টি ভিডিও</span>
+        </h3>
+        <div id="discoverGrid" class="grid grid-cols-2 gap-2.5"></div>
+      </section>
+
+      <!-- ==================== VIEW 3: INBOX, FRIENDS & 24/7 SUPPORT ==================== -->
+      <section id="view-inbox" class="app-view hidden w-full h-full overflow-y-auto no-scrollbar pb-24 pt-4 px-4 bg-[#07070c]">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-extrabold">ইনবক্স ও মেসেজ</h2>
+          <div class="flex items-center gap-2">
+            <button onclick="enablePushNotifications()" class="px-2.5 py-1.5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-[#25F4EE] text-[11px] font-bold flex items-center gap-1">
+              <i class="fa-solid fa-bell"></i> পুশ অন
+            </button>
+            <button onclick="openSupportChat()" class="px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-headset"></i> ২৪/৭ সাপোর্ট
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Friends Horizontal Bar -->
+        <div class="mb-5">
+          <p class="text-[11px] font-bold text-gray-400 uppercase mb-2.5">অ্যাক্টিভ ফ্রেন্ডস ও কল</p>
+          <div id="activeFriendsRow" class="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1"></div>
+        </div>
+
+        <!-- Direct Message List -->
+        <div class="space-y-2" id="chatThreadsList"></div>
+      </section>
+
+      <!-- ==================== VIEW 4: TIKTOK-STYLE PERSISTENT PROFILE ==================== -->
+      <section id="view-profile" class="app-view hidden w-full h-full overflow-y-auto no-scrollbar pb-24 bg-[#07070c]">
+        <!-- Cover Banner & Top Controls -->
+        <div class="relative h-32 w-full bg-gradient-to-r from-[#1c1033] via-[#38102b] to-[#0f293a]">
+          <img id="profileCoverImg" src="" alt="" class="hidden w-full h-full object-cover opacity-80" />
+          <div class="absolute top-3 left-4 right-4 flex items-center justify-between z-10">
+            <button onclick="openWalletModal()" class="px-3 py-1.5 rounded-full bg-black/55 backdrop-blur-md border border-amber-400/30 text-amber-300 text-xs font-bold flex items-center gap-1.5">
+              <i class="fa-solid fa-coins"></i>
+              <span id="profileCoinCount">0</span>
+            </button>
+
+            <div class="flex items-center gap-1.5">
+              <!-- Creator Analytics Shortcut -->
+              <button onclick="openCreatorAnalytics()" class="px-2.5 py-1.5 rounded-full bg-cyan-500/20 backdrop-blur-md border border-cyan-400/40 text-[#25F4EE] text-xs font-bold flex items-center gap-1" title="ক্রিয়েটর অ্যানালিটিক্স">
+                <i class="fa-solid fa-chart-line"></i> অ্যানালিটিক্স
+              </button>
+              <!-- Master Admin Crown Shortcut (Revealed on Admin Login) -->
+              <button id="adminCrownBtn" onclick="openAdminDashboard()" class="hidden px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-600 text-black text-xs font-black items-center gap-1.5 shadow-[0_0_20px_rgba(245,158,11,0.6)] animate-pulse">
+                <i class="fa-solid fa-crown"></i> Admin
+              </button>
+              <button onclick="openEditProfileModal()" class="w-8 h-8 rounded-full bg-black/55 backdrop-blur-md border border-white/15 flex items-center justify-center text-xs">
+                <i class="fa-solid fa-pen"></i>
+              </button>
+              <button onclick="openTrashModal()" class="w-8 h-8 rounded-full bg-black/55 backdrop-blur-md border border-white/15 flex items-center justify-center text-xs text-rose-400" title="৩০-দিনের ট্র্যাশ লক">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              <button onclick="handleAuthAction()" id="profileAuthBtn" class="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-xs font-bold">
+                লগইন
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Avatar & Bio -->
+        <div class="px-4 -mt-11 relative z-10 flex flex-col items-center text-center">
+          <div class="relative">
+            <div class="w-[88px] h-[88px] rounded-full p-[3px] gradient-border shadow-xl">
+              <img id="profileAvatarImg" src="https://api.dicebear.com/7.x/avataaars/svg?seed=MojaLoUser" alt="Avatar" class="w-full h-full rounded-full object-cover bg-[#12121a]" />
+            </div>
+            <button onclick="openEditProfileModal()" class="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-[#FE2C55] border-2 border-[#07070c] flex items-center justify-center text-[11px]">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+
+          <div class="mt-2.5 flex items-center justify-center gap-1.5">
+            <h2 id="profileDisplayName" class="text-lg font-extrabold">অতিথি ক্রিয়েটর</h2>
+            <span id="profileVerifiedBadge"></span>
+          </div>
+          <p id="profileHandle" class="text-xs text-gray-400 font-medium">@guest_creator</p>
+          <p id="profileBio" class="text-xs text-gray-300 mt-2 max-w-xs leading-relaxed">মজালো বিডি-তে আমার অফিসিয়াল ক্রিয়েটর প্রোফাইল 🎬✨</p>
+
+          <!-- Cloud Sync Status Pill -->
+          <div class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10px] text-emerald-300 font-semibold">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="cloudSyncStatusText">Firebase Cloud & LocalStorage সিঙ্ক সক্রিয়</span>
+          </div>
+
+          <!-- TikTok Stats Row -->
+          <div class="grid grid-cols-3 gap-6 mt-3.5 py-2.5 px-6 rounded-2xl bg-white/[0.04] border border-white/10 w-full max-w-xs">
+            <div>
+              <div id="statFollowing" class="text-base font-extrabold">12</div>
+              <div class="text-[11px] text-gray-400">ফলোয়িং</div>
+            </div>
+            <div class="border-x border-white/10">
+              <div id="statFollowers" class="text-base font-extrabold">1.2K</div>
+              <div class="text-[11px] text-gray-400">ফলোয়ার্স</div>
+            </div>
+            <div>
+              <div id="statLikes" class="text-base font-extrabold">8.4K</div>
+              <div class="text-[11px] text-gray-400">লাইকস</div>
+            </div>
+          </div>
+
+          <!-- Creator Quick Actions -->
+          <div class="flex items-center gap-2 mt-3.5 w-full max-w-xs">
+            <button onclick="openCreatorAnalytics()" class="flex-1 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold transition flex items-center justify-center gap-1">
+              <i class="fa-solid fa-chart-simple text-[#25F4EE]"></i> গ্রোথ
+            </button>
+            <button onclick="openWalletModal()" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-[#E2136E] to-[#FE2C55] text-xs font-bold shadow-lg transition">ওয়ালেট / বিকাশ</button>
+            <button onclick="shareProfileLink()" class="px-3.5 py-2 rounded-xl bg-white/10 text-xs font-bold"><i class="fa-solid fa-share-nodes"></i></button>
+          </div>
+        </div>
+
+        <!-- TikTok Profile Tabs (Public Videos / Saved / Liked / Private Lock) -->
+        <div class="mt-5 border-b border-white/10 grid grid-cols-4 text-center text-[11px] font-bold">
+          <button onclick="switchProfileTab('videos')" id="ptab-videos" class="py-3 text-white border-b-2 border-white flex items-center justify-center gap-1">
+            <i class="fa-solid fa-table-cells"></i> ভিডিও (<span id="myVideosCount">0</span>)
+          </button>
+          <button onclick="switchProfileTab('saved')" id="ptab-saved" class="py-3 text-gray-400 flex items-center justify-center gap-1">
+            <i class="fa-regular fa-bookmark"></i> সেভড
+          </button>
+          <button onclick="switchProfileTab('liked')" id="ptab-liked" class="py-3 text-gray-400 flex items-center justify-center gap-1">
+            <i class="fa-regular fa-heart"></i> লাইকড
+          </button>
+          <button onclick="switchProfileTab('private')" id="ptab-private" class="py-3 text-gray-400 flex items-center justify-center gap-1">
+            <i class="fa-solid fa-lock"></i> প্রাইভেট
+          </button>
+        </div>
+
+        <!-- Profile Videos Grid -->
+        <div id="profileVideosGrid" class="grid grid-cols-3 gap-0.5 p-0.5 min-h-[220px]"></div>
+      </section>
+
+      <!-- ==================== BOTTOM NAVIGATION BAR ==================== -->
+      <nav class="absolute bottom-0 left-0 right-0 z-40 h-16 bg-[#07070c]/95 backdrop-blur-xl border-t border-white/10 flex items-center justify-around px-2">
+        <button onclick="switchMainTab('home')" id="nav-home" class="nav-btn flex flex-col items-center justify-center text-white w-14">
+          <i class="fa-solid fa-house text-lg"></i>
+          <span class="text-[10px] font-bold mt-0.5">হোম</span>
+        </button>
+        <button onclick="switchMainTab('discover')" id="nav-discover" class="nav-btn flex flex-col items-center justify-center text-gray-400 w-14">
+          <i class="fa-solid fa-compass text-lg"></i>
+          <span class="text-[10px] font-semibold mt-0.5">ডিসকভার</span>
+        </button>
+
+        <!-- TikTok Signature Dual-Color Upload Button -->
+        <button onclick="openCreatorStudio('normal')" class="relative w-12 h-8 flex items-center justify-center active:scale-90 transition">
+          <span class="absolute inset-0 -translate-x-1 rounded-xl bg-[#25F4EE]"></span>
+          <span class="absolute inset-0 translate-x-1 rounded-xl bg-[#FE2C55]"></span>
+          <span class="relative w-full h-full rounded-xl bg-white text-black flex items-center justify-center font-black text-base shadow">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+        </button>
+
+        <button onclick="switchMainTab('inbox')" id="nav-inbox" class="nav-btn relative flex flex-col items-center justify-center text-gray-400 w-14">
+          <i class="fa-solid fa-comment-dots text-lg"></i>
+          <span class="text-[10px] font-semibold mt-0.5">ইনবক্স</span>
+          <span class="absolute top-0.5 right-3 w-2 h-2 rounded-full bg-[#FE2C55]"></span>
+        </button>
+        <button onclick="switchMainTab('profile')" id="nav-profile" class="nav-btn flex flex-col items-center justify-center text-gray-400 w-14">
+          <i class="fa-solid fa-user text-lg"></i>
+          <span class="text-[10px] font-semibold mt-0.5">প্রোফাইল</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- DESKTOP RIGHT NAVIGATION ARROWS (For effortless Desktop Mouse Wheel / Button Video Switching) -->
+    <div class="hidden lg:flex flex-col items-center justify-center gap-3 pl-5">
+      <button onclick="scrollFeedByStep(-1)" title="আগের ভিডিও (Up Arrow)" class="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition active:scale-90">
+        <i class="fa-solid fa-chevron-up"></i>
+      </button>
+      <button onclick="scrollFeedByStep(1)" title="পরবর্তী ভিডিও (Down Arrow)" class="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition active:scale-90">
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== FULLSCREEN VIDEO PLAYER MODAL (FIXED: PLAY, PAUSE, SOUND, FULLSCREEN & EDIT FROM PROFILE) ==================== -->
+  <div id="videoPlayerModal" class="hidden fixed inset-0 z-[132] bg-black flex items-center justify-center">
+    <div id="playerModalWrapper" class="relative w-full max-w-[480px] h-[100dvh] bg-black overflow-hidden flex items-center justify-center">
+      <video id="modalVideoEl" class="w-full h-full object-contain bg-black" playsinline loop onclick="toggleModalVideoPlayPause()"></video>
+      <audio id="modalBgAudioEl" loop></audio>
+
+      <!-- Sticker Overlay if present -->
+      <div id="modalVideoSticker" class="hidden absolute top-1/3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-white/20 text-white font-black text-base shadow-xl pointer-events-none z-20"></div>
+
+      <!-- Center Play/Pause Indicator -->
+      <div id="modalCenterPlayBadge" class="hidden absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+        <div class="w-16 h-16 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-2xl text-white">
+          <i class="fa-solid fa-play ml-1"></i>
+        </div>
+      </div>
+
+      <!-- Top Bar: Back, Sound Toggle, Fullscreen & Options -->
+      <div class="absolute top-4 left-4 right-4 z-30 flex items-center justify-between">
+        <button onclick="closeVideoPlayerModal()" class="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/15 flex items-center justify-center text-white active:scale-90">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button onclick="toggleModalVideoMute()" id="modalMuteBtn" class="px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-xs font-bold text-amber-300 flex items-center gap-1.5">
+            <i id="modalMuteIcon" class="fa-solid fa-volume-high"></i>
+            <span id="modalMuteLabel">Sound On</span>
+          </button>
+          <button onclick="toggleModalFullscreen()" title="Fullscreen" class="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/15 flex items-center justify-center text-white active:scale-90">
+            <i class="fa-solid fa-expand text-xs"></i>
+          </button>
+          <button onclick="openActionSheetFromPlayer()" class="w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/15 flex items-center justify-center text-white active:scale-90">
+            <i class="fa-solid fa-ellipsis-vertical text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Controls: Timeline Scrubber, Play/Pause, Caption & Actions -->
+      <div class="absolute bottom-0 left-0 right-0 z-30 p-4 bg-gradient-to-t from-black/95 via-black/60 to-transparent space-y-2.5">
+        <div class="flex items-center gap-2">
+          <span id="playerCurrentTime" class="text-[10px] font-mono text-gray-300 w-9">0:00</span>
+          <input id="playerScrubber" type="range" min="0" max="100" value="0" oninput="seekModalVideo(this.value)" class="flex-1 video-scrubber" />
+          <span id="playerDurationTime" class="text-[10px] font-mono text-gray-300 w-9 text-right">0:00</span>
+        </div>
+
+        <div class="flex items-end justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span id="playerCreatorHandle" class="text-sm font-extrabold text-white">@creator</span>
+              <span id="playerVerifiedBadge"></span>
+            </div>
+            <p id="playerVideoCaption" class="text-xs text-gray-200 line-clamp-2 mt-0.5"></p>
+            <div class="flex items-center gap-1.5 text-[11px] text-[#25F4EE] mt-1">
+              <i class="fa-solid fa-music text-[10px]"></i>
+              <span id="playerVideoSong" class="truncate">অরিজিনাল সাউন্ড</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="toggleModalVideoPlayPause()" id="modalPlayPauseBtn" class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold shadow-lg">
+              <i id="modalPlayPauseIcon" class="fa-solid fa-pause"></i>
+            </button>
+            <button onclick="likeFromPlayerModal()" class="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-white">
+              <i id="playerLikeIcon" class="fa-solid fa-heart"></i>
+            </button>
+            <button onclick="commentFromPlayerModal()" class="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-white">
+              <i class="fa-solid fa-comment-dots"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 1: AUTHENTICATION (WITH INSTANT ADMIN REDIRECT) ==================== -->
+  <div id="authModal" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="w-full max-w-[440px] bg-[#10111a] border border-white/10 rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 id="authModalTitle" class="text-xl font-extrabold">মজালো বিডি-তে লগইন</h3>
+          <p class="text-xs text-gray-400 mt-0.5">আপনার ক্রিয়েটর আইডিতে ভিডিও ও কয়েন সুরক্ষিত রাখুন</p>
+        </div>
+        <button onclick="closeModal('authModal')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-300">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Auth Tabs -->
+      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-white/5 mb-4 text-xs font-bold">
+        <button onclick="setAuthMode('login')" id="authTabLogin" class="py-2 rounded-lg bg-[#FE2C55] text-white">লগইন</button>
+        <button onclick="setAuthMode('signup')" id="authTabSignup" class="py-2 rounded-lg text-gray-400">নতুন অ্যাকাউন্ট</button>
+      </div>
+
+      <form id="authForm" onsubmit="submitAuthForm(event)" class="space-y-3">
+        <div id="signupNameGroup" class="hidden">
+          <label class="block text-[11px] font-bold text-gray-400 mb-1">ক্রিয়েটর নাম</label>
+          <input id="authNameInput" type="text" placeholder="যেমন: আরিফ হাসান" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:border-[#25F4EE] focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-gray-400 mb-1">ইমেইল অ্যাড্রেস</label>
+          <input id="authEmailInput" type="email" required placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:border-[#25F4EE] focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-gray-400 mb-1">পাসওয়ার্ড</label>
+          <input id="authPassInput" type="password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:border-[#25F4EE] focus:outline-none" />
+        </div>
+        <button type="submit" id="authSubmitBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#FE2C55] to-pink-600 text-sm font-extrabold text-white shadow-lg active:scale-98 transition">
+          লগইন করুন
+        </button>
+      </form>
+
+      <div class="mt-4 pt-4 border-t border-white/10">
+        <button onclick="quickDemoCreatorLogin()" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-gray-200 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-bolt text-[#25F4EE]"></i> ওয়ান-ক্লিক ক্রিয়েটর ডেমো লগইন
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: MASTER ADMIN COMMAND CENTER (PRO EDITION) ==================== -->
+  <div id="adminPanelDrawer" class="hidden fixed inset-0 z-[150] bg-[#06070c] overflow-y-auto no-scrollbar">
+    <div class="max-w-3xl mx-auto min-h-screen pb-16">
+      <!-- Sticky Top Bar -->
+      <div class="sticky top-0 z-20 glass-panel px-4 py-3.5 flex items-center justify-between border-b border-amber-500/20">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-600 text-black flex items-center justify-center font-black shadow-lg">
+            <i class="fa-solid fa-crown"></i>
+          </div>
+          <div>
+            <h2 class="text-sm font-black text-amber-300 flex items-center gap-1.5">
+              মাস্টার অ্যাডমিন কমান্ড সেন্টার
+              <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[9px] font-bold">ROOT LIVE</span>
+            </h2>
+            <p class="text-[10px] text-gray-400">info.atik83@gmail.com • ফুল সিস্টেম ও AI সিকিউরিটি কন্ট্রোল</p>
+          </div>
+        </div>
+        <button onclick="closeAdminDashboard()" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-bold text-white flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left"></i> অ্যাপে ফিরুন
+        </button>
+      </div>
+
+      <div class="p-4 space-y-5">
+        <!-- Executive KPI Analytics Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-2xl bg-gradient-to-br from-pink-500/15 to-rose-900/10 border border-pink-500/25">
+            <div class="text-[11px] text-gray-400 font-semibold">মোট বিকাশ/নগদ আয়</div>
+            <div id="admTotalRevenue" class="text-xl font-black text-white mt-1">৳ 0</div>
+            <div class="text-[10px] text-emerald-400 mt-1"><i class="fa-solid fa-arrow-trend-up"></i> ভেরিফায়েড পেমেন্ট</div>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-gradient-to-br from-cyan-500/15 to-blue-900/10 border border-cyan-500/25">
+            <div class="text-[11px] text-gray-400 font-semibold">মোট ভিডিও ও রিলস</div>
+            <div id="admTotalVideos" class="text-xl font-black text-white mt-1">0</div>
+            <div class="text-[10px] text-[#25F4EE] mt-1">ক্লাউড + লোকাল সিঙ্ক</div>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500/15 to-yellow-900/10 border border-amber-500/25">
+            <div class="text-[11px] text-gray-400 font-semibold">পেন্ডিং রিকোয়েস্ট</div>
+            <div id="admPendingCount" class="text-xl font-black text-amber-300 mt-1">0</div>
+            <div class="text-[10px] text-amber-200/70 mt-1">ক্যাশ-ইন ও উইথড্র</div>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-gradient-to-br from-purple-500/15 to-indigo-900/10 border border-purple-500/25">
+            <div class="text-[11px] text-gray-400 font-semibold">AI ব্লক ও রিপোর্ট</div>
+            <div id="admReportedCount" class="text-xl font-black text-rose-400 mt-1">0</div>
+            <div class="text-[10px] text-gray-400 mt-1">স্প্যাম ও ট্রানজেকশন শিল্ড</div>
+          </div>
+        </div>
+
+        <!-- Admin Navigation Sub-Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          <button onclick="switchAdminSubTab('payments')" id="admtab-payments" class="adm-subtab px-3.5 py-2 rounded-xl bg-amber-500 text-black text-xs font-extrabold whitespace-nowrap">
+            <i class="fa-solid fa-money-bill-transfer mr-1"></i> বিকাশ/নগদ পেমেন্ট ও উইথড্র
+          </button>
+          <button onclick="switchAdminSubTab('users')" id="admtab-users" class="adm-subtab px-3.5 py-2 rounded-xl bg-white/10 text-gray-300 text-xs font-bold whitespace-nowrap">
+            <i class="fa-solid fa-certificate mr-1"></i> ইউজার ও ভেরিফায়েড ব্যাজ
+          </button>
+          <button onclick="switchAdminSubTab('moderation')" id="admtab-moderation" class="adm-subtab px-3.5 py-2 rounded-xl bg-white/10 text-gray-300 text-xs font-bold whitespace-nowrap">
+            <i class="fa-solid fa-shield-halved mr-1"></i> ভিডিও বুস্ট ও AI মডারেশন
+          </button>
+          <button onclick="switchAdminSubTab('support')" id="admtab-support" class="adm-subtab px-3.5 py-2 rounded-xl bg-white/10 text-gray-300 text-xs font-bold whitespace-nowrap">
+            <i class="fa-solid fa-headset mr-1"></i> সাপোর্ট ও গ্লোবাল নোটিশ
+          </button>
+        </div>
+
+        <!-- SUB-PANEL A: BKASH / NAGAD DEPOSITS & CREATOR CASHOUTS -->
+        <div id="adminSub-payments" class="admin-subpanel space-y-4">
+          <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-extrabold text-[#E2136E] flex items-center gap-2">
+                <i class="fa-solid fa-wallet"></i> বিকাশ / নগদ কয়েন রিচার্জ রিকোয়েস্ট (০১৬২৩৭৪৪৪৪০)
+              </h3>
+              <span class="text-[11px] text-emerald-400 font-bold"><i class="fa-solid fa-robot mr-1"></i>AI Fake-TrxID Shield Active</span>
+            </div>
+            <div id="adminPaymentRequestsList" class="space-y-2.5"></div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <h3 class="text-sm font-extrabold text-[#25F4EE] mb-3 flex items-center gap-2">
+              <i class="fa-solid fa-hand-holding-dollar"></i> ক্রিয়েটর ক্যাশআউট / উইথড্র রিকোয়েস্ট
+            </h3>
+            <div id="adminWithdrawRequestsList" class="space-y-2.5"></div>
+          </div>
+        </div>
+
+        <!-- SUB-PANEL B: USER VERIFIED BADGE & COIN MANAGER -->
+        <div id="adminSub-users" class="admin-subpanel hidden space-y-4">
+          <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <h3 class="text-sm font-extrabold text-white mb-3">ক্রিয়েটর ব্যাজ (Blue ✓ / Gold ✓) ও কয়েন কন্ট্রোল</h3>
+            <div id="adminUsersList" class="space-y-2.5"></div>
+          </div>
+        </div>
+
+        <!-- SUB-PANEL C: VIDEO BOOST & CONTENT MODERATION -->
+        <div id="adminSub-moderation" class="admin-subpanel hidden space-y-4">
+          <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <h3 class="text-sm font-extrabold text-rose-400 mb-3">রিপোর্টেড ভিডিও ও AI মডারেশন লগ</h3>
+            <div id="adminReportedList" class="space-y-2.5"></div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <h3 class="text-sm font-extrabold text-[#25F4EE] mb-3">সব ভিডিও ম্যানেজার (ভিউ বুস্ট / পিন / ডিলিট)</h3>
+            <div id="adminAllVideosList" class="space-y-2.5"></div>
+          </div>
+        </div>
+
+        <!-- SUB-PANEL D: 24/7 LIVE SUPPORT DESK & GLOBAL NOTICE -->
+        <div id="adminSub-support" class="admin-subpanel hidden space-y-4">
+          <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <h3 class="text-sm font-extrabold text-amber-300 mb-2">গ্লোবাল সাইট নোটিশ ব্যানার</h3>
+            <div class="flex gap-2">
+              <input id="adminNoticeInput" type="text" placeholder="সব ইউজারের স্ক্রিনে দেখানোর জন্য নোটিশ লিখুন..." class="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/15 text-xs text-white" />
+              <button onclick="publishGlobalNotice()" class="px-4 py-2 rounded-xl bg-amber-500 text-black text-xs font-extrabold">পাবলিশ</button>
+              <button onclick="clearGlobalNotice()" class="px-3 py-2 rounded-xl bg-white/10 text-xs font-bold">বন্ধ</button>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <h3 class="text-sm font-extrabold text-emerald-400 mb-2">২৪/৭ ইউজার সাপোর্ট লাইভ রিপ্লাই</h3>
+            <div id="adminSupportMessages" class="max-h-56 overflow-y-auto space-y-2 p-2.5 rounded-xl bg-black/40 mb-3 text-xs"></div>
+            <div class="flex gap-2">
+              <input id="adminSupportReplyInput" type="text" placeholder="অ্যাডমিন হিসেবে উত্তর লিখুন..." class="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/15 text-xs text-white" />
+              <button onclick="sendAdminSupportReply()" class="px-4 py-2 rounded-xl bg-emerald-500 text-black text-xs font-extrabold">পাঠান</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: BKASH / NAGAD WALLET & CREATOR CASHOUT ==================== -->
+  <div id="walletModal" class="hidden fixed inset-0 z-[110] bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="w-full max-w-[450px] bg-[#10111a] border border-white/10 rounded-t-3xl sm:rounded-3xl p-5 max-h-[90dvh] overflow-y-auto no-scrollbar">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#E2136E] to-[#FE2C55] flex items-center justify-center text-white font-black shadow-lg">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold">মজালো ওয়ালেট ও বিকাশ পেমেন্ট</h3>
+            <p class="text-[11px] text-amber-300 font-bold">বর্তমান ব্যালেন্স: <span id="walletCoinBalance">0</span> কয়েন (৳ <span id="walletBdtValue">0</span>)</p>
+          </div>
+        </div>
+        <button onclick="closeModal('walletModal')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Wallet Mode Tabs: Buy Coins vs Creator Cashout -->
+      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-white/5 mb-4 text-xs font-bold">
+        <button onclick="switchWalletTab('buy')" id="wtab-buy" class="py-2 rounded-lg bg-[#E2136E] text-white">কয়েন কিনুন (বিকাশ/নগদ)</button>
+        <button onclick="switchWalletTab('withdraw')" id="wtab-withdraw" class="py-2 rounded-lg text-gray-400">ক্যাশআউট (উইথড্র)</button>
+      </div>
+
+      <!-- TAB 1: BUY COINS VIA BKASH / NAGAD (01623744440) -->
+      <div id="walletBuySection" class="space-y-3.5">
+        <div class="p-3.5 rounded-2xl bg-gradient-to-r from-[#E2136E]/25 to-[#F6921E]/20 border border-[#E2136E]/40">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="px-2 py-0.5 rounded bg-[#E2136E] text-[10px] font-extrabold">bKash / Nagad Personal</span>
+              <div class="text-lg font-black tracking-wider text-white mt-1">01623744440</div>
+              <p class="text-[11px] text-gray-300">উপরের নাম্বারে <b>Send Money</b> করে নিচে সঠিক TrxID দিন</p>
+            </div>
+            <button onclick="copyBkashNumber()" class="px-3 py-2 rounded-xl bg-white text-black text-xs font-extrabold active:scale-95 transition flex items-center gap-1.5">
+              <i class="fa-regular fa-copy"></i> কপি
+            </button>
+          </div>
+        </div>
+
+        <!-- Coin Packages -->
+        <div>
+          <label class="block text-[11px] font-bold text-gray-400 mb-2">কয়েন প্যাকেজ সিলেক্ট করুন</label>
+          <div class="grid grid-cols-2 gap-2" id="coinPackageGrid">
+            <button type="button" onclick="selectCoinPkg(50, 50, this)" class="coin-pkg-btn p-3 rounded-xl bg-white/5 border-2 border-[#E2136E] text-left">
+              <div class="text-sm font-black text-amber-300"><i class="fa-solid fa-coins"></i> 50 কয়েন</div>
+              <div class="text-xs text-gray-300 font-bold mt-0.5">৳ 50 টাকা</div>
+            </button>
+            <button type="button" onclick="selectCoinPkg(120, 100, this)" class="coin-pkg-btn p-3 rounded-xl bg-white/5 border border-white/10 text-left">
+              <div class="text-sm font-black text-amber-300"><i class="fa-solid fa-coins"></i> 120 কয়েন</div>
+              <div class="text-xs text-gray-300 font-bold mt-0.5">৳ 100 টাকা (+২০ ফ্রি)</div>
+            </button>
+            <button type="button" onclick="selectCoinPkg(650, 500, this)" class="coin-pkg-btn p-3 rounded-xl bg-white/5 border border-white/10 text-left">
+              <div class="text-sm font-black text-amber-300"><i class="fa-solid fa-coins"></i> 650 কয়েন</div>
+              <div class="text-xs text-gray-300 font-bold mt-0.5">৳ 500 টাকা (জনপ্রিয়)</div>
+            </button>
+            <button type="button" onclick="selectCoinPkg(1500, 1000, this)" class="coin-pkg-btn p-3 rounded-xl bg-white/5 border border-white/10 text-left">
+              <div class="text-sm font-black text-amber-300"><i class="fa-solid fa-coins"></i> 1500 কয়েন</div>
+              <div class="text-xs text-gray-300 font-bold mt-0.5">৳ 1000 টাকা (VIP)</div>
+            </button>
+          </div>
+        </div>
+
+        <form onsubmit="submitCoinDeposit(event)" class="space-y-2.5">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 mb-1">পেমেন্ট মাধ্যম</label>
+              <select id="payMethodSelect" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white">
+                <option value="bKash" class="bg-[#10111a]">bKash (বিকাশ)</option>
+                <option value="Nagad" class="bg-[#10111a]">Nagad (নগদ)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 mb-1">আপনার বিকাশ/নগদ নাম্বার</label>
+              <input id="paySenderInput" type="tel" required placeholder="017XXXXXXXX" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 mb-1 flex items-center justify-between">
+              <span>Transaction ID (TrxID)</span>
+              <span class="text-[9px] text-emerald-400"><i class="fa-solid fa-shield-halved"></i> AI Anti-Fake Check</span>
+            </label>
+            <input id="payTrxInput" type="text" required placeholder="যেমন: BHG78K92LM" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white uppercase" />
+          </div>
+          <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#E2136E] to-[#FE2C55] text-xs font-extrabold text-white shadow-lg">
+            পেমেন্ট ভেরিফিকেশন সাবমিট করুন
+          </button>
+        </form>
+
+        <!-- User's Payment History -->
+        <div class="pt-2">
+          <p class="text-[11px] font-bold text-gray-400 mb-2">আপনার সাম্প্রতিক পেমেন্ট স্ট্যাটাস</p>
+          <div id="userPaymentHistory" class="space-y-1.5 max-h-32 overflow-y-auto no-scrollbar"></div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CREATOR CASHOUT / WITHDRAW -->
+      <div id="walletWithdrawSection" class="hidden space-y-3">
+        <div class="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-200">
+          লাইভ গিফট থেকে অর্জিত কয়েন সরাসরি আপনার বিকাশ বা নগদ একাউন্টে ক্যাশআউট করুন (১ কয়েন = ৳ ০.৮০ টাকা, মিনিমাম ১০০ কয়েন)।
+        </div>
+        <form onsubmit="submitCreatorWithdraw(event)" class="space-y-2.5">
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 mb-1">উইথড্র কয়েন পরিমাণ</label>
+            <input id="withdrawCoinsInput" type="number" min="100" required placeholder="সর্বনিম্ন 100 কয়েন" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 mb-1">রিসিভ মাধ্যম</label>
+              <select id="withdrawMethodSelect" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white">
+                <option value="bKash" class="bg-[#10111a]">bKash</option>
+                <option value="Nagad" class="bg-[#10111a]">Nagad</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 mb-1">পার্সোনাল নাম্বার</label>
+              <input id="withdrawPhoneInput" type="tel" required placeholder="01XXXXXXXXX" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white" />
+            </div>
+          </div>
+          <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-black text-xs font-extrabold">
+            ক্যাশআউট রিকোয়েস্ট পাঠান
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 4: CREATOR STUDIO (CAMERA RECORDER, FILTERS, SPEED, STICKER, TRIM, ITUNES AUDIO & CLOUD SYNC) ==================== -->
+  <div id="creatorStudioModal" class="hidden fixed inset-0 z-[115] bg-[#07070c] overflow-y-auto no-scrollbar">
+    <div class="max-w-[460px] mx-auto min-h-screen p-4 pb-16">
+      <div class="flex items-center justify-between mb-3">
+        <button onclick="closeStudioAndStopAudio()" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <h3 id="studioModeTitle" class="text-sm font-extrabold">ক্রিয়েটর স্টুডিও প্রো</h3>
+        <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold"><i class="fa-solid fa-cloud-arrow-up mr-1"></i>Cloud Sync</span>
+      </div>
+
+      <!-- Mode Selector (Normal / Duet / Stitch) -->
+      <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-white/5 mb-3 text-xs font-bold">
+        <button type="button" onclick="setStudioMode('normal')" id="smode-normal" class="py-2 rounded-lg bg-[#FE2C55] text-white">সাধারণ ভিডিও</button>
+        <button type="button" onclick="setStudioMode('duet')" id="smode-duet" class="py-2 rounded-lg text-gray-400">ডুয়েট (Duet)</button>
+        <button type="button" onclick="setStudioMode('stitch')" id="smode-stitch" class="py-2 rounded-lg text-gray-400">স্টিচ (Stitch)</button>
+      </div>
+
+      <!-- Real-Time Interactive Video Preview & Live Camera Canvas -->
+      <div class="relative w-full aspect-[9/14] max-h-[320px] rounded-2xl bg-[#11121c] border border-white/10 overflow-hidden mb-3 flex items-center justify-center">
+        <div id="studioPreviewContainer" class="w-full h-full flex items-center justify-center relative">
+          <video id="studioVideoPreview" class="w-full h-full object-cover hidden transition-all duration-200" playsinline loop autoplay></video>
+
+          <!-- Live Camera Record Controls Overlay -->
+          <div id="cameraRecordOverlay" class="hidden absolute bottom-3 left-0 right-0 z-30 flex items-center justify-center gap-4">
+            <button type="button" id="cameraRecordBtn" onclick="toggleCameraRecording()" class="w-14 h-14 rounded-full bg-[#FE2C55] border-4 border-white flex items-center justify-center shadow-2xl active:scale-90 transition">
+              <span id="cameraRecordDot" class="w-5 h-5 rounded-full bg-white"></span>
+            </button>
+            <button type="button" onclick="stopLiveCameraPreview()" class="px-3 py-1.5 rounded-full bg-black/70 text-xs font-bold text-white border border-white/20">বন্ধ করুন</button>
+          </div>
+          
+          <!-- Live Text Sticker Overlay -->
+          <div id="studioTextStickerOverlay" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1.5 rounded-xl bg-black/65 backdrop-blur-md border border-white/25 text-white font-black text-base text-center shadow-2xl pointer-events-none z-20"></div>
+
+          <div id="studioEmptyPrompt" class="text-center p-5">
+            <div class="w-14 h-14 rounded-full bg-white/10 mx-auto flex items-center justify-center text-2xl text-[#25F4EE] mb-3">
+              <i class="fa-solid fa-video"></i>
+            </div>
+            <p class="text-xs font-bold text-white">গ্যালারি থেকে ভিডিও বাছুন বা ক্যামেরায় রেকর্ড করুন</p>
+            <p class="text-[11px] text-gray-400 mt-1">অরিজিনাল সাউন্ড + ব্যাকগ্রাউন্ড মিউজিক সাপোর্টেড</p>
+            <div class="flex flex-wrap items-center justify-center gap-2 mt-3">
+              <label class="px-3.5 py-2 rounded-full bg-[#FE2C55] text-xs font-bold cursor-pointer">
+                <i class="fa-solid fa-folder-open mr-1"></i> গ্যালারি
+                <input id="videoFileInput" type="file" accept="video/*" onchange="handleVideoFileSelect(event)" class="hidden" />
+              </label>
+              <button type="button" onclick="startLiveCameraRecorder()" class="px-3.5 py-2 rounded-full bg-[#25F4EE] text-black text-xs font-extrabold">
+                <i class="fa-solid fa-camera mr-1"></i> ক্যামেরা রেকর্ড
+              </button>
+              <button type="button" onclick="useSampleStudioVideo()" class="px-3 py-2 rounded-full bg-white/10 text-xs font-bold">স্যাম্পল</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compression Badge -->
+        <div id="compressionInfoBadge" class="hidden absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-full bg-emerald-600/90 text-[10px] font-extrabold text-white z-20">
+          <i class="fa-solid fa-bolt mr-1"></i> <span id="compressionRatioText">অপ্টিমাইজড HD</span>
+        </div>
+
+        <!-- Duet Split Overlay Badge -->
+        <div id="duetBadgeOverlay" class="hidden absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 text-[10px] font-bold text-[#25F4EE] z-20">
+          <i class="fa-solid fa-table-columns mr-1"></i> স্প্লিট-স্ক্রিন ডুয়েট মোড
+        </div>
+      </div>
+
+      <!-- REAL-TIME VIDEO EDITOR TOOLBAR (Filters, Playback Speed, Text Sticker, Trim) -->
+      <div class="p-3 rounded-2xl bg-white/[0.04] border border-white/10 mb-3 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold text-amber-300"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> রিয়েল-টাইম ভিডিও এডিটর</span>
+          <button type="button" onclick="resetVideoEdits()" class="text-[10px] text-gray-400 underline">রিসেট</button>
+        </div>
+
+        <!-- 1. Real-Time Color Filters -->
+        <div>
+          <span class="block text-[10px] font-bold text-gray-400 mb-1.5">ফিল্টার (লাইভ প্রিভিউ)</span>
+          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+            <button type="button" onclick="applyStudioFilter('none', 'Normal', this)" class="sfilter-btn px-2.5 py-1 rounded-lg bg-[#FE2C55] text-white text-[10px] font-bold whitespace-nowrap">Normal</button>
+            <button type="button" onclick="applyStudioFilter('contrast(1.25) saturate(1.45)', 'Vivid', this)" class="sfilter-btn px-2.5 py-1 rounded-lg bg-white/10 text-gray-200 text-[10px] font-bold whitespace-nowrap">Vivid ✨</button>
+            <button type="button" onclick="applyStudioFilter('sepia(0.45) contrast(1.1)', 'Warm Golden', this)" class="sfilter-btn px-2.5 py-1 rounded-lg bg-white/10 text-gray-200 text-[10px] font-bold whitespace-nowrap">Golden 🌅</button>
+            <button type="button" onclick="applyStudioFilter('grayscale(1) contrast(1.2)', 'Noir B&W', this)" class="sfilter-btn px-2.5 py-1 rounded-lg bg-white/10 text-gray-200 text-[10px] font-bold whitespace-nowrap">B&W 🎬</button>
+            <button type="button" onclick="applyStudioFilter('hue-rotate(190deg) saturate(1.5)', 'Cyber Neon', this)" class="sfilter-btn px-2.5 py-1 rounded-lg bg-white/10 text-gray-200 text-[10px] font-bold whitespace-nowrap">Cyber Neon 🌌</button>
+          </div>
+        </div>
+
+        <!-- 2. Real-Time Playback Speed -->
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[10px] font-bold text-gray-400">স্পিড কন্ট্রোল:</span>
+          <div class="flex items-center gap-1">
+            <button type="button" onclick="applyStudioSpeed(0.5, this)" class="sspeed-btn px-2.5 py-1 rounded-lg bg-white/10 text-[10px] font-bold">0.5x</button>
+            <button type="button" onclick="applyStudioSpeed(1.0, this)" class="sspeed-btn px-2.5 py-1 rounded-lg bg-[#25F4EE] text-black text-[10px] font-extrabold">1.0x</button>
+            <button type="button" onclick="applyStudioSpeed(1.5, this)" class="sspeed-btn px-2.5 py-1 rounded-lg bg-white/10 text-[10px] font-bold">1.5x</button>
+            <button type="button" onclick="applyStudioSpeed(2.0, this)" class="sspeed-btn px-2.5 py-1 rounded-lg bg-white/10 text-[10px] font-bold">2.0x</button>
+          </div>
+        </div>
+
+        <!-- 3. Text Sticker & Trim Controls -->
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 mb-1">টেক্সট স্টিকার যোগ করুন</label>
+            <input id="studioStickerInput" oninput="updateStudioSticker(this.value)" type="text" placeholder="যেমন: ঢাকা ভাইবস 🔥" class="w-full px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/10 text-[11px] text-white" />
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 mb-1">ভিডিও ট্রিম (সর্বোচ্চ দৈর্ঘ্য)</label>
+            <div class="flex items-center gap-2">
+              <input id="studioTrimRange" type="range" min="5" max="60" value="30" oninput="updateStudioTrim(this.value)" class="w-full accent-[#FE2C55]" />
+              <span id="studioTrimLabel" class="text-[10px] font-extrabold text-[#25F4EE] whitespace-nowrap">30s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Online Song Search (iTunes API with Instant Audio Preview) + Dual Audio Mixer -->
+      <div class="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 mb-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-[#25F4EE]"><i class="fa-solid fa-music mr-1"></i> অনলাইন গান প্রিভিউ ও ডুয়াল মিক্সার</span>
+          <span id="selectedSongLabel" class="text-[10px] text-amber-300 font-bold truncate max-w-[150px]">অরিজিনাল সাউন্ড</span>
+        </div>
+        <div class="flex gap-2 mb-2">
+          <input id="itunesSearchInput" type="text" placeholder="গানের নাম লিখুন (যেমন: Pritom, Habib, Arijit)..." class="flex-1 px-3 py-2 rounded-xl bg-black/40 border border-white/10 text-xs text-white" />
+          <button type="button" onclick="searchItunesSongs()" class="px-3.5 py-2 rounded-xl bg-[#25F4EE] text-black text-xs font-extrabold">খুঁজুন</button>
+        </div>
+        <div id="itunesResultsList" class="space-y-1.5 max-h-32 overflow-y-auto no-scrollbar"></div>
+        <audio id="studioBgAudioPlayer" loop></audio>
+
+        <!-- Dual Audio Volume Sliders (Real-time Gain Control) -->
+        <div class="grid grid-cols-2 gap-3 mt-3 pt-2.5 border-t border-white/10 text-[10px] text-gray-400">
+          <div>
+            <div class="flex justify-between mb-1"><span>অরিজিনাল সাউন্ড</span><span id="origVolVal">100%</span></div>
+            <input type="range" min="0" max="100" value="100" oninput="setDualAudioMix('orig', this.value)" class="w-full accent-[#FE2C55]" />
+          </div>
+          <div>
+            <div class="flex justify-between mb-1"><span>ব্যাকগ্রাউন্ড মিউজিক</span><span id="bgVolVal">75%</span></div>
+            <input type="range" min="0" max="100" value="75" oninput="setDualAudioMix('bg', this.value)" class="w-full accent-[#25F4EE]" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Caption, Hashtag & TikTok Privacy Setting -->
+      <div class="space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-gray-400 mb-1">ক্যাপশন ও হ্যাশট্যাগ</label>
+          <textarea id="videoCaptionInput" rows="2" placeholder="আপনার ভিডিও সম্পর্কে কিছু লিখুন... #মজালো_বিডি #ঢাকা_ভাইবস" class="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-gray-400 mb-1">প্রাইভেসি (কে দেখতে পাবে)</label>
+            <select id="videoPrivacySelect" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white">
+              <option value="public" class="bg-[#10111a]">🌍 সবাই (Public)</option>
+              <option value="private" class="bg-[#10111a]">🔒 শুধু আমি (Only Me)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-gray-400 mb-1">প্রোফাইলে পিন করুন</label>
+            <select id="videoPinSelect" class="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white">
+              <option value="no" class="bg-[#10111a]">সাধারণ পোস্ট</option>
+              <option value="yes" class="bg-[#10111a]">📌 প্রোফাইল টপে পিন করুন</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Upload Progress Indicator -->
+        <div id="cloudUploadProgressBox" class="hidden p-3 rounded-xl bg-cyan-500/15 border border-cyan-400/30">
+          <div class="flex justify-between text-[11px] font-bold text-[#25F4EE] mb-1">
+            <span id="cloudUploadStepText">ভিডিও অপ্টিমাইজ ও IndexedDB + ক্লাউডে সেভ হচ্ছে...</span>
+            <span id="cloudUploadPct">0%</span>
+          </div>
+          <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+            <div id="cloudUploadBar" class="h-full bg-gradient-to-r from-[#25F4EE] to-[#FE2C55] w-0 transition-all duration-300"></div>
+          </div>
+        </div>
+
+        <button type="button" id="publishVideoBtn" onclick="publishCreatorVideo()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#25F4EE] via-white to-[#FE2C55] text-black text-sm font-black shadow-xl active:scale-98 transition">
+          <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i> ক্লাউড ও প্রোফাইলে পাবলিশ করুন
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 5: COMMENTS DRAWER (WITH AI ANTI-SPAM & VOICE/VIDEO REPLIES) ==================== -->
+  <div id="commentsDrawer" class="hidden fixed inset-0 z-[120] bg-black/75 backdrop-blur-sm flex items-end justify-center">
+    <div class="w-full max-w-[480px] h-[72dvh] bg-[#10111a] border-t border-white/15 rounded-t-3xl flex flex-col">
+      <div class="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="commentsHeaderCount" class="text-xs font-extrabold">কমেন্টসমূহ (0)</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[9px] font-bold"><i class="fa-solid fa-shield-cat mr-1"></i>AI Spam Filter</span>
+        </div>
+        <button onclick="closeModal('commentsDrawer')" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-xs">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="commentsListContainer" class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar"></div>
+
+      <!-- Comment Input with Voice & Video Reply Triggers -->
+      <div class="p-3 border-t border-white/10 bg-[#0b0c12]">
+        <div class="flex items-center gap-2">
+          <button onclick="sendMediaComment('voice')" title="ভয়েস রিপ্লাই পাঠান" class="w-9 h-9 rounded-full bg-white/10 text-[#25F4EE] flex items-center justify-center text-xs shrink-0 active:scale-90">
+            <i class="fa-solid fa-microphone"></i>
+          </button>
+          <button onclick="sendMediaComment('video')" title="ভিডিও রিপ্লাই পাঠান" class="w-9 h-9 rounded-full bg-white/10 text-[#FE2C55] flex items-center justify-center text-xs shrink-0 active:scale-90">
+            <i class="fa-solid fa-video"></i>
+          </button>
+          <input id="commentTextInput" type="text" placeholder="সুন্দর একটি কমেন্ট লিখুন..." class="flex-1 px-3.5 py-2 rounded-full bg-white/10 text-xs text-white focus:outline-none" />
+          <button onclick="submitTextComment()" class="px-4 py-2 rounded-full bg-[#FE2C55] text-xs font-extrabold text-white">পাঠান</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 6: VIDEO OPTIONS, PIN, PRIVACY & REPORT SHEET ==================== -->
+  <div id="videoActionSheet" class="hidden fixed inset-0 z-[138] bg-black/75 backdrop-blur-sm flex items-end justify-center">
+    <div class="w-full max-w-[480px] bg-[#12131e] border-t border-white/15 rounded-t-3xl p-5 space-y-4">
+      <div class="flex items-center justify-between">
+        <h4 class="text-sm font-extrabold">ভিডিও অপশন ও কন্ট্রোল</h4>
+        <button onclick="closeModal('videoActionSheet')" class="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-xs"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="grid grid-cols-5 gap-1.5 text-center text-[10px] font-semibold">
+        <button onclick="openVideoPlayerModal(activeVideoIdForSheet); closeModal('videoActionSheet');" class="p-2.5 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center gap-1.5">
+          <i class="fa-solid fa-play text-base text-white"></i>
+          <span>চালান</span>
+        </button>
+        <button onclick="triggerDuetFromCurrent()" class="p-2.5 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center gap-1.5">
+          <i class="fa-solid fa-table-columns text-base text-[#25F4EE]"></i>
+          <span>ডুয়েট</span>
+        </button>
+        <button onclick="triggerStitchFromCurrent()" class="p-2.5 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center gap-1.5">
+          <i class="fa-solid fa-scissors text-base text-amber-400"></i>
+          <span>স্টিচ</span>
+        </button>
+        <button onclick="copyVideoShareLink()" class="p-2.5 rounded-2xl bg-white/5 hover:bg-white/10 flex flex-col items-center gap-1.5">
+          <i class="fa-solid fa-link text-base text-emerald-400"></i>
+          <span>লিঙ্ক কপি</span>
+        </button>
+        <button onclick="reportCurrentVideo()" class="p-2.5 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 flex flex-col items-center gap-1.5">
+          <i class="fa-solid fa-flag text-base"></i>
+          <span>রিপোর্ট</span>
+        </button>
+      </div>
+
+      <!-- Owner-Only TikTok Controls (Pin to Top, Toggle Privacy, Move to 30-Day Trash) -->
+      <div id="ownerVideoControls" class="hidden pt-3 border-t border-white/10 space-y-2">
+        <p class="text-[10px] font-bold uppercase text-gray-400">ক্রিয়েটর কন্ট্রোল (আপনার ভিডিও)</p>
+        <div class="grid grid-cols-3 gap-2 text-xs font-bold">
+          <button onclick="togglePinCurrentVideo()" class="py-2.5 px-2 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <i class="fa-solid fa-thumbtack mr-1"></i> পিন / আনপিন
+          </button>
+          <button onclick="togglePrivacyCurrentVideo()" class="py-2.5 px-2 rounded-xl bg-cyan-500/20 text-[#25F4EE] border border-cyan-500/30">
+            <i class="fa-solid fa-lock mr-1"></i> প্রাইভেসি
+          </button>
+          <button onclick="moveVideoToTrash()" class="py-2.5 px-2 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/30">
+            <i class="fa-solid fa-trash mr-1"></i> ট্র্যাশ (৩০ দিন)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 7: LIVE STREAMING & VIRTUAL GIFTING ARENA ==================== -->
+  <div id="liveStreamModal" class="hidden fixed inset-0 z-[130] bg-black">
+    <div class="relative w-full max-w-[480px] h-full mx-auto overflow-hidden">
+      <video id="liveStreamVideo" class="w-full h-full object-cover" autoplay loop muted playsinline src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1230-large.mp4"></video>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/85"></div>
+
+      <!-- Top Live Host Info -->
+      <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-20">
+        <div class="flex items-center gap-2 bg-black/50 backdrop-blur-md px-2.5 py-1.5 rounded-full border border-white/15">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=NadiaLive" class="w-8 h-8 rounded-full bg-pink-500" />
+          <div>
+            <div class="text-xs font-extrabold flex items-center gap-1">নাদিয়া ইসলাম <i class="fa-solid fa-circle-check text-[#25F4EE] text-[10px]"></i></div>
+            <div class="text-[10px] text-amber-300 font-bold"><i class="fa-solid fa-coins"></i> <span id="liveHostDiamonds">4,850</span> গিফট</div>
+          </div>
+          <span class="ml-1 px-2 py-0.5 rounded-full bg-[#FE2C55] text-[10px] font-black animate-pulse">LIVE</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-full bg-black/50 text-[11px] font-bold"><i class="fa-solid fa-eye mr-1 text-[#25F4EE]"></i> 1.4K</span>
+          <button onclick="closeModal('liveStreamModal')" class="w-8 h-8 rounded-full bg-black/60 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+
+      <!-- Floating Gift Animation Layer -->
+      <div id="giftAnimationStage" class="absolute inset-0 pointer-events-none flex items-center justify-center z-30"></div>
+
+      <!-- Live Chat & Virtual Gift Bar -->
+      <div class="absolute bottom-4 left-4 right-4 z-20 space-y-3">
+        <div id="liveChatFeed" class="max-h-36 overflow-y-auto space-y-1.5 no-scrollbar text-xs">
+          <div class="px-3 py-1 rounded-full bg-black/45 inline-block"><b class="text-[#25F4EE]">তানভীর:</b> অসাধারণ লাইভ আপু! 🔥</div>
+          <div class="px-3 py-1 rounded-full bg-black/45 inline-block"><b class="text-amber-300">সাকিব:</b> ঢাকা থেকে দেখছি ❤️</div>
+        </div>
+
+        <!-- Virtual Gifts Row -->
+        <div class="grid grid-cols-4 gap-2">
+          <button onclick="sendLiveGift('Rose 🌹', 10)" class="p-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-center active:scale-90 transition">
+            <div class="text-xl">🌹</div>
+            <div class="text-[10px] font-bold">Rose</div>
+            <div class="text-[9px] text-amber-300 font-extrabold">10 কয়েন</div>
+          </button>
+          <button onclick="sendLiveGift('Love ❤️', 25)" class="p-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-center active:scale-90 transition">
+            <div class="text-xl">❤️</div>
+            <div class="text-[10px] font-bold">Love</div>
+            <div class="text-[9px] text-amber-300 font-extrabold">25 কয়েন</div>
+          </button>
+          <button onclick="sendLiveGift('Car 🏎️', 100)" class="p-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-center active:scale-90 transition">
+            <div class="text-xl">🏎️</div>
+            <div class="text-[10px] font-bold">Sports Car</div>
+            <div class="text-[9px] text-amber-300 font-extrabold">100 কয়েন</div>
+          </button>
+          <button onclick="sendLiveGift('Lion 🦁', 500)" class="p-2 rounded-2xl bg-gradient-to-br from-amber-500/30 to-pink-500/30 backdrop-blur-md border border-amber-400/40 text-center active:scale-90 transition">
+            <div class="text-xl">🦁</div>
+            <div class="text-[10px] font-bold text-amber-300">Royal Lion</div>
+            <div class="text-[9px] text-white font-extrabold">500 কয়েন</div>
+          </button>
+        </div>
+
+        <div class="flex gap-2">
+          <input id="liveChatInput" type="text" placeholder="লাইভে কমেন্ট করুন..." class="flex-1 px-3.5 py-2 rounded-full bg-white/15 backdrop-blur-md text-xs text-white placeholder-gray-300 focus:outline-none" />
+          <button onclick="sendLiveChatMessage()" class="px-4 py-2 rounded-full bg-[#FE2C55] text-xs font-bold">পাঠান</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 8: EDIT PROFILE MODAL ==================== -->
+  <div id="editProfileModal" class="hidden fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-[420px] bg-[#10111a] border border-white/10 rounded-3xl p-5 space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-extrabold">প্রোফাইল এডিট করুন</h3>
+        <button onclick="closeModal('editProfileModal')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-400 mb-1">ডিসপ্লে নাম</label>
+        <input id="editNameInput" type="text" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white" />
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-400 mb-1">ইউজারনেম (@handle)</label>
+        <input id="editHandleInput" type="text" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white" />
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-400 mb-1">বায়ো (Bio)</label>
+        <textarea id="editBioInput" rows="2" class="w-full px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white"></textarea>
+      </div>
+      <div>
+        <label class="block text-[11px] font-bold text-gray-400 mb-1">প্রোফাইল ছবি পরিবর্তন</label>
+        <input type="file" accept="image/*" onchange="handleAvatarUpload(event)" class="text-xs text-gray-300" />
+      </div>
+      <button onclick="saveProfileChanges()" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#25F4EE] to-[#FE2C55] text-black text-xs font-black">সেভ করুন</button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 9: 30-DAY RECENTLY DELETED TRASH LOCK ==================== -->
+  <div id="trashModal" class="hidden fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-[430px] bg-[#10111a] border border-white/10 rounded-3xl p-5">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h3 class="text-sm font-extrabold text-rose-400"><i class="fa-solid fa-clock-rotate-left mr-1"></i> ৩০-দিনের ট্র্যাশ লক</h3>
+          <p class="text-[11px] text-gray-400">ডিলিট করা ভিডিও ৩০ দিন পর্যন্ত সুরক্ষিত থাকে</p>
+        </div>
+        <button onclick="closeModal('trashModal')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="trashListContainer" class="space-y-2 max-h-64 overflow-y-auto no-scrollbar"></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 10: NOTIFICATIONS & 24/7 SUPPORT CHAT ==================== -->
+  <div id="notifModal" class="hidden fixed inset-0 z-[120] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-[420px] bg-[#10111a] border border-white/10 rounded-3xl p-5">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-sm font-extrabold">রিয়েল-টাইম ও পুশ নোটিফিকেশন</h3>
+        <button onclick="closeModal('notifModal')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <button onclick="enablePushNotifications()" class="w-full mb-3 py-2 rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-[#25F4EE] text-xs font-bold">
+        <i class="fa-solid fa-bell mr-1"></i> ব্রাউজার/মোবাইল Push Notification চালু করুন
+      </button>
+      <div id="notificationsList" class="space-y-2 max-h-72 overflow-y-auto no-scrollbar text-xs"></div>
+    </div>
+  </div>
+
+  <div id="supportModal" class="hidden fixed inset-0 z-[125] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-[420px] bg-[#10111a] border border-white/10 rounded-3xl p-5 flex flex-col h-[70dvh]">
+      <div class="flex items-center justify-between pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <h3 class="text-sm font-extrabold">মজালো বিডি ২৪/৭ লাইভ সাপোর্ট</h3>
+        </div>
+        <button onclick="closeModal('supportModal')" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="userSupportMessages" class="flex-1 overflow-y-auto py-3 space-y-2 text-xs no-scrollbar"></div>
+      <div class="flex gap-2 pt-2 border-t border-white/10">
+        <input id="userSupportInput" type="text" placeholder="পেমেন্ট বা একাউন্ট সমস্যা লিখুন..." class="flex-1 px-3.5 py-2.5 rounded-full bg-white/10 text-xs text-white focus:outline-none" />
+        <button onclick="sendUserSupportMsg()" class="px-4 py-2.5 rounded-full bg-emerald-500 text-black text-xs font-extrabold">পাঠান</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 11: WEBRTC CALL OVERLAY ==================== -->
+  <div id="callModal" class="hidden fixed inset-0 z-[140] bg-gradient-to-b from-[#16102b] to-[#050508] flex flex-col items-center justify-between py-14 px-6">
+    <div class="text-center">
+      <span id="callTypeBadge" class="px-3 py-1 rounded-full bg-[#25F4EE]/20 text-[#25F4EE] text-xs font-bold">HD ভিডিও কল</span>
+      <img id="callPeerAvatar" src="" class="w-24 h-24 rounded-full mx-auto mt-6 border-4 border-[#FE2C55] shadow-2xl" />
+      <h3 id="callPeerName" class="text-xl font-extrabold mt-4">ক্রিয়েটর</h3>
+      <p id="callStatusText" class="text-xs text-gray-400 mt-1 animate-pulse">রিং হচ্ছে...</p>
+    </div>
+    <div class="flex items-center gap-6">
+      <button onclick="showToast('মাইক্রোফোন মিউট/আনমিউট হয়েছে')" class="w-14 h-14 rounded-full bg-white/15 flex items-center justify-center text-lg"><i class="fa-solid fa-microphone-slash"></i></button>
+      <button onclick="closeModal('callModal')" class="w-16 h-16 rounded-full bg-rose-600 flex items-center justify-center text-2xl shadow-xl active:scale-90"><i class="fa-solid fa-phone-slash"></i></button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 12: CREATOR ANALYTICS & 7-DAY GROWTH DASHBOARD ==================== -->
+  <div id="analyticsModal" class="hidden fixed inset-0 z-[135] bg-[#07070c] overflow-y-auto no-scrollbar">
+    <div class="max-w-[480px] mx-auto min-h-screen p-4 pb-16 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-black text-white flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-[#25F4EE]"></i> ক্রিয়েটর অ্যানালিটিক্স ড্যাশবোর্ড
+          </h3>
+          <p class="text-[11px] text-gray-400">গত ৭ দিনের ভিডিও ভিউ, প্রোফাইল ভিজিট ও কয়েন গ্রোথ</p>
+        </div>
+        <button onclick="closeModal('analyticsModal')" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Top 3 Growth Cards -->
+      <div class="grid grid-cols-3 gap-2.5">
+        <div class="p-3 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-900/10 border border-cyan-500/30">
+          <div class="text-[10px] text-gray-300">৭ দিনের ভিডিও ভিউ</div>
+          <div id="ana7dViews" class="text-lg font-black text-white mt-1">18.4K</div>
+          <div class="text-[10px] text-emerald-400 font-bold mt-0.5">+24.8% ↑</div>
+        </div>
+        <div class="p-3 rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-900/10 border border-pink-500/30">
+          <div class="text-[10px] text-gray-300">প্রোফাইল ভিজিট</div>
+          <div id="ana7dVisits" class="text-lg font-black text-white mt-1">3,920</div>
+          <div class="text-[10px] text-emerald-400 font-bold mt-0.5">+18.2% ↑</div>
+        </div>
+        <div class="p-3 rounded-2xl bg-gradient-to-br from-amber-500/20 to-yellow-900/10 border border-amber-500/30">
+          <div class="text-[10px] text-gray-300">গিফট ও কয়েন আয়</div>
+          <div id="ana7dCoins" class="text-lg font-black text-amber-300 mt-1">1,450</div>
+          <div class="text-[10px] text-emerald-400 font-bold mt-0.5">+31.5% ↑</div>
+        </div>
+      </div>
+
+      <!-- 7-Day Interactive Bar Chart -->
+      <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-extrabold text-white">গত ৭ দিনের ভিডিও ভিউ গ্রাফ</span>
+          <span class="px-2 py-0.5 rounded bg-[#25F4EE]/15 text-[#25F4EE] text-[10px] font-bold">লাইভ ডেটা</span>
+        </div>
+        <div id="analyticsBarChart" class="h-40 flex items-end justify-between gap-2 pt-4 px-1"></div>
+      </div>
+
+      <!-- Coin & Gift Earning Progress -->
+      <div class="p-4 rounded-2xl bg-white/[0.04] border border-white/10 space-y-3">
+        <h4 class="text-xs font-extrabold text-amber-300">কয়েন ও মনিটাইজেশন টার্গেট</h4>
+        <div>
+          <div class="flex justify-between text-[11px] mb-1">
+            <span class="text-gray-300">ব্লু ব্যাজ ভেরিফিকেশন এলিজিবিলিটি</span>
+            <span class="text-[#25F4EE] font-bold">85% সম্পন্ন</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-[#25F4EE] to-[#FE2C55] w-[85%]"></div>
+          </div>
+        </div>
+        <button onclick="closeModal('analyticsModal'); openWalletModal();" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#E2136E] to-[#FE2C55] text-xs font-extrabold text-white">
+          অর্জিত কয়েন বিকাশে উইথড্র করুন
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
+  <script>
+    // ==================== FIREBASE CONFIGURATION & CLOUD INITIALIZATION ====================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgAn4OehtWHwVtCp9ISdJDWHaOZKK3GFk",
+      authDomain: "tiktok-pro-46434.firebaseapp.com",
+      projectId: "tiktok-pro-46434",
+      storageBucket: "tiktok-pro-46434.firebasestorage.app",
+      messagingSenderId: "634109089305",
+      appId: "1:634109089305:web:85a8117ee997fd29a83c88",
+      measurementId: "G-91T9CD8ERJ"
+    };
+    const FCM_VAPID_KEY = "BCOPRc5OZ3eSfC08wum6is588Vc5cG9xug0-uVYyDdHqpb87jB_gfYnLI0O8LGQcWPZgPIWjdsGZ7bAFhewYuv8";
+
+    let fbDb = null;
+    let fbStorage = null;
+    let fbMessaging = null;
+
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+      fbDb = firebase.firestore();
+      fbStorage = firebase.storage();
+      if (firebase.messaging.isSupported()) {
+        fbMessaging = firebase.messaging();
+      }
+    } catch (fbErr) {
+      console.warn("Firebase offline fallback mode active:", fbErr);
+    }
+
+    // ==================== INDEXEDDB LARGE VIDEO BLOB PERSISTENCE (FIXES SOUND & LARGE FILE STORAGE) ====================
+    const IDB_NAME = 'MojaLoBD_VideoVault';
+    const IDB_STORE = 'video_blobs';
+    const blobUrlRegistry = new Map();
+
+    function openVideoVaultDB() {
+      return new Promise((resolve, reject) => {
+        if (!window.indexedDB) return reject('IndexedDB not supported');
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(IDB_STORE)) {
+            db.createObjectStore(IDB_STORE);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveVideoBlobToVault(videoId, blobOrFile) {
+      try {
+        const db = await openVideoVaultDB();
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(IDB_STORE, 'readwrite');
+          tx.objectStore(IDB_STORE).put(blobOrFile, videoId);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error);
+        });
+      } catch (e) {
+        console.warn('IndexedDB save fallback:', e);
+        return false;
+      }
+    }
+
+    async function loadVideoBlobFromVault(videoId) {
+      if (blobUrlRegistry.has(videoId)) return blobUrlRegistry.get(videoId);
+      try {
+        const db = await openVideoVaultDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(IDB_STORE, 'readonly');
+          const req = tx.objectStore(IDB_STORE).get(videoId);
+          req.onsuccess = () => {
+            if (req.result) {
+              const url = URL.createObjectURL(req.result);
+              blobUrlRegistry.set(videoId, url);
+              resolve(url);
+            } else {
+              resolve(null);
+            }
+          };
+          req.onerror = () => resolve(null);
+        });
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function hydrateStoredVideoUrls() {
+      let updated = false;
+      for (const v of appState.videos) {
+        if (v.hasLocalVaultBlob) {
+          const restoredUrl = await loadVideoBlobFromVault(v.id);
+          if (restoredUrl && v.videoUrl !== restoredUrl) {
+            v.videoUrl = restoredUrl;
+            updated = true;
+          }
+        }
+      }
+      if (updated) {
+        renderAllUI();
+      }
+    }
+
+    // ==================== MASTER ADMIN SECRET CREDENTIALS & HASH VERIFICATION ====================
+    const MASTER_ADMIN_EMAIL = 'info.atik83@gmail.com';
+    const MASTER_ADMIN_PASS = 'Atik@209267#b';
+    const OFFICIAL_BKASH_NUMBER = '01623744440';
+    let adminLoginAttempts = 0;
+    let adminLockoutUntil = 0;
+
+    // ==================== AI CONTENT & SPAM PROTECTION ENGINE ====================
+    const BANNED_SPAM_WORDS = [
+      'spam', 'scam', 'hack', 'fuck', 'bitch', 'asshole', 'bastard',
+      'বাল', 'খানকি', 'মাগি', 'চোদ', 'শালা', 'হারামি', 'ফেক', 'প্রতারক'
+    ];
+
+    function runAiSpamFilter(text) {
+      const lower = text.toLowerCase();
+      for (const word of BANNED_SPAM_WORDS) {
+        if (lower.includes(word)) {
+          return { safe: false, reason: `AI অটো-মডারেশন: অনুপযুক্ত শব্দ ("${word}") শনাক্ত হয়েছে` };
+        }
+      }
+      if (/(http|https|\.xyz|\.tk|bit\.ly)/i.test(lower)) {
+        return { safe: false, reason: 'AI স্প্যাম শিল্ড: কমেন্টে সন্দেহজনক লিঙ্ক ব্লক করা হয়েছে' };
+      }
+      return { safe: true };
+    }
+
+    function validateTrxIdWithAi(trxId, existingRequests) {
+      const clean = trxId.trim().toUpperCase();
+      if (clean.length < 8 || clean.length > 14 || !/^[A-Z0-9]+$/.test(clean)) {
+        return { valid: false, reason: 'AI সিকিউরিটি: ভুয়া বা অসম্পূর্ণ TrxID! সঠিক ৮-১২ ডিজিটের TrxID দিন।' };
+      }
+      if (/^(123456|ABCDEF|000000|111111|TEST|FAKE|DEMO)/i.test(clean)) {
+        return { valid: false, reason: 'AI সিকিউরিটি: ফেক TrxID প্যাটার্ন শনাক্ত ও ব্লক করা হয়েছে!' };
+      }
+      if (existingRequests.some(r => r.trxId === clean)) {
+        return { valid: false, reason: 'AI সিকিউরিটি: এই TrxID ইতিপূর্বে ব্যবহার করা হয়েছে (ডুপ্লিকেট ব্লক)!' };
+      }
+      return { valid: true };
+    }
+
+    // ==================== PERSISTENT STATE ARCHITECTURE (LOCALSTORAGE + INDEXEDDB + FIREBASE) ====================
+    const STORAGE_KEY = 'mojalo_bd_ultra_pro_v3';
+
+    const DEFAULT_VIDEOS = [
+      {
+        id: 'vid_101',
+        creatorId: 'usr_nadia',
+        creatorName: 'নাদিয়া ইসলাম',
+        creatorHandle: '@nadia_dhaka',
+        creatorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=NadiaLive',
+        verified: 'gold',
+        caption: 'রাতের ঢাকার নিয়ন আলো আর বৃষ্টির ছোঁয়া ✨🌧️ #ঢাকা_ভাইবস #মজালো_বিডি',
+        song: 'অরিজিনাল সাউন্ড - নাদিয়া ইসলাম',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1230-large.mp4',
+        filterCss: 'none',
+        speed: 1.0,
+        stickerText: '',
+        likes: 14200,
+        likedByMe: false,
+        bookmarkedByMe: false,
+        shares: 840,
+        views: 98500,
+        privacy: 'public',
+        pinned: true,
+        comments: [
+          { id: 'c1', user: 'রাফি আহমেদ', text: 'অসাধারণ সিনেমাটিক ভাইব আপু! 🔥', type: 'text', time: '২ ঘণ্টা আগে' },
+          { id: 'c2', user: 'সুমাইয়া', text: 'ভয়েস নোট রিপ্লাই (0:06)', type: 'voice', time: '১ ঘণ্টা আগে' }
+        ]
+      },
+      {
+        id: 'vid_102',
+        creatorId: 'usr_tanvir',
+        creatorName: 'তানভীর হাসান',
+        creatorHandle: '@tanvir_beats',
+        creatorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tanvir',
+        verified: 'blue',
+        caption: 'সমুদ্রের ঢেউ আর গিটারের সুরে হারিয়ে যাওয়া 🎸🌊 #গান_ও_সুর #মজালো_বিডি',
+        song: 'Coxs Bazar Sunset Beats - Tanvir',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4',
+        filterCss: 'contrast(1.2) saturate(1.3)',
+        speed: 1.0,
+        stickerText: '',
+        likes: 9320,
+        likedByMe: false,
+        bookmarkedByMe: false,
+        shares: 410,
+        views: 64200,
+        privacy: 'public',
+        pinned: false,
+        comments: [
+          { id: 'c3', user: 'জাহিদ', text: 'কক্সবাজারের কথা মনে পড়ে গেল ভাই!', type: 'text', time: '৪ ঘণ্টা আগে' }
+        ]
+      },
+      {
+        id: 'vid_103',
+        creatorId: 'usr_comedy',
+        creatorName: 'হাসির রাজা বিডি',
+        creatorHandle: '@hasir_raja',
+        creatorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HasirRaja',
+        verified: 'blue',
+        caption: 'বন্ধু যখন বলে "দোস্ত বিলটা আজকে তুই দে" 😂💸 #কমেডি_কিং #মজালো_বিডি',
+        song: 'Funny Bengali Comedy Tune',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-changing-lights-1240-large.mp4',
+        filterCss: 'none',
+        speed: 1.0,
+        stickerText: '',
+        likes: 28900,
+        likedByMe: false,
+        bookmarkedByMe: false,
+        shares: 3200,
+        views: 215000,
+        privacy: 'public',
+        pinned: false,
+        comments: []
+      }
+    ];
+
+    let appState = {
+      currentUser: {
+        id: 'usr_guest_01',
+        name: 'অতিথি ক্রিয়েটর',
+        handle: '@guest_creator',
+        email: '',
+        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MojaLoUser',
+        bio: 'মজালো বিডি-তে আমার অফিসিয়াল ক্রিয়েটর প্রোফাইল 🎬✨',
+        coins: 150,
+        verified: 'none',
+        isAdmin: false,
+        isLoggedIn: false,
+        following: ['usr_nadia']
+      },
+      usersDirectory: [
+        { id: 'usr_nadia', name: 'নাদিয়া ইসলাম', handle: '@nadia_dhaka', email: 'nadia@mojalo.bd', coins: 4850, verified: 'gold', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=NadiaLive' },
+        { id: 'usr_tanvir', name: 'তানভীর হাসান', handle: '@tanvir_beats', email: 'tanvir@mojalo.bd', coins: 1200, verified: 'blue', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tanvir' },
+        { id: 'usr_comedy', name: 'হাসির রাজা বিডি', handle: '@hasir_raja', email: 'comedy@mojalo.bd', coins: 3100, verified: 'blue', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HasirRaja' }
+      ],
+      videos: [...DEFAULT_VIDEOS],
+      trashVideos: [],
+      paymentRequests: [
+        {
+          id: 'pay_demo_1',
+          userId: 'usr_tanvir',
+          userName: 'তানভীর হাসান',
+          method: 'bKash',
+          sender: '01711223344',
+          trxId: 'BHG9921KL',
+          coins: 650,
+          bdt: 500,
+          status: 'approved',
+          time: 'আজ, ১০:৩০ AM'
+        }
+      ],
+      withdrawRequests: [],
+      reportedVideos: [],
+      notifications: [
+        { id: 'n1', text: 'নাদিয়া ইসলাম লাইভে এসেছেন! এখনই জয়েন করুন 🔴', time: '২ মিনিট আগে' },
+        { id: 'n2', text: 'মজালো বিডি ওয়ালেটে বিকাশ (01623744440) পেমেন্ট চালু হয়েছে 💸', time: '১ ঘণ্টা আগে' },
+        { id: 'n3', text: 'আপনার প্রোফাইলে নতুন ভিডিও আপলোড করে বোনাস কয়েন জিতুন!', time: 'আজ' }
+      ],
+      supportChat: [
+        { sender: 'admin', text: 'আসসালামু আলাইকুম! মজালো বিডি ২৪/৭ সাপোর্টে স্বাগতম। বিকাশ পেমেন্ট বা একাউন্ট নিয়ে কোনো প্রশ্ন থাকলে লিখুন।', time: 'এখন' }
+      ],
+      globalNotice: '',
+      fcmToken: ''
+    };
+
+    // Runtime UI variables
+    let authMode = 'login';
+    let currentFeedTab = 'foryou';
+    let currentProfileTab = 'videos';
+    let activeVideoIdForSheet = null;
+    let activePlayerVideoId = null;
+    let activeCommentVideoId = null;
+    let isGlobalMuted = false; // Sound enabled by default on user interaction
+    let selectedCoinPkg = { coins: 50, bdt: 50 };
+    let studioMode = 'normal';
+    let studioVideoSrc = '';
+    let studioRawFile = null;
+    let studioSelectedSong = 'অরিজিনাল সাউন্ড';
+    let studioSelectedPreviewUrl = '';
+    let studioFilterCss = 'none';
+    let studioPlaybackSpeed = 1.0;
+    let studioStickerText = '';
+    let studioTrimSeconds = 30;
+    let studioOrigVolume = 1.0;
+    let studioBgVolume = 0.75;
+    let cameraMediaStream = null;
+    let cameraMediaRecorder = null;
+    let cameraRecordedChunks = [];
+
+    // ==================== LOAD & SAVE PERSISTENT STORAGE (LOCAL + INDEXEDDB + FIREBASE FIRESTORE) ====================
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState = { ...appState, ...parsed };
+        }
+      } catch (e) {
+        console.warn('Storage load fallback:', e);
+      }
+      hydrateStoredVideoUrls();
+      syncVideosFromFirebaseCloud();
+    }
+
+    function saveState() {
+      try {
+        const serializableVideos = appState.videos.map(v => {
+          if (v.videoUrl && v.videoUrl.startsWith('blob:') && v.cloudUrl && !v.cloudUrl.startsWith('blob:')) {
+            return { ...v, videoUrl: v.cloudUrl };
+          }
+          return v;
+        });
+        const stateToSave = { ...appState, videos: serializableVideos };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+      } catch (e) {
+        console.warn('Storage quota warning:', e);
+      }
+    }
+
+    async function syncVideosFromFirebaseCloud() {
+      if (!fbDb) return;
+      try {
+        const snap = await fbDb.collection('mojalo_videos').orderBy('createdAt', 'desc').limit(30).get();
+        if (!snap.empty) {
+          const cloudVideos = [];
+          snap.forEach(doc => cloudVideos.push({ id: doc.id, ...doc.data() }));
+          const existingIds = new Set(appState.videos.map(v => v.id));
+          cloudVideos.forEach(cv => {
+            if (!existingIds.has(cv.id)) {
+              appState.videos.unshift(cv);
+            }
+          });
+          saveState();
+          renderAllUI();
+        }
+      } catch (err) {
+        console.log('Cloud read sync standby:', err.message);
+      }
+    }
+
+    // ==================== FCM WEB PUSH NOTIFICATIONS ====================
+    async function enablePushNotifications() {
+      if (!('Notification' in window)) {
+        showToast('এই ব্রাউজারে Push Notification সাপোর্টেড নয়');
+        return;
+      }
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          showToast('নোটিফিকেশন পারমিশন ব্লক করা আছে');
+          return;
+        }
+        if (fbMessaging) {
+          const token = await fbMessaging.getToken({ vapidKey: FCM_VAPID_KEY }).catch(() => null);
+          if (token) {
+            appState.fcmToken = token;
+            saveState();
+            if (fbDb) {
+              fbDb.collection('fcm_tokens').doc(appState.currentUser.id).set({
+                token: token,
+                userId: appState.currentUser.id,
+                updatedAt: Date.now()
+              }).catch(() => {});
+            }
+          }
+        }
+        new Notification('মজালো বিডি — MojaLo BD', {
+          body: '🔔 পুশ নোটিফিকেশন সফলভাবে চালু হয়েছে! নতুন ফলোয়ার, লাইক ও মেসেজের অ্যালার্ট পাবেন।',
+          icon: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MojaLoUser'
+        });
+        showToast('🔔 Push Notification অ্যাক্টিভ হয়েছে!');
+      } catch (e) {
+        showToast('🔔 ইন-অ্যাপ পুশ অ্যালার্ট চালু হয়েছে!');
+      }
+    }
+
+    function triggerLocalPushAlert(title, body) {
+      appState.notifications.unshift({
+        id: 'n_' + Date.now(),
+        text: `${title}: ${body}`,
+        time: 'এইমাত্র'
+      });
+      document.getElementById('notifBadge').innerText = appState.notifications.length;
+      if ('Notification' in window && Notification.permission === 'granted') {
+        try {
+          new Notification(title, { body });
+        } catch (e) {}
+      }
+    }
+
+    // ==================== INITIALIZATION & 3.5s SPLASH ====================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      const bar = document.getElementById('splashBar');
+      if (bar) setTimeout(() => { bar.style.width = '100%'; }, 80);
+
+      setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        if (splash) {
+          splash.style.opacity = '0';
+          setTimeout(() => splash.classList.add('hidden'), 500);
+        }
+      }, 3300);
+
+      syncUserInDirectory();
+      renderAllUI();
+      setupKeyboardShortcuts();
+    });
+
+    function setupKeyboardShortcuts() {
+      document.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        const playerOpen = !document.getElementById('videoPlayerModal').classList.contains('hidden');
+        if (playerOpen) {
+          if (e.code === 'Space') { e.preventDefault(); toggleModalVideoPlayPause(); }
+          if (e.key === 'm' || e.key === 'M') toggleModalVideoMute();
+          if (e.key === 'f' || e.key === 'F') toggleModalFullscreen();
+          if (e.key === 'Escape') closeVideoPlayerModal();
+          return;
+        }
+        const homeVisible = !document.getElementById('view-home').classList.contains('hidden');
+        if (homeVisible) {
+          if (e.key === 'ArrowDown') { e.preventDefault(); scrollFeedByStep(1); }
+          if (e.key === 'ArrowUp') { e.preventDefault(); scrollFeedByStep(-1); }
+          if (e.key === 'm' || e.key === 'M') toggleGlobalAudioMute();
+        }
+      });
+    }
+
+    function scrollFeedByStep(dir) {
+      const feed = document.getElementById('videoFeedContainer');
+      if (!feed) return;
+      feed.scrollBy({ top: dir * feed.clientHeight, behavior: 'smooth' });
+    }
+
+    function renderAllUI() {
+      renderGlobalNotice();
+      renderVideoFeed();
+      renderDiscoverGrid();
+      renderInbox();
+      renderProfile();
+      renderDesktopSidebarCreators();
+      document.getElementById('notifBadge').innerText = appState.notifications.length;
+      if (appState.currentUser.isAdmin) {
+        document.getElementById('adminCrownBtn').classList.remove('hidden');
+        document.getElementById('adminCrownBtn').classList.add('flex');
+      } else {
+        document.getElementById('adminCrownBtn').classList.add('hidden');
+        document.getElementById('adminCrownBtn').classList.remove('flex');
+      }
+    }
+
+    function renderDesktopSidebarCreators() {
+      const box = document.getElementById('desktopSuggestedCreators');
+      if (!box) return;
+      box.innerHTML = appState.usersDirectory.slice(0, 4).map(u => `
+        <div onclick="switchMainTab('discover'); filterDiscover('${u.name}')" class="flex items-center gap-2.5 p-2 rounded-xl hover:bg-white/10 cursor-pointer transition">
+          <img src="${u.avatar}" class="w-8 h-8 rounded-full bg-gray-800 object-cover" />
+          <div class="min-w-0 flex-1">
+            <div class="text-xs font-bold text-white truncate flex items-center gap-1">${u.name} ${getVerifiedBadgeHTML(u.verified)}</div>
+            <div class="text-[10px] text-gray-400 truncate">${u.handle}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==================== HELPER: VERIFIED BADGE HTML ====================
+    function getVerifiedBadgeHTML(level) {
+      if (level === 'gold') {
+        return `<i class="fa-solid fa-circle-check text-amber-400 text-xs" title="Gold Verified Creator"></i>`;
+      }
+      if (level === 'blue') {
+        return `<i class="fa-solid fa-circle-check text-[#25F4EE] text-xs" title="Verified Creator"></i>`;
+      }
+      return '';
+    }
+
+    // ==================== TOAST & MODAL CONTROLS ====================
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const txt = document.getElementById('toastMsg');
+      txt.innerHTML = `<i class="fa-solid fa-circle-check text-[#25F4EE]"></i> <span>${msg}</span>`;
+      box.classList.remove('opacity-0', '-translate-y-3');
+      box.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        box.classList.add('opacity-0', '-translate-y-3');
+        box.classList.remove('opacity-100', 'translate-y-0');
+      }, 2800);
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ==================== NAVIGATION TABS ====================
+    function switchMainTab(tab) {
+      document.querySelectorAll('.app-view').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`view-${tab}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-white');
+        btn.classList.add('text-gray-400');
+      });
+      const activeNav = document.getElementById(`nav-${tab}`);
+      if (activeNav) {
+        activeNav.classList.add('text-white');
+        activeNav.classList.remove('text-gray-400');
+      }
+
+      // Pause feed audio when switching away from home
+      if (tab !== 'home') {
+        pauseAllFeedMedia();
+      } else {
+        syncActiveFeedMediaPlayback();
+      }
+
+      if (tab === 'profile') renderProfile();
+      if (tab === 'discover') renderDiscoverGrid();
+      if (tab === 'inbox') renderInbox();
+    }
+
+    // ==================== AUTHENTICATION & SECURE ADMIN REDIRECT ====================
+    function handleAuthAction() {
+      if (appState.currentUser.isLoggedIn) {
+        appState.currentUser = {
+          id: 'usr_guest_01',
+          name: 'অতিথি ক্রিয়েটর',
+          handle: '@guest_creator',
+          email: '',
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=MojaLoUser',
+          bio: 'মজালো বিডি-তে আমার অফিসিয়াল ক্রিয়েটর প্রোফাইল 🎬✨',
+          coins: 150,
+          verified: 'none',
+          isAdmin: false,
+          isLoggedIn: false,
+          following: ['usr_nadia']
+        };
+        saveState();
+        renderAllUI();
+        showToast('সফলভাবে লগআউট হয়েছে');
+      } else {
+        setAuthMode('login');
+        document.getElementById('authModal').classList.remove('hidden');
+      }
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode;
+      const isSignup = mode === 'signup';
+      document.getElementById('signupNameGroup').classList.toggle('hidden', !isSignup);
+      document.getElementById('authModalTitle').innerText = isSignup ? 'নতুন ক্রিয়েটর অ্যাকাউন্ট' : 'মজালো বিডি-তে লগইন';
+      document.getElementById('authSubmitBtn').innerText = isSignup ? 'রেজিস্টার করুন' : 'লগইন করুন';
+      document.getElementById('authTabLogin').className = !isSignup ? 'py-2 rounded-lg bg-[#FE2C55] text-white' : 'py-2 rounded-lg text-gray-400';
+      document.getElementById('authTabSignup').className = isSignup ? 'py-2 rounded-lg bg-[#FE2C55] text-white' : 'py-2 rounded-lg text-gray-400';
+    }
+
+    function submitAuthForm(e) {
+      e.preventDefault();
+      const email = document.getElementById('authEmailInput').value.trim();
+      const pass = document.getElementById('authPassInput').value.trim();
+      const nameInput = document.getElementById('authNameInput').value.trim();
+
+      if (Date.now() < adminLockoutUntil) {
+        const secs = Math.ceil((adminLockoutUntil - Date.now()) / 1000);
+        showToast(`🛡️ সিকিউরিটি লক: ${secs} সেকেন্ড পর আবার চেষ্টা করুন`);
+        return;
+      }
+
+      // 1. MASTER ADMIN INSTANT LOGIN & DIRECT DASHBOARD OPEN
+      if (email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
+        if (pass !== MASTER_ADMIN_PASS) {
+          adminLoginAttempts++;
+          if (adminLoginAttempts >= 3) {
+            adminLockoutUntil = Date.now() + 30000;
+            adminLoginAttempts = 0;
+            showToast('🛡️ একাধিক ভুল পাসওয়ার্ড! ৩০ সেকেন্ডের জন্য লক করা হয়েছে।');
+          } else {
+            showToast('❌ অ্যাডমিন পাসওয়ার্ড সঠিক নয়!');
+          }
+          return;
+        }
+
+        adminLoginAttempts = 0;
+        appState.currentUser = {
+          id: 'usr_master_admin',
+          name: 'Atik (Master Admin)',
+          handle: '@atik_root',
+          email: MASTER_ADMIN_EMAIL,
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=AtikAdmin',
+          bio: 'মজালো বিডি প্ল্যাটফর্ম ফাউন্ডার ও মাস্টার অ্যাডমিন 👑',
+          coins: 99999,
+          verified: 'gold',
+          isAdmin: true,
+          isLoggedIn: true,
+          following: ['usr_nadia', 'usr_tanvir', 'usr_comedy']
+        };
+        syncUserInDirectory();
+        saveState();
+
+        document.getElementById('authModal').classList.add('hidden');
+        const splash = document.getElementById('splashScreen');
+        if (splash) splash.classList.add('hidden');
+
+        renderAllUI();
+        switchMainTab('profile');
+        openAdminDashboard();
+        showToast('👑 মাস্টার অ্যাডমিন ড্যাশবোর্ড আনলক হয়েছে!');
+        return;
+      }
+
+      // 2. REGULAR CREATOR LOGIN / SIGNUP (PERSISTENT IDENTITY)
+      const cleanHandle = '@' + email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
+      const existingUser = appState.usersDirectory.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+      if (existingUser) {
+        appState.currentUser = {
+          ...appState.currentUser,
+          id: existingUser.id,
+          name: existingUser.name,
+          handle: existingUser.handle,
+          email: existingUser.email,
+          avatar: existingUser.avatar,
+          coins: existingUser.coins,
+          verified: existingUser.verified,
+          isAdmin: false,
+          isLoggedIn: true
+        };
+      } else {
+        const newId = 'usr_' + Date.now();
+        const displayName = nameInput || email.split('@')[0];
+        appState.currentUser = {
+          id: newId,
+          name: displayName,
+          handle: cleanHandle,
+          email: email,
+          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`,
+          bio: 'মজালো বিডি ক্রিয়েটর 🎬✨',
+          coins: 200,
+          verified: 'none',
+          isAdmin: false,
+          isLoggedIn: true,
+          following: ['usr_nadia']
+        };
+        syncUserInDirectory();
+      }
+
+      saveState();
+      closeModal('authModal');
+      renderAllUI();
+      switchMainTab('profile');
+      showToast(`স্বাগতম, ${appState.currentUser.name}!`);
+    }
+
+    function quickDemoCreatorLogin() {
+      document.getElementById('authEmailInput').value = 'creator.bd@mojalo.com';
+      document.getElementById('authPassInput').value = '123456';
+      submitAuthForm(new Event('submit'));
+    }
+
+    function syncUserInDirectory() {
+      const u = appState.currentUser;
+      if (!u.isLoggedIn) return;
+      const idx = appState.usersDirectory.findIndex(item => item.id === u.id);
+      const record = {
+        id: u.id,
+        name: u.name,
+        handle: u.handle,
+        email: u.email,
+        coins: u.coins,
+        verified: u.verified,
+        avatar: u.avatar
+      };
+      if (idx >= 0) appState.usersDirectory[idx] = record;
+      else appState.usersDirectory.unshift(record);
+    }
+
+    // ==================== RENDER VERTICAL SNAP VIDEO FEED (WITH REAL SOUND + DUAL AUDIO SYNC) ====================
+    function switchFeedTab(tab) {
+      currentFeedTab = tab;
+      document.getElementById('tab-foryou').className = tab === 'foryou' ? 'text-white relative pb-1' : 'text-white/60 hover:text-white transition';
+      document.getElementById('tab-following').className = tab === 'following' ? 'text-white relative pb-1' : 'text-white/60 hover:text-white transition';
+      renderVideoFeed();
+    }
+
+    function formatCaptionHashtags(caption) {
+      return caption.replace(/(#[a-zA-Z0-9_ঀ-৿]+)/g, `<span onclick="event.stopPropagation(); switchMainTab('discover'); filterByTag('$1');" class="text-[#25F4EE] font-bold cursor-pointer hover:underline">$1</span>`);
+    }
+
+    function renderVideoFeed() {
+      const container = document.getElementById('videoFeedContainer');
+      let list = appState.videos.filter(v => v.privacy === 'public' || v.creatorId === appState.currentUser.id);
+      if (currentFeedTab === 'following') {
+        list = list.filter(v => appState.currentUser.following.includes(v.creatorId) || v.creatorId === appState.currentUser.id);
+      }
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="w-full h-full flex flex-col items-center justify-center p-8 text-center">
+            <i class="fa-solid fa-film text-4xl text-gray-600 mb-3"></i>
+            <p class="text-sm font-bold text-gray-300">এখানে এখনো কোনো ভিডিও নেই</p>
+            <button onclick="switchFeedTab('foryou')" class="mt-3 px-4 py-2 rounded-full bg-[#FE2C55] text-xs font-bold">ফর ইউ ফিড দেখুন</button>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = list.map((v, index) => {
+        const isFollowing = appState.currentUser.following.includes(v.creatorId);
+        const isOwn = v.creatorId === appState.currentUser.id;
+        const filterStyle = v.filterCss ? `filter: ${v.filterCss};` : '';
+        const origVol = typeof v.origVolume === 'number' ? v.origVolume : 1.0;
+        const bgVol = typeof v.bgVolume === 'number' ? v.bgVolume : 0.75;
+
+        return `
+          <div class="snap-item bg-black flex items-center justify-center overflow-hidden" data-vid="${v.id}">
+            <video id="feedVid_${v.id}" src="${v.videoUrl}" style="${filterStyle}" class="feed-video w-full h-full object-cover" loop playsinline ${index === 0 ? 'autoplay' : ''} onloadedmetadata="this.playbackRate=${v.speed || 1}; this.volume=${origVol};" onclick="handleFeedVideoTap(event, '${v.id}', this)"></video>
+            ${v.bgAudioUrl ? `<audio id="feedBgAudio_${v.id}" src="${v.bgAudioUrl}" class="feed-bg-audio" loop preload="auto" onloadedmetadata="this.volume=${bgVol};"></audio>` : ''}
+            ${v.stickerText ? `<div class="absolute top-1/3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-white/20 text-white font-black text-base shadow-xl pointer-events-none z-10">${v.stickerText}</div>` : ''}
+            <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/80 pointer-events-none"></div>
+
+            <!-- Double Tap Heart Animation Target -->
+            <div id="heartBurst_${v.id}" class="pointer-events-none absolute z-30"></div>
+
+            <!-- Right Vertical TikTok Action Bar -->
+            <div class="absolute right-3 bottom-24 z-20 flex flex-col items-center gap-3.5">
+              <!-- Creator Avatar + Follow Plus -->
+              <div class="relative mb-1">
+                <img src="${v.creatorAvatar}" onclick="switchMainTab('discover'); filterDiscover('${v.creatorName}')" class="w-11 h-11 rounded-full border-2 border-white object-cover bg-gray-900 cursor-pointer" />
+                ${!isOwn ? `
+                  <button onclick="toggleFollowCreator('${v.creatorId}', '${v.creatorName}')" class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full ${isFollowing ? 'bg-emerald-500' : 'bg-[#FE2C55]'} text-white flex items-center justify-center text-[10px] font-black shadow">
+                    <i class="fa-solid ${isFollowing ? 'fa-check' : 'fa-plus'}"></i>
+                  </button>` : ''}
+              </div>
+
+              <!-- Like Button -->
+              <button onclick="toggleLikeVideo('${v.id}')" class="flex flex-col items-center active:scale-125 transition">
+                <div class="w-10 h-10 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center">
+                  <i class="fa-solid fa-heart text-2xl ${v.likedByMe ? 'text-[#FE2C55]' : 'text-white'}"></i>
+                </div>
+                <span class="text-[11px] font-bold mt-0.5">${formatNumber(v.likes)}</span>
+              </button>
+
+              <!-- Comments Button -->
+              <button onclick="openCommentsDrawer('${v.id}')" class="flex flex-col items-center active:scale-110 transition">
+                <div class="w-10 h-10 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center">
+                  <i class="fa-solid fa-comment-dots text-2xl text-white"></i>
+                </div>
+                <span class="text-[11px] font-bold mt-0.5">${v.comments.length}</span>
+              </button>
+
+              <!-- Bookmark / Save Video Button -->
+              <button onclick="toggleBookmarkVideo('${v.id}')" class="flex flex-col items-center active:scale-110 transition">
+                <div class="w-10 h-10 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center">
+                  <i class="fa-solid fa-bookmark text-xl ${v.bookmarkedByMe ? 'text-amber-400' : 'text-white'}"></i>
+                </div>
+                <span class="text-[10px] font-bold mt-0.5">${v.bookmarkedByMe ? 'সেভড' : 'সেভ'}</span>
+              </button>
+
+              <!-- Gift / Support Creator Button -->
+              <button onclick="openLiveHub()" class="flex flex-col items-center active:scale-110 transition">
+                <div class="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/40 backdrop-blur-sm flex items-center justify-center">
+                  <i class="fa-solid fa-gift text-xl text-amber-300"></i>
+                </div>
+                <span class="text-[10px] font-bold text-amber-300 mt-0.5">গিফট</span>
+              </button>
+
+              <!-- Share & More Options Sheet -->
+              <button onclick="openVideoActionSheet('${v.id}')" class="flex flex-col items-center active:scale-110 transition">
+                <div class="w-10 h-10 rounded-full bg-black/35 backdrop-blur-sm flex items-center justify-center">
+                  <i class="fa-solid fa-share text-xl text-white"></i>
+                </div>
+                <span class="text-[11px] font-bold mt-0.5">${formatNumber(v.shares)}</span>
+              </button>
+
+              <!-- Spinning Vinyl Music Disc -->
+              <div onclick="openCreatorStudio('normal')" title="এই সাউন্ড দিয়ে ভিডিও বানান" class="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-900 via-gray-700 to-gray-900 p-2 border border-white/25 animate-disc cursor-pointer">
+                <img src="${v.creatorAvatar}" class="w-full h-full rounded-full object-cover" />
+              </div>
+            </div>
+
+            <!-- Bottom Left Creator Caption & Sound Info -->
+            <div class="absolute left-4 right-20 bottom-20 z-20 space-y-1.5">
+              <div class="flex items-center gap-1.5">
+                <span onclick="switchMainTab('discover'); filterDiscover('${v.creatorName}')" class="text-sm font-extrabold text-white cursor-pointer hover:underline">${v.creatorHandle}</span>
+                ${getVerifiedBadgeHTML(v.verified)}
+                ${v.pinned ? `<span class="px-1.5 py-0.5 rounded bg-amber-500/25 text-amber-300 text-[9px] font-bold">📌 Pinned</span>` : ''}
+                ${v.privacy === 'private' ? `<span class="px-1.5 py-0.5 rounded bg-white/15 text-gray-200 text-[9px] font-bold">🔒 Private</span>` : ''}
+              </div>
+              <p class="text-xs text-gray-100 leading-snug line-clamp-2">${formatCaptionHashtags(v.caption)}</p>
+              <div class="flex items-center gap-2 text-[11px] text-gray-300 pt-0.5">
+                <i class="fa-solid fa-music text-[#25F4EE] text-[10px]"></i>
+                <span class="truncate">${v.song}</span>
+                <span class="text-gray-400">• 👁️ ${formatNumber(v.views)}</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      attachFeedScrollObserver();
+    }
+
+    let lastTapTime = 0;
+    function handleFeedVideoTap(e, videoId, videoEl) {
+      const now = Date.now();
+      if (now - lastTapTime < 280) {
+        // Double tap -> Heart burst + Like
+        const v = appState.videos.find(item => item.id === videoId);
+        if (v && !v.likedByMe) {
+          toggleLikeVideo(videoId);
+        }
+        const rect = videoEl.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const burstContainer = document.getElementById(`heartBurst_${videoId}`);
+        if (burstContainer) {
+          const heart = document.createElement('i');
+          heart.className = 'fa-solid fa-heart text-6xl text-[#FE2C55] drop-shadow-[0_0_20px_rgba(254,44,85,0.9)] heart-burst absolute';
+          heart.style.left = x + 'px';
+          heart.style.top = y + 'px';
+          burstContainer.appendChild(heart);
+          setTimeout(() => heart.remove(), 900);
+        }
+      } else {
+        toggleVideoPlay(videoEl, videoId);
+      }
+      lastTapTime = now;
+    }
+
+    function toggleVideoPlay(videoEl, videoId) {
+      const bgAudio = document.getElementById(`feedBgAudio_${videoId}`);
+      if (videoEl.paused) {
+        videoEl.muted = isGlobalMuted;
+        videoEl.play().catch(() => {});
+        if (bgAudio) {
+          bgAudio.muted = isGlobalMuted;
+          bgAudio.play().catch(() => {});
+        }
+      } else {
+        videoEl.pause();
+        if (bgAudio) bgAudio.pause();
+      }
+    }
+
+    function toggleGlobalAudioMute() {
+      isGlobalMuted = !isGlobalMuted;
+      const icon = document.getElementById('globalMuteIcon');
+      if (icon) {
+        icon.className = isGlobalMuted ? 'fa-solid fa-volume-xmark text-xs text-rose-400' : 'fa-solid fa-volume-high text-xs text-amber-300';
+      }
+      document.querySelectorAll('.feed-video, .feed-bg-audio').forEach(el => {
+        el.muted = isGlobalMuted;
+      });
+      showToast(isGlobalMuted ? '🔇 সাউন্ড মিউট করা হয়েছে' : '🔊 অরিজিনাল সাউন্ড চালু হয়েছে');
+    }
+
+    function pauseAllFeedMedia() {
+      document.querySelectorAll('.feed-video, .feed-bg-audio').forEach(el => {
+        el.pause();
+      });
+    }
+
+    function syncActiveFeedMediaPlayback() {
+      const items = document.querySelectorAll('#videoFeedContainer .snap-item');
+      items.forEach((item, idx) => {
+        const vid = item.querySelector('.feed-video');
+        const bgAudio = item.querySelector('.feed-bg-audio');
+        if (!vid) return;
+        const rect = item.getBoundingClientRect();
+        const isVisible = rect.top >= -100 && rect.top < window.innerHeight / 2;
+        if (isVisible || idx === 0) {
+          vid.muted = isGlobalMuted;
+          vid.play().catch(() => {});
+          if (bgAudio) {
+            bgAudio.muted = isGlobalMuted;
+            bgAudio.play().catch(() => {});
+          }
+        } else {
+          vid.pause();
+          if (bgAudio) bgAudio.pause();
+        }
+      });
+    }
+
+    function attachFeedScrollObserver() {
+      const feed = document.getElementById('videoFeedContainer');
+      if (!feed) return;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const vid = entry.target.querySelector('.feed-video');
+          const bgAudio = entry.target.querySelector('.feed-bg-audio');
+          if (!vid) return;
+          if (entry.isIntersecting) {
+            vid.muted = isGlobalMuted;
+            vid.play().catch(() => {
+              // Browser autoplay fallback if user hasn't interacted yet
+              vid.muted = true;
+              vid.play().catch(() => {});
+            });
+            if (bgAudio) {
+              bgAudio.muted = isGlobalMuted;
+              bgAudio.play().catch(() => {});
+            }
+          } else {
+            vid.pause();
+            if (bgAudio) bgAudio.pause();
+          }
+        });
+      }, { root: feed, threshold: 0.65 });
+
+      feed.querySelectorAll('.snap-item').forEach(item => observer.observe(item));
+    }
+
+    function toggleLikeVideo(id) {
+      const v = appState.videos.find(item => item.id === id);
+      if (!v) return;
+      v.likedByMe = !v.likedByMe;
+      v.likes += v.likedByMe ? 1 : -1;
+      if (v.likedByMe) {
+        triggerLocalPushAlert('নতুন লাইক ❤️', `${appState.currentUser.name} একটি ভিডিওতে লাইক দিয়েছেন`);
+      }
+      saveState();
+      renderVideoFeed();
+      renderProfile();
+    }
+
+    function toggleBookmarkVideo(id) {
+      const v = appState.videos.find(item => item.id === id);
+      if (!v) return;
+      v.bookmarkedByMe = !v.bookmarkedByMe;
+      saveState();
+      renderVideoFeed();
+      renderProfile();
+      showToast(v.bookmarkedByMe ? '🔖 ভিডিওটি সেভড ট্যাবে সংরক্ষিত হয়েছে' : 'সেভ তালিকা থেকে সরানো হয়েছে');
+    }
+
+    function toggleFollowCreator(creatorId, creatorName = 'ক্রিয়েটর') {
+      const idx = appState.currentUser.following.indexOf(creatorId);
+      if (idx >= 0) {
+        appState.currentUser.following.splice(idx, 1);
+        showToast('আনফলো করা হয়েছে');
+      } else {
+        appState.currentUser.following.push(creatorId);
+        triggerLocalPushAlert('নতুন ফলোয়ার 🎉', `আপনি ${creatorName}-কে ফলো করেছেন`);
+        showToast('ফলো করা হয়েছে ✓');
+      }
+      saveState();
+      renderVideoFeed();
+      renderProfile();
+    }
+
+    // ==================== FULLSCREEN INTERACTIVE VIDEO PLAYER MODAL (FIXED FOR PROFILE VIDEOS!) ====================
+    function openVideoPlayerModal(videoId) {
+      const v = appState.videos.find(item => item.id === videoId);
+      if (!v) return;
+
+      activePlayerVideoId = videoId;
+      pauseAllFeedMedia();
+
+      // Increment view count
+      v.views = (v.views || 0) + 1;
+      saveState();
+
+      const modal = document.getElementById('videoPlayerModal');
+      const vidEl = document.getElementById('modalVideoEl');
+      const bgAudioEl = document.getElementById('modalBgAudioEl');
+      const stickerEl = document.getElementById('modalVideoSticker');
+
+      vidEl.src = v.videoUrl;
+      vidEl.style.filter = v.filterCss || 'none';
+      vidEl.playbackRate = v.speed || 1.0;
+      vidEl.volume = typeof v.origVolume === 'number' ? v.origVolume : 1.0;
+      vidEl.muted = false;
+
+      if (v.bgAudioUrl) {
+        bgAudioEl.src = v.bgAudioUrl;
+        bgAudioEl.volume = typeof v.bgVolume === 'number' ? v.bgVolume : 0.75;
+        bgAudioEl.muted = false;
+      } else {
+        bgAudioEl.pause();
+        bgAudioEl.removeAttribute('src');
+      }
+
+      if (v.stickerText) {
+        stickerEl.innerText = v.stickerText;
+        stickerEl.classList.remove('hidden');
+      } else {
+        stickerEl.classList.add('hidden');
+      }
+
+      document.getElementById('playerCreatorHandle').innerText = v.creatorHandle;
+      document.getElementById('playerVerifiedBadge').innerHTML = getVerifiedBadgeHTML(v.verified);
+      document.getElementById('playerVideoCaption').innerText = v.caption;
+      document.getElementById('playerVideoSong').innerText = v.song;
+      document.getElementById('playerLikeIcon').className = v.likedByMe ? 'fa-solid fa-heart text-[#FE2C55]' : 'fa-solid fa-heart text-white';
+      document.getElementById('modalCenterPlayBadge').classList.add('hidden');
+      document.getElementById('modalPlayPauseIcon').className = 'fa-solid fa-pause';
+      document.getElementById('modalMuteIcon').className = 'fa-solid fa-volume-high';
+      document.getElementById('modalMuteLabel').innerText = 'Sound On';
+
+      // Timeline scrubber updater
+      vidEl.ontimeupdate = () => {
+        if (!vidEl.duration) return;
+        const pct = (vidEl.currentTime / vidEl.duration) * 100;
+        document.getElementById('playerScrubber').value = pct;
+        document.getElementById('playerCurrentTime').innerText = formatDuration(vidEl.currentTime);
+        document.getElementById('playerDurationTime').innerText = formatDuration(vidEl.duration);
+      };
+
+      modal.classList.remove('hidden');
+      vidEl.play().catch(() => {});
+      if (v.bgAudioUrl) bgAudioEl.play().catch(() => {});
+    }
+
+    function closeVideoPlayerModal() {
+      const vidEl = document.getElementById('modalVideoEl');
+      const bgAudioEl = document.getElementById('modalBgAudioEl');
+      vidEl.pause();
+      bgAudioEl.pause();
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      document.getElementById('videoPlayerModal').classList.add('hidden');
+      renderProfile();
+      if (!document.getElementById('view-home').classList.contains('hidden')) {
+        syncActiveFeedMediaPlayback();
+      }
+    }
+
+    function toggleModalVideoPlayPause() {
+      const vidEl = document.getElementById('modalVideoEl');
+      const bgAudioEl = document.getElementById('modalBgAudioEl');
+      const badge = document.getElementById('modalCenterPlayBadge');
+      const icon = document.getElementById('modalPlayPauseIcon');
+      if (vidEl.paused) {
+        vidEl.play().catch(() => {});
+        if (bgAudioEl.src) bgAudioEl.play().catch(() => {});
+        badge.classList.add('hidden');
+        icon.className = 'fa-solid fa-pause';
+      } else {
+        vidEl.pause();
+        if (bgAudioEl.src) bgAudioEl.pause();
+        badge.classList.remove('hidden');
+        icon.className = 'fa-solid fa-play ml-0.5';
+      }
+    }
+
+    function toggleModalVideoMute() {
+      const vidEl = document.getElementById('modalVideoEl');
+      const bgAudioEl = document.getElementById('modalBgAudioEl');
+      vidEl.muted = !vidEl.muted;
+      bgAudioEl.muted = vidEl.muted;
+      document.getElementById('modalMuteIcon').className = vidEl.muted ? 'fa-solid fa-volume-xmark text-rose-400' : 'fa-solid fa-volume-high';
+      document.getElementById('modalMuteLabel').innerText = vidEl.muted ? 'Muted' : 'Sound On';
+    }
+
+    function toggleModalFullscreen() {
+      const wrapper = document.getElementById('playerModalWrapper');
+      if (!document.fullscreenElement) {
+        if (wrapper.requestFullscreen) {
+          wrapper.requestFullscreen().catch(() => showToast('ফুলস্ক্রিন সাপোর্ট করছে না'));
+        }
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    function seekModalVideo(val) {
+      const vidEl = document.getElementById('modalVideoEl');
+      const bgAudioEl = document.getElementById('modalBgAudioEl');
+      if (!vidEl.duration) return;
+      const targetTime = (parseFloat(val) / 100) * vidEl.duration;
+      vidEl.currentTime = targetTime;
+      if (bgAudioEl.src && bgAudioEl.duration) {
+        bgAudioEl.currentTime = targetTime % bgAudioEl.duration;
+      }
+    }
+
+    function openActionSheetFromPlayer() {
+      if (activePlayerVideoId) {
+        openVideoActionSheet(activePlayerVideoId);
+      }
+    }
+
+    function likeFromPlayerModal() {
+      if (!activePlayerVideoId) return;
+      toggleLikeVideo(activePlayerVideoId);
+      const v = appState.videos.find(item => item.id === activePlayerVideoId);
+      if (v) {
+        document.getElementById('playerLikeIcon').className = v.likedByMe ? 'fa-solid fa-heart text-[#FE2C55]' : 'fa-solid fa-heart text-white';
+      }
+    }
+
+    function commentFromPlayerModal() {
+      if (activePlayerVideoId) {
+        openCommentsDrawer(activePlayerVideoId);
+      }
+    }
+
+    function formatDuration(sec) {
+      const s = Math.floor(sec || 0);
+      const mins = Math.floor(s / 60);
+      const rem = s % 60;
+      return `${mins}:${rem < 10 ? '0' : ''}${rem}`;
+    }
+
+    // ==================== TIKTOK-STYLE PERSISTENT CREATOR PROFILE ====================
+    function switchProfileTab(tab) {
+      currentProfileTab = tab;
+      ['videos', 'saved', 'liked', 'private'].forEach(t => {
+        const el = document.getElementById(`ptab-${t}`);
+        if (!el) return;
+        el.className = t === tab
+          ? 'py-3 text-white border-b-2 border-white flex items-center justify-center gap-1'
+          : 'py-3 text-gray-400 flex items-center justify-center gap-1';
+      });
+      renderProfile();
+    }
+
+    function renderProfile() {
+      const u = appState.currentUser;
+      document.getElementById('profileDisplayName').innerText = u.name;
+      document.getElementById('profileVerifiedBadge').innerHTML = getVerifiedBadgeHTML(u.verified);
+      document.getElementById('profileHandle').innerText = u.handle;
+      document.getElementById('profileBio').innerText = u.bio;
+      document.getElementById('profileAvatarImg').src = u.avatar;
+      document.getElementById('profileCoinCount').innerText = formatNumber(u.coins);
+      document.getElementById('profileAuthBtn').innerText = u.isLoggedIn ? 'লগআউট' : 'লগইন';
+      document.getElementById('statFollowing').innerText = u.following.length;
+
+      const myPublicVideos = appState.videos.filter(v => v.creatorId === u.id && v.privacy === 'public');
+      const myPrivateVideos = appState.videos.filter(v => v.creatorId === u.id && v.privacy === 'private');
+      const savedVideos = appState.videos.filter(v => v.bookmarkedByMe);
+      const likedVideos = appState.videos.filter(v => v.likedByMe);
+
+      document.getElementById('myVideosCount').innerText = myPublicVideos.length;
+
+      let gridVideos = [];
+      if (currentProfileTab === 'videos') {
+        gridVideos = [...myPublicVideos].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+      } else if (currentProfileTab === 'saved') {
+        gridVideos = savedVideos;
+      } else if (currentProfileTab === 'private') {
+        gridVideos = myPrivateVideos;
+      } else {
+        gridVideos = likedVideos;
+      }
+
+      const grid = document.getElementById('profileVideosGrid');
+      if (gridVideos.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-3 py-12 text-center px-4">
+            <i class="fa-solid fa-clapperboard text-3xl text-gray-600 mb-2"></i>
+            <p class="text-xs text-gray-400">এই ট্যাবে এখনো কোনো ভিডিও নেই</p>
+            <button onclick="openCreatorStudio('normal')" class="mt-3 px-4 py-1.5 rounded-full bg-[#FE2C55] text-xs font-bold">নতুন ভিডিও আপলোড করুন</button>
+          </div>`;
+        return;
+      }
+
+      // Clicking any video thumbnail now opens the Fullscreen Video Player with Play, Pause, Sound & Fullscreen controls!
+      grid.innerHTML = gridVideos.map(v => `
+        <div onclick="openVideoPlayerModal('${v.id}')" class="relative aspect-[3/4] bg-[#12131d] overflow-hidden group cursor-pointer">
+          <video src="${v.videoUrl}" style="filter:${v.filterCss || 'none'}" class="w-full h-full object-cover" muted playsinline preload="metadata"></video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/25"></div>
+          <button onclick="event.stopPropagation(); openVideoActionSheet('${v.id}')" title="অপশন" class="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/65 text-white flex items-center justify-center text-[10px] z-10">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </button>
+          ${v.pinned ? `<span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-[#FE2C55] text-[9px] font-black text-white">পিন করা</span>` : ''}
+          ${v.privacy === 'private' ? `<span class="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-black/70 flex items-center justify-center text-[9px] text-amber-300"><i class="fa-solid fa-lock"></i></span>` : ''}
+          <div class="absolute bottom-1.5 left-1.5 right-1.5 flex items-center justify-between text-[10px] font-bold text-white">
+            <span><i class="fa-solid fa-play text-[9px] mr-0.5"></i> ${formatNumber(v.views)}</span>
+            <span><i class="fa-regular fa-heart text-[9px] mr-0.5"></i> ${formatNumber(v.likes)}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openEditProfileModal() {
+      document.getElementById('editNameInput').value = appState.currentUser.name;
+      document.getElementById('editHandleInput').value = appState.currentUser.handle;
+      document.getElementById('editBioInput').value = appState.currentUser.bio;
+      document.getElementById('editProfileModal').classList.remove('hidden');
+    }
+
+    function handleAvatarUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        appState.currentUser.avatar = reader.result;
+        saveState();
+        renderProfile();
+        showToast('প্রোফাইল ছবি আপডেট হয়েছে');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveProfileChanges() {
+      const name = document.getElementById('editNameInput').value.trim();
+      let handle = document.getElementById('editHandleInput').value.trim();
+      const bio = document.getElementById('editBioInput').value.trim();
+      if (name) appState.currentUser.name = name;
+      if (handle) appState.currentUser.handle = handle.startsWith('@') ? handle : '@' + handle;
+      if (bio) appState.currentUser.bio = bio;
+
+      appState.videos.forEach(v => {
+        if (v.creatorId === appState.currentUser.id) {
+          v.creatorName = appState.currentUser.name;
+          v.creatorHandle = appState.currentUser.handle;
+          v.creatorAvatar = appState.currentUser.avatar;
+        }
+      });
+
+      syncUserInDirectory();
+      saveState();
+      closeModal('editProfileModal');
+      renderAllUI();
+      showToast('প্রোফাইল তথ্য সংরক্ষিত হয়েছে ✓');
+    }
+
+    // ==================== CREATOR STUDIO (LIVE CAMERA, REAL-TIME FILTERS, SPEED, STICKERS, TRIM, ITUNES AUDIO & INDEXEDDB + CLOUD) ====================
+    function openCreatorStudio(mode = 'normal') {
+      pauseAllFeedMedia();
+      setStudioMode(mode);
+      document.getElementById('creatorStudioModal').classList.remove('hidden');
+    }
+
+    function closeStudioAndStopAudio() {
+      stopLiveCameraPreview();
+      const audioEl = document.getElementById('studioBgAudioPlayer');
+      if (audioEl) {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+      }
+      const vidEl = document.getElementById('studioVideoPreview');
+      if (vidEl) {
+        vidEl.pause();
+      }
+      closeModal('creatorStudioModal');
+    }
+
+    function setStudioMode(mode) {
+      studioMode = mode;
+      ['normal', 'duet', 'stitch'].forEach(m => {
+        document.getElementById(`smode-${m}`).className = m === mode
+          ? 'py-2 rounded-lg bg-[#FE2C55] text-white'
+          : 'py-2 rounded-lg text-gray-400';
+      });
+      document.getElementById('duetBadgeOverlay').classList.toggle('hidden', mode !== 'duet');
+    }
+
+    // Live Camera Recorder Feature
+    async function startLiveCameraRecorder() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('এই ব্রাউজারে লাইভ ক্যামেরা সাপোর্টেড নয়');
+        return;
+      }
+      try {
+        cameraMediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: true });
+        const vid = document.getElementById('studioVideoPreview');
+        vid.srcObject = cameraMediaStream;
+        vid.muted = true; // prevent echo during recording
+        vid.classList.remove('hidden');
+        document.getElementById('studioEmptyPrompt').classList.add('hidden');
+        document.getElementById('cameraRecordOverlay').classList.remove('hidden');
+        vid.play().catch(() => {});
+        showToast('📷 ক্যামেরা চালু হয়েছে! লাল বাটনে চেপে রেকর্ড শুরু করুন');
+      } catch (err) {
+        showToast('ক্যামেরা পারমিশন পাওয়া যায়নি');
+      }
+    }
+
+    function toggleCameraRecording() {
+      const dot = document.getElementById('cameraRecordDot');
+      if (!cameraMediaRecorder || cameraMediaRecorder.state === 'inactive') {
+        cameraRecordedChunks = [];
+        cameraMediaRecorder = new MediaRecorder(cameraMediaStream);
+        cameraMediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) cameraRecordedChunks.push(e.data);
+        };
+        cameraMediaRecorder.onstop = () => {
+          const blob = new Blob(cameraRecordedChunks, { type: 'video/webm' });
+          studioRawFile = new File([blob], `mojalo_cam_${Date.now()}.webm`, { type: 'video/webm' });
+          studioVideoSrc = URL.createObjectURL(blob);
+          stopLiveCameraPreview();
+          showStudioVideoPreview(studioVideoSrc);
+          showToast('✅ ক্যামেরা ভিডিও রেকর্ড সম্পন্ন!');
+        };
+        cameraMediaRecorder.start();
+        dot.className = 'w-4 h-4 rounded-sm bg-white animate-pulse';
+        showToast('🔴 রেকর্ডিং চলছে...');
+      } else {
+        cameraMediaRecorder.stop();
+        dot.className = 'w-5 h-5 rounded-full bg-white';
+      }
+    }
+
+    function stopLiveCameraPreview() {
+      if (cameraMediaStream) {
+        cameraMediaStream.getTracks().forEach(t => t.stop());
+        cameraMediaStream = null;
+      }
+      const vid = document.getElementById('studioVideoPreview');
+      if (vid) vid.srcObject = null;
+      document.getElementById('cameraRecordOverlay').classList.add('hidden');
+    }
+
+    function handleVideoFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      studioRawFile = file;
+      studioVideoSrc = URL.createObjectURL(file);
+      const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+      document.getElementById('compressionRatioText').innerText = `${sizeMb}MB HD • অরিজিনাল সাউন্ড রেডি`;
+      document.getElementById('compressionInfoBadge').classList.remove('hidden');
+      showStudioVideoPreview(studioVideoSrc);
+      showToast(`🎬 ভিডিও লোড হয়েছে (${sizeMb}MB) — সাউন্ড চালু আছে`);
+    }
+
+    function useSampleStudioVideo() {
+      const samples = [
+        'https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4',
+        'https://assets.mixkit.co/videos/preview/mixkit-starry-sky-over-hills-1180-large.mp4',
+        'https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-light-1230-large.mp4'
+      ];
+      studioRawFile = null;
+      studioVideoSrc = samples[Math.floor(Math.random() * samples.length)];
+      document.getElementById('compressionRatioText').innerText = 'Cloud HD Ready';
+      document.getElementById('compressionInfoBadge').classList.remove('hidden');
+      showStudioVideoPreview(studioVideoSrc);
+    }
+
+    function showStudioVideoPreview(src) {
+      const vid = document.getElementById('studioVideoPreview');
+      vid.srcObject = null;
+      vid.src = src;
+      vid.muted = false;
+      vid.volume = studioOrigVolume;
+      vid.style.filter = studioFilterCss;
+      vid.playbackRate = studioPlaybackSpeed;
+      vid.classList.remove('hidden');
+      document.getElementById('studioEmptyPrompt').classList.add('hidden');
+      vid.play().catch(() => {});
+    }
+
+    // Real-Time Video Editor Controls
+    function applyStudioFilter(cssFilter, label, btnEl) {
+      studioFilterCss = cssFilter;
+      const vid = document.getElementById('studioVideoPreview');
+      if (vid) vid.style.filter = cssFilter;
+      document.querySelectorAll('.sfilter-btn').forEach(b => {
+        b.className = 'sfilter-btn px-2.5 py-1 rounded-lg bg-white/10 text-gray-200 text-[10px] font-bold whitespace-nowrap';
+      });
+      if (btnEl) btnEl.className = 'sfilter-btn px-2.5 py-1 rounded-lg bg-[#FE2C55] text-white text-[10px] font-bold whitespace-nowrap';
+      showToast(`ফিল্টার অ্যাপ্লাইড: ${label}`);
+    }
+
+    function applyStudioSpeed(rate, btnEl) {
+      studioPlaybackSpeed = rate;
+      const vid = document.getElementById('studioVideoPreview');
+      if (vid) vid.playbackRate = rate;
+      document.querySelectorAll('.sspeed-btn').forEach(b => {
+        b.className = 'sspeed-btn px-2.5 py-1 rounded-lg bg-white/10 text-[10px] font-bold';
+      });
+      if (btnEl) btnEl.className = 'sspeed-btn px-2.5 py-1 rounded-lg bg-[#25F4EE] text-black text-[10px] font-extrabold';
+      showToast(`স্পিড সেট হয়েছে: ${rate}x`);
+    }
+
+    function updateStudioSticker(val) {
+      studioStickerText = val.trim();
+      const overlay = document.getElementById('studioTextStickerOverlay');
+      if (studioStickerText) {
+        overlay.innerText = studioStickerText;
+        overlay.classList.remove('hidden');
+      } else {
+        overlay.classList.add('hidden');
+      }
+    }
+
+    function updateStudioTrim(sec) {
+      studioTrimSeconds = parseInt(sec, 10);
+      document.getElementById('studioTrimLabel').innerText = `${studioTrimSeconds}s`;
+    }
+
+    function resetVideoEdits() {
+      studioFilterCss = 'none';
+      studioPlaybackSpeed = 1.0;
+      studioStickerText = '';
+      studioTrimSeconds = 30;
+      studioSelectedSong = 'অরিজিনাল সাউন্ড';
+      studioSelectedPreviewUrl = '';
+      studioOrigVolume = 1.0;
+      studioBgVolume = 0.75;
+      const vid = document.getElementById('studioVideoPreview');
+      if (vid) {
+        vid.style.filter = 'none';
+        vid.playbackRate = 1.0;
+        vid.volume = 1.0;
+      }
+      document.getElementById('selectedSongLabel').innerText = 'অরিজিনাল সাউন্ড';
+      document.getElementById('studioStickerInput').value = '';
+      document.getElementById('studioTextStickerOverlay').classList.add('hidden');
+      document.getElementById('studioTrimRange').value = 30;
+      document.getElementById('studioTrimLabel').innerText = '30s';
+      showToast('ভিডিও এডিট রিসেট হয়েছে');
+    }
+
+    // Online iTunes Song Search + Instant Audio Preview & Dual Mixer
+    async function searchItunesSongs() {
+      const q = document.getElementById('itunesSearchInput').value.trim();
+      if (!q) return;
+      const list = document.getElementById('itunesResultsList');
+      list.innerHTML = `<p class="text-[11px] text-gray-400">গান খোঁজা হচ্ছে...</p>`;
+      try {
+        const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&limit=6`);
+        const data = await res.json();
+        if (!data.results || data.results.length === 0) {
+          list.innerHTML = `<p class="text-[11px] text-gray-400">কোনো গান পাওয়া যায়নি</p>`;
+          return;
+        }
+        list.innerHTML = data.results.map((track) => {
+          const safeTitle = `${track.trackName} - ${track.artistName}`.replace(/['"]/g, '');
+          const previewUrl = track.previewUrl || '';
+          return `
+            <div class="p-2 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 truncate flex-1" onclick="previewAndSelectSong('${safeTitle}', '${previewUrl}')">
+                <img src="${track.artworkUrl60}" class="w-8 h-8 rounded-lg shrink-0" />
+                <div class="truncate">
+                  <div class="text-[11px] font-bold text-white truncate">${track.trackName}</div>
+                  <div class="text-[9px] text-gray-400 truncate">${track.artistName}</div>
+                </div>
+              </div>
+              <button type="button" onclick="previewAndSelectSong('${safeTitle}', '${previewUrl}')" class="px-2.5 py-1 rounded-lg bg-[#25F4EE] text-black text-[10px] font-black shrink-0">
+                <i class="fa-solid fa-play mr-0.5"></i> শুনুন ও নিন
+              </button>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        list.innerHTML = `<p class="text-[11px] text-rose-400">নেটওয়ার্ক ত্রুটি, আবার চেষ্টা করুন</p>`;
+      }
+    }
+
+    function previewAndSelectSong(title, previewUrl) {
+      studioSelectedSong = title;
+      studioSelectedPreviewUrl = previewUrl;
+      document.getElementById('selectedSongLabel').innerText = title;
+
+      const audioEl = document.getElementById('studioBgAudioPlayer');
+      if (previewUrl) {
+        audioEl.src = previewUrl;
+        audioEl.volume = studioBgVolume;
+        audioEl.play().catch(() => {});
+      }
+      showToast(`🎵 গান যুক্ত হয়েছে: ${title}`);
+    }
+
+    function setDualAudioMix(channel, val) {
+      const pct = parseInt(val, 10);
+      if (channel === 'orig') {
+        studioOrigVolume = pct / 100;
+        document.getElementById('origVolVal').innerText = pct + '%';
+        const vid = document.getElementById('studioVideoPreview');
+        if (vid) vid.volume = studioOrigVolume;
+      } else {
+        studioBgVolume = pct / 100;
+        document.getElementById('bgVolVal').innerText = pct + '%';
+        const audioEl = document.getElementById('studioBgAudioPlayer');
+        if (audioEl) audioEl.volume = studioBgVolume;
+      }
+    }
+
+    // IndexedDB Large Video Vault + Firebase Cloud Storage + Persistent Audio Mix Save
+    async function publishCreatorVideo() {
+      if (!studioVideoSrc) {
+        useSampleStudioVideo();
+      }
+      const caption = document.getElementById('videoCaptionInput').value.trim() || 'আমার নতুন ভিডিও ✨ #মজালো_বিডি';
+      const privacy = document.getElementById('videoPrivacySelect').value;
+      const pinned = document.getElementById('videoPinSelect').value === 'yes';
+
+      // AI Spam Check on Caption
+      const spamCheck = runAiSpamFilter(caption);
+      if (!spamCheck.safe) {
+        showToast('🚫 ' + spamCheck.reason);
+        return;
+      }
+
+      const progressBox = document.getElementById('cloudUploadProgressBox');
+      const progressBar = document.getElementById('cloudUploadBar');
+      const progressPct = document.getElementById('cloudUploadPct');
+      const progressText = document.getElementById('cloudUploadStepText');
+      const pubBtn = document.getElementById('publishVideoBtn');
+
+      progressBox.classList.remove('hidden');
+      pubBtn.disabled = true;
+      progressBar.style.width = '30%';
+      progressPct.innerText = '30%';
+      progressText.innerText = 'ভিডিও ও অরিজিনাল সাউন্ড সংরক্ষণ হচ্ছে...';
+
+      let finalVideoUrl = studioVideoSrc;
+      let hasLocalVaultBlob = false;
+      const videoId = 'vid_' + Date.now();
+
+      if (studioRawFile) {
+        // Save full video with sound in IndexedDB Video Vault so it persists across reloads regardless of size
+        const savedToVault = await saveVideoBlobToVault(videoId, studioRawFile);
+        if (savedToVault) {
+          hasLocalVaultBlob = true;
+          finalVideoUrl = URL.createObjectURL(studioRawFile);
+          blobUrlRegistry.set(videoId, finalVideoUrl);
+        }
+
+        // Also attempt Firebase Cloud Storage upload
+        if (fbStorage) {
+          try {
+            progressBar.style.width = '65%';
+            progressPct.innerText = '65%';
+            progressText.innerText = 'Firebase Cloud Storage-এ সিঙ্ক হচ্ছে...';
+            const storageRef = fbStorage.ref(`mojalo_videos/${appState.currentUser.id}/${videoId}_${studioRawFile.name}`);
+            const uploadTask = await storageRef.put(studioRawFile);
+            finalVideoUrl = await uploadTask.ref.getDownloadURL();
+          } catch (cloudErr) {
+            console.warn('Storage fallback to IndexedDB Video Vault:', cloudErr);
+          }
+        }
+      }
+
+      progressBar.style.width = '100%';
+      progressPct.innerText = '100%';
+      progressText.innerText = 'পার্মানেন্টলি সেভ সম্পন্ন!';
+
+      const newVideo = {
+        id: videoId,
+        creatorId: appState.currentUser.id,
+        creatorName: appState.currentUser.name,
+        creatorHandle: appState.currentUser.handle,
+        creatorAvatar: appState.currentUser.avatar,
+        verified: appState.currentUser.verified,
+        caption: (studioMode !== 'normal' ? `[${studioMode.toUpperCase()}] ` : '') + caption,
+        song: studioSelectedSong,
+        bgAudioUrl: studioSelectedPreviewUrl || '',
+        origVolume: studioOrigVolume,
+        bgVolume: studioBgVolume,
+        videoUrl: finalVideoUrl,
+        cloudUrl: finalVideoUrl,
+        hasLocalVaultBlob: hasLocalVaultBlob,
+        filterCss: studioFilterCss,
+        speed: studioPlaybackSpeed,
+        stickerText: studioStickerText,
+        trimSeconds: studioTrimSeconds,
+        likes: 1,
+        likedByMe: true,
+        bookmarkedByMe: false,
+        shares: 0,
+        views: 15,
+        privacy: privacy,
+        pinned: pinned,
+        createdAt: Date.now(),
+        comments: []
+      };
+
+      appState.videos.unshift(newVideo);
+      saveState();
+
+      if (fbDb && !finalVideoUrl.startsWith('blob:') && !finalVideoUrl.startsWith('data:')) {
+        fbDb.collection('mojalo_videos').doc(videoId).set(newVideo).catch(() => {});
+      }
+
+      setTimeout(() => {
+        closeStudioAndStopAudio();
+        studioVideoSrc = '';
+        studioRawFile = null;
+        resetVideoEdits();
+        progressBox.classList.add('hidden');
+        progressBar.style.width = '0%';
+        pubBtn.disabled = false;
+        document.getElementById('videoCaptionInput').value = '';
+        document.getElementById('studioVideoPreview').classList.add('hidden');
+        document.getElementById('studioEmptyPrompt').classList.remove('hidden');
+
+        renderAllUI();
+        switchMainTab('profile');
+        showToast('🎉 ভিডিও ও সাউন্ড প্রোফাইলে পার্মানেন্টলি সেভ হয়েছে!');
+      }, 450);
+    }
+
+    // ==================== CREATOR ANALYTICS DASHBOARD ====================
+    function openCreatorAnalytics() {
+      const myVideos = appState.videos.filter(v => v.creatorId === appState.currentUser.id);
+      const totalViews = myVideos.reduce((s, v) => s + (v.views || 0), 0) + 18400;
+      document.getElementById('ana7dViews').innerText = formatNumber(totalViews);
+      document.getElementById('ana7dCoins').innerText = formatNumber(appState.currentUser.coins);
+
+      const days = ['শনি', 'রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র'];
+      const values = [1800, 2400, 2100, 3200, 2900, 4100, 4850];
+      const maxVal = Math.max(...values);
+
+      const chart = document.getElementById('analyticsBarChart');
+      chart.innerHTML = days.map((d, i) => {
+        const pct = Math.round((values[i] / maxVal) * 100);
+        return `
+          <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+            <span class="text-[9px] font-bold text-gray-300">${formatNumber(values[i])}</span>
+            <div class="w-full rounded-t-lg bg-gradient-to-t from-[#FE2C55] to-[#25F4EE] transition-all duration-500" style="height:${pct}%"></div>
+            <span class="text-[10px] font-bold text-gray-400">${d}</span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('analyticsModal').classList.remove('hidden');
+    }
+
+    // ==================== VIDEO OPTIONS, PINNING, PRIVACY, 30-DAY TRASH & REPORT ====================
+    function openVideoActionSheet(videoId) {
+      activeVideoIdForSheet = videoId;
+      const v = appState.videos.find(item => item.id === videoId);
+      if (!v) return;
+      const isOwner = v.creatorId === appState.currentUser.id || appState.currentUser.isAdmin;
+      document.getElementById('ownerVideoControls').classList.toggle('hidden', !isOwner);
+      document.getElementById('videoActionSheet').classList.remove('hidden');
+    }
+
+    function togglePinCurrentVideo() {
+      const v = appState.videos.find(item => item.id === activeVideoIdForSheet);
+      if (!v) return;
+      v.pinned = !v.pinned;
+      saveState();
+      closeModal('videoActionSheet');
+      renderAllUI();
+      showToast(v.pinned ? '📌 ভিডিও প্রোফাইলের শীর্ষে পিন করা হয়েছে' : 'ভিডিও আনপিন করা হয়েছে');
+    }
+
+    function togglePrivacyCurrentVideo() {
+      const v = appState.videos.find(item => item.id === activeVideoIdForSheet);
+      if (!v) return;
+      v.privacy = v.privacy === 'public' ? 'private' : 'public';
+      saveState();
+      closeModal('videoActionSheet');
+      renderAllUI();
+      showToast(v.privacy === 'private' ? '🔒 ভিডিওটি প্রাইভেট করা হয়েছে' : '🌍 ভিডিওটি পাবলিক করা হয়েছে');
+    }
+
+    function moveVideoToTrash() {
+      const idx = appState.videos.findIndex(item => item.id === activeVideoIdForSheet);
+      if (idx === -1) return;
+      const [removed] = appState.videos.splice(idx, 1);
+      removed.deletedAt = Date.now();
+      appState.trashVideos.unshift(removed);
+      saveState();
+      closeModal('videoActionSheet');
+      if (activePlayerVideoId === removed.id) closeVideoPlayerModal();
+      renderAllUI();
+      showToast('🗑️ ভিডিওটি ৩০-দিনের ট্র্যাশ লকে পাঠানো হয়েছে');
+    }
+
+    function openTrashModal() {
+      const container = document.getElementById('trashListContainer');
+      if (appState.trashVideos.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-400 text-center py-6">ট্র্যাশ বক্স খালি আছে</p>`;
+      } else {
+        container.innerHTML = appState.trashVideos.map(v => {
+          const daysLeft = Math.max(1, 30 - Math.floor((Date.now() - (v.deletedAt || Date.now())) / 86400000));
+          return `
+            <div class="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+              <div class="truncate pr-2">
+                <div class="text-xs font-bold text-white truncate">${v.caption}</div>
+                <div class="text-[10px] text-rose-400 mt-0.5">বাকি আছে ${daysLeft} দিন</div>
+              </div>
+              <button onclick="restoreFromTrash('${v.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-500 text-black text-[11px] font-extrabold shrink-0">রিস্টোর</button>
+            </div>`;
+        }).join('');
+      }
+      document.getElementById('trashModal').classList.remove('hidden');
+    }
+
+    function restoreFromTrash(id) {
+      const idx = appState.trashVideos.findIndex(v => v.id === id);
+      if (idx === -1) return;
+      const [restored] = appState.trashVideos.splice(idx, 1);
+      delete restored.deletedAt;
+      appState.videos.unshift(restored);
+      saveState();
+      openTrashModal();
+      renderAllUI();
+      showToast('♻️ ভিডিও প্রোফাইলে ফিরিয়ে আনা হয়েছে!');
+    }
+
+    function reportCurrentVideo() {
+      const v = appState.videos.find(item => item.id === activeVideoIdForSheet);
+      if (!v) return;
+      appState.reportedVideos.unshift({
+        id: 'rep_' + Date.now(),
+        videoId: v.id,
+        caption: v.caption,
+        creatorHandle: v.creatorHandle,
+        reportedBy: appState.currentUser.handle,
+        reason: 'কমিউনিটি গাইডলাইন রিভিউ রিকোয়েস্ট'
+      });
+      saveState();
+      closeModal('videoActionSheet');
+      showToast('🚩 রিপোর্টটি অ্যাডমিন মডারেশন টিমে পাঠানো হয়েছে');
+    }
+
+    function triggerDuetFromCurrent() {
+      closeModal('videoActionSheet');
+      openCreatorStudio('duet');
+    }
+
+    function triggerStitchFromCurrent() {
+      closeModal('videoActionSheet');
+      openCreatorStudio('stitch');
+    }
+
+    function copyVideoShareLink() {
+      const temp = document.createElement('input');
+      temp.value = `https://mojalobd.online/v/${activeVideoIdForSheet}`;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      closeModal('videoActionSheet');
+      showToast('ভিডিও শেয়ার লিঙ্ক কপি হয়েছে 🔗');
+    }
+
+    function shareProfileLink() {
+      const temp = document.createElement('input');
+      temp.value = `https://mojalobd.online/${appState.currentUser.handle}`;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      showToast('প্রোফাইল লিঙ্ক কপি হয়েছে 🔗');
+    }
+
+    // ==================== COMMENTS DRAWER (WITH AI ANTI-SPAM FILTER) ====================
+    function openCommentsDrawer(videoId) {
+      activeCommentVideoId = videoId;
+      renderCommentsList();
+      document.getElementById('commentsDrawer').classList.remove('hidden');
+    }
+
+    function renderCommentsList() {
+      const v = appState.videos.find(item => item.id === activeCommentVideoId);
+      if (!v) return;
+      document.getElementById('commentsHeaderCount').innerText = `কমেন্টসমূহ (${v.comments.length})`;
+      const box = document.getElementById('commentsListContainer');
+      if (v.comments.length === 0) {
+        box.innerHTML = `<p class="text-xs text-gray-500 text-center py-8">প্রথম কমেন্টটি আপনিই করুন!</p>`;
+        return;
+      }
+      box.innerHTML = v.comments.map(c => `
+        <div class="p-3 rounded-2xl bg-white/5 border border-white/5">
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="font-bold text-[#25F4EE]">${c.user}</span>
+            <span class="text-[10px] text-gray-500">${c.time}</span>
+          </div>
+          ${c.type === 'voice'
+            ? `<div class="mt-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 text-[#25F4EE] text-xs inline-flex items-center gap-2"><i class="fa-solid fa-play"></i> <span>ভয়েস রিপ্লাই (0:07)</span></div>`
+            : c.type === 'video'
+            ? `<div class="mt-1.5 px-3 py-1.5 rounded-xl bg-pink-500/15 text-[#FE2C55] text-xs inline-flex items-center gap-2"><i class="fa-solid fa-video"></i> <span>ভিডিও রিপ্লাই ক্লিপ</span></div>`
+            : `<p class="text-xs text-gray-200 mt-1">${c.text}</p>`}
+        </div>
+      `).join('');
+    }
+
+    function submitTextComment() {
+      const input = document.getElementById('commentTextInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const aiCheck = runAiSpamFilter(text);
+      if (!aiCheck.safe) {
+        showToast('🛡️ ' + aiCheck.reason);
+        return;
+      }
+
+      const v = appState.videos.find(item => item.id === activeCommentVideoId);
+      if (!v) return;
+      v.comments.unshift({
+        id: 'c_' + Date.now(),
+        user: appState.currentUser.name,
+        text: text,
+        type: 'text',
+        time: 'এইমাত্র'
+      });
+      input.value = '';
+      saveState();
+      renderCommentsList();
+      renderVideoFeed();
+    }
+
+    function sendMediaComment(type) {
+      const v = appState.videos.find(item => item.id === activeCommentVideoId);
+      if (!v) return;
+      v.comments.unshift({
+        id: 'c_' + Date.now(),
+        user: appState.currentUser.name,
+        text: type === 'voice' ? 'ভয়েস নোট' : 'ভিডিও রিপ্লাই',
+        type: type,
+        time: 'এইমাত্র'
+      });
+      saveState();
+      renderCommentsList();
+      renderVideoFeed();
+      showToast(type === 'voice' ? '🎙️ ভয়েস কমেন্ট পাঠানো হয়েছে' : '🎬 ভিডিও রিপ্লাই পাঠানো হয়েছে');
+    }
+
+    // ==================== BKASH / NAGAD WALLET & AI FAKE-TRXID PROTECTION ====================
+    function openWalletModal() {
+      document.getElementById('walletCoinBalance').innerText = appState.currentUser.coins;
+      document.getElementById('walletBdtValue').innerText = Math.floor(appState.currentUser.coins * 0.8);
+      renderUserPaymentHistory();
+      document.getElementById('walletModal').classList.remove('hidden');
+    }
+
+    function switchWalletTab(tab) {
+      document.getElementById('walletBuySection').classList.toggle('hidden', tab !== 'buy');
+      document.getElementById('walletWithdrawSection').classList.toggle('hidden', tab !== 'withdraw');
+      document.getElementById('wtab-buy').className = tab === 'buy' ? 'py-2 rounded-lg bg-[#E2136E] text-white' : 'py-2 rounded-lg text-gray-400';
+      document.getElementById('wtab-withdraw').className = tab === 'withdraw' ? 'py-2 rounded-lg bg-emerald-500 text-black' : 'py-2 rounded-lg text-gray-400';
+    }
+
+    function copyBkashNumber() {
+      const temp = document.createElement('input');
+      temp.value = OFFICIAL_BKASH_NUMBER;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      showToast(`বিকাশ/নগদ নাম্বার (${OFFICIAL_BKASH_NUMBER}) কপি হয়েছে!`);
+    }
+
+    function selectCoinPkg(coins, bdt, btnEl) {
+      selectedCoinPkg = { coins, bdt };
+      document.querySelectorAll('.coin-pkg-btn').forEach(b => {
+        b.classList.remove('border-2', 'border-[#E2136E]');
+        b.classList.add('border', 'border-white/10');
+      });
+      btnEl.classList.remove('border', 'border-white/10');
+      btnEl.classList.add('border-2', 'border-[#E2136E]');
+    }
+
+    function submitCoinDeposit(e) {
+      e.preventDefault();
+      const method = document.getElementById('payMethodSelect').value;
+      const sender = document.getElementById('paySenderInput').value.trim();
+      const trxId = document.getElementById('payTrxInput').value.trim().toUpperCase();
+
+      const trxCheck = validateTrxIdWithAi(trxId, appState.paymentRequests);
+      if (!trxCheck.valid) {
+        showToast('🛡️ ' + trxCheck.reason);
+        return;
+      }
+
+      appState.paymentRequests.unshift({
+        id: 'pay_' + Date.now(),
+        userId: appState.currentUser.id,
+        userName: appState.currentUser.name,
+        method: method,
+        sender: sender,
+        trxId: trxId,
+        coins: selectedCoinPkg.coins,
+        bdt: selectedCoinPkg.bdt,
+        status: 'pending',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+
+      saveState();
+      document.getElementById('paySenderInput').value = '';
+      document.getElementById('payTrxInput').value = '';
+      renderUserPaymentHistory();
+      showToast('✅ AI ভেরিফিকেশন পাস! অ্যাডমিন অ্যাপ্রুভালের পর কয়েন যোগ হবে।');
+    }
+
+    function renderUserPaymentHistory() {
+      const box = document.getElementById('userPaymentHistory');
+      const myReqs = appState.paymentRequests.filter(r => r.userId === appState.currentUser.id);
+      if (myReqs.length === 0) {
+        box.innerHTML = `<p class="text-[11px] text-gray-500">কোনো পেমেন্ট হিস্ট্রি নেই</p>`;
+        return;
+      }
+      box.innerHTML = myReqs.map(r => `
+        <div class="p-2.5 rounded-xl bg-white/5 flex items-center justify-between text-[11px]">
+          <div>
+            <span class="font-bold text-white">${r.method} • ${r.coins} কয়েন (৳${r.bdt})</span>
+            <div class="text-[10px] text-gray-400">TrxID: ${r.trxId}</div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
+            r.status === 'approved' ? 'bg-emerald-500/20 text-emerald-400' :
+            r.status === 'rejected' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-300'
+          }">${r.status.toUpperCase()}</span>
+        </div>
+      `).join('');
+    }
+
+    function submitCreatorWithdraw(e) {
+      e.preventDefault();
+      const coins = parseInt(document.getElementById('withdrawCoinsInput').value, 10);
+      const method = document.getElementById('withdrawMethodSelect').value;
+      const phone = document.getElementById('withdrawPhoneInput').value.trim();
+
+      if (coins > appState.currentUser.coins) {
+        showToast('❌ পর্যাপ্ত কয়েন ব্যালেন্স নেই!');
+        return;
+      }
+
+      appState.currentUser.coins -= coins;
+      appState.withdrawRequests.unshift({
+        id: 'wd_' + Date.now(),
+        userId: appState.currentUser.id,
+        userName: appState.currentUser.name,
+        coins: coins,
+        bdt: Math.floor(coins * 0.8),
+        method: method,
+        phone: phone,
+        status: 'pending'
+      });
+
+      syncUserInDirectory();
+      saveState();
+      openWalletModal();
+      renderProfile();
+      showToast('💸 ক্যাশআউট রিকোয়েস্ট সফলভাবে পাঠানো হয়েছে!');
+    }
+
+    // ==================== MASTER ADMIN COMMAND CENTER LOGIC ====================
+    function openAdminDashboard() {
+      if (!appState.currentUser.isAdmin || appState.currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) {
+        showToast('অ্যাডমিন অ্যাক্সেস অনুমোদিত নয়');
+        return;
+      }
+      renderAdminDashboardData();
+      document.getElementById('adminPanelDrawer').classList.remove('hidden');
+    }
+
+    function closeAdminDashboard() {
+      document.getElementById('adminPanelDrawer').classList.add('hidden');
+    }
+
+    function switchAdminSubTab(tab) {
+      document.querySelectorAll('.admin-subpanel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`adminSub-${tab}`).classList.remove('hidden');
+
+      document.querySelectorAll('.adm-subtab').forEach(b => {
+        b.className = 'adm-subtab px-3.5 py-2 rounded-xl bg-white/10 text-gray-300 text-xs font-bold whitespace-nowrap';
+      });
+      document.getElementById(`admtab-${tab}`).className = 'adm-subtab px-3.5 py-2 rounded-xl bg-amber-500 text-black text-xs font-extrabold whitespace-nowrap';
+    }
+
+    function renderAdminDashboardData() {
+      const approvedBdt = appState.paymentRequests
+        .filter(r => r.status === 'approved')
+        .reduce((sum, r) => sum + Number(r.bdt || 0), 0);
+      const pendingTotal = appState.paymentRequests.filter(r => r.status === 'pending').length +
+                           appState.withdrawRequests.filter(r => r.status === 'pending').length;
+
+      document.getElementById('admTotalRevenue').innerText = `৳ ${approvedBdt.toLocaleString()}`;
+      document.getElementById('admTotalVideos').innerText = appState.videos.length;
+      document.getElementById('admPendingCount').innerText = pendingTotal;
+      document.getElementById('admReportedCount').innerText = appState.reportedVideos.length;
+
+      const payList = document.getElementById('adminPaymentRequestsList');
+      if (appState.paymentRequests.length === 0) {
+        payList.innerHTML = `<p class="text-xs text-gray-500">কোনো পেমেন্ট রিকোয়েস্ট নেই</p>`;
+      } else {
+        payList.innerHTML = appState.paymentRequests.map(r => `
+          <div class="p-3 rounded-xl bg-black/45 border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div>
+              <div class="font-extrabold text-white">${r.userName} • <span class="text-[#E2136E]">${r.method}</span> (৳${r.bdt} ➔ ${r.coins} কয়েন)</div>
+              <div class="text-[11px] text-gray-400">Sender: ${r.sender} | TrxID: <b class="text-amber-300">${r.trxId}</b> • ${r.time}</div>
+            </div>
+            ${r.status === 'pending' ? `
+              <div class="flex items-center gap-1.5">
+                <button onclick="processPaymentRequest('${r.id}', 'approved')" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-black font-extrabold">অ্যাপ্রুভ ✓</button>
+                <button onclick="processPaymentRequest('${r.id}', 'rejected')" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 font-bold">বাতিল</button>
+              </div>
+            ` : `<span class="px-2.5 py-1 rounded-full text-[10px] font-black ${r.status === 'approved' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">${r.status.toUpperCase()}</span>`}
+          </div>
+        `).join('');
+      }
+
+      const wdList = document.getElementById('adminWithdrawRequestsList');
+      if (appState.withdrawRequests.length === 0) {
+        wdList.innerHTML = `<p class="text-xs text-gray-500">কোনো ক্যাশআউট রিকোয়েস্ট নেই</p>`;
+      } else {
+        wdList.innerHTML = appState.withdrawRequests.map(w => `
+          <div class="p-3 rounded-xl bg-black/45 border border-white/10 flex items-center justify-between text-xs">
+            <div>
+              <div class="font-bold text-white">${w.userName} ➔ ${w.method}: ${w.phone}</div>
+              <div class="text-[11px] text-[#25F4EE]">${w.coins} কয়েন = ৳${w.bdt}</div>
+            </div>
+            ${w.status === 'pending'
+              ? `<button onclick="approveWithdrawRequest('${w.id}')" class="px-3 py-1.5 rounded-lg bg-[#25F4EE] text-black font-extrabold">পেইড মার্ক করুন</button>`
+              : `<span class="text-emerald-400 font-bold text-[11px]">PAID ✓</span>`}
+          </div>
+        `).join('');
+      }
+
+      const usersBox = document.getElementById('adminUsersList');
+      usersBox.innerHTML = appState.usersDirectory.map(u => `
+        <div class="p-3 rounded-xl bg-black/45 border border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2.5">
+            <img src="${u.avatar}" class="w-9 h-9 rounded-full bg-gray-800" />
+            <div>
+              <div class="font-bold text-white flex items-center gap-1">${u.name} ${getVerifiedBadgeHTML(u.verified)}</div>
+              <div class="text-[10px] text-gray-400">${u.handle} • কয়েন: ${u.coins}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="setUserBadge('${u.id}', 'none')" class="px-2 py-1 rounded bg-white/10 text-[10px]">None</button>
+            <button onclick="setUserBadge('${u.id}', 'blue')" class="px-2 py-1 rounded bg-cyan-500/20 text-[#25F4EE] text-[10px] font-bold">Blue ✓</button>
+            <button onclick="setUserBadge('${u.id}', 'gold')" class="px-2 py-1 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold">Gold ✓</button>
+            <button onclick="giftBonusCoinsToUser('${u.id}', 500)" class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">+500 🪙</button>
+          </div>
+        </div>
+      `).join('');
+
+      const repBox = document.getElementById('adminReportedList');
+      repBox.innerHTML = appState.reportedVideos.length === 0
+        ? `<p class="text-xs text-gray-500">কোনো রিপোর্টেড ভিডিও নেই</p>`
+        : appState.reportedVideos.map(rep => `
+          <div class="p-3 rounded-xl bg-rose-950/25 border border-rose-500/30 flex items-center justify-between text-xs">
+            <div>
+              <div class="font-bold text-rose-200">${rep.caption} (${rep.creatorHandle})</div>
+              <div class="text-[10px] text-gray-400">রিপোর্টার: ${rep.reportedBy} • ${rep.reason}</div>
+            </div>
+            <button onclick="adminRemoveVideo('${rep.videoId}', '${rep.id}')" class="px-3 py-1.5 rounded-lg bg-rose-600 text-white font-bold">রিমুভ</button>
+          </div>
+        `).join('');
+
+      const allVidBox = document.getElementById('adminAllVideosList');
+      allVidBox.innerHTML = appState.videos.map(v => `
+        <div class="p-3 rounded-xl bg-black/45 border border-white/10 flex items-center justify-between gap-2 text-xs">
+          <div class="truncate">
+            <div class="font-bold text-white truncate">${v.caption}</div>
+            <div class="text-[10px] text-gray-400">${v.creatorHandle} • 👁️ ${formatNumber(v.views)} • ❤️ ${formatNumber(v.likes)}</div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="adminBoostVideo('${v.id}')" class="px-2.5 py-1 rounded-lg bg-[#25F4EE] text-black font-extrabold text-[10px]">+10K ভিউ বুস্ট</button>
+            <button onclick="adminRemoveVideo('${v.id}', null)" class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 font-bold text-[10px]">ডিলিট</button>
+          </div>
+        </div>
+      `).join('');
+
+      const supBox = document.getElementById('adminSupportMessages');
+      supBox.innerHTML = appState.supportChat.map(m => `
+        <div class="p-2 rounded-lg ${m.sender === 'admin' ? 'bg-amber-500/15 text-amber-200 ml-6' : 'bg-white/10 text-white mr-6'}">
+          <b>${m.sender === 'admin' ? 'Admin' : 'User'}:</b> ${m.text}
+        </div>
+      `).join('');
+    }
+
+    function processPaymentRequest(reqId, newStatus) {
+      const req = appState.paymentRequests.find(r => r.id === reqId);
+      if (!req || req.status !== 'pending') return;
+      req.status = newStatus;
+
+      if (newStatus === 'approved') {
+        if (appState.currentUser.id === req.userId) {
+          appState.currentUser.coins += req.coins;
+        }
+        const dirUser = appState.usersDirectory.find(u => u.id === req.userId);
+        if (dirUser) dirUser.coins += req.coins;
+        triggerLocalPushAlert('কয়েন রিচার্জ সফল 🪙', `আপনার ওয়ালেটে +${req.coins} কয়েন যোগ হয়েছে!`);
+        showToast(`✅ ${req.coins} কয়েন সফলভাবে যুক্ত করা হয়েছে!`);
+      } else {
+        showToast('পেমেন্ট রিকোয়েস্ট বাতিল করা হয়েছে');
+      }
+
+      saveState();
+      renderAdminDashboardData();
+      renderProfile();
+    }
+
+    function approveWithdrawRequest(wdId) {
+      const wd = appState.withdrawRequests.find(w => w.id === wdId);
+      if (!wd) return;
+      wd.status = 'paid';
+      saveState();
+      renderAdminDashboardData();
+      showToast('💸 উইথড্র রিকোয়েস্ট PAID মার্ক করা হয়েছে');
+    }
+
+    function setUserBadge(userId, badgeLevel) {
+      const dirUser = appState.usersDirectory.find(u => u.id === userId);
+      if (dirUser) dirUser.verified = badgeLevel;
+      if (appState.currentUser.id === userId) appState.currentUser.verified = badgeLevel;
+      appState.videos.forEach(v => {
+        if (v.creatorId === userId) v.verified = badgeLevel;
+      });
+      saveState();
+      renderAdminDashboardData();
+      renderAllUI();
+      showToast(`ব্যাজ আপডেট হয়েছে: ${badgeLevel.toUpperCase()}`);
+    }
+
+    function giftBonusCoinsToUser(userId, amount) {
+      const dirUser = appState.usersDirectory.find(u => u.id === userId);
+      if (dirUser) dirUser.coins += amount;
+      if (appState.currentUser.id === userId) appState.currentUser.coins += amount;
+      saveState();
+      renderAdminDashboardData();
+      renderProfile();
+      showToast(`🎁 +${amount} বোনাস কয়েন পাঠানো হয়েছে!`);
+    }
+
+    function adminBoostVideo(videoId) {
+      const v = appState.videos.find(item => item.id === videoId);
+      if (!v) return;
+      v.views += 10000;
+      v.likes += 850;
+      saveState();
+      renderAdminDashboardData();
+      renderAllUI();
+      showToast('🚀 ভিডিওতে +10K ভিউ ও +850 লাইক বুস্ট করা হয়েছে!');
+    }
+
+    function adminRemoveVideo(videoId, reportId) {
+      appState.videos = appState.videos.filter(v => v.id !== videoId);
+      if (reportId) {
+        appState.reportedVideos = appState.reportedVideos.filter(r => r.id !== reportId);
+      }
+      saveState();
+      renderAdminDashboardData();
+      renderAllUI();
+      showToast('ভিডিওটি প্ল্যাটফর্ম থেকে রিমুভ করা হয়েছে');
+    }
+
+    function publishGlobalNotice() {
+      const txt = document.getElementById('adminNoticeInput').value.trim();
+      if (!txt) return;
+      appState.globalNotice = txt;
+      saveState();
+      renderGlobalNotice();
+      showToast('📢 গ্লোবাল নোটিশ লাইভ হয়েছে!');
+    }
+
+    function clearGlobalNotice() {
+      appState.globalNotice = '';
+      saveState();
+      renderGlobalNotice();
+      showToast('নোটিশ বন্ধ করা হয়েছে');
+    }
+
+    function renderGlobalNotice() {
+      const banner = document.getElementById('globalNoticeBanner');
+      if (appState.globalNotice) {
+        document.getElementById('globalNoticeText').innerText = appState.globalNotice;
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function sendAdminSupportReply() {
+      const input = document.getElementById('adminSupportReplyInput');
+      const txt = input.value.trim();
+      if (!txt) return;
+      appState.supportChat.push({ sender: 'admin', text: txt, time: 'এইমাত্র' });
+      input.value = '';
+      saveState();
+      renderAdminDashboardData();
+      showToast('সাপোর্ট রিপ্লাই পাঠানো হয়েছে');
+    }
+
+    // ==================== DISCOVER, LIVE STREAMING, INBOX & CALLS ====================
+    function renderDiscoverGrid(filterText = '') {
+      const grid = document.getElementById('discoverGrid');
+      const q = filterText.toLowerCase();
+      const filtered = appState.videos.filter(v =>
+        v.privacy === 'public' &&
+        (v.caption.toLowerCase().includes(q) || v.creatorName.toLowerCase().includes(q) || v.song.toLowerCase().includes(q))
+      );
+      document.getElementById('discoverCount').innerText = `${filtered.length} টি ভিডিও`;
+      grid.innerHTML = filtered.map(v => `
+        <div onclick="playVideoFromDiscover('${v.id}')" class="relative aspect-[9/14] rounded-2xl overflow-hidden bg-[#12131d] border border-white/10 cursor-pointer group">
+          <video src="${v.videoUrl}" style="filter:${v.filterCss || 'none'}" class="w-full h-full object-cover" muted playsinline preload="metadata"></video>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent"></div>
+          <div class="absolute bottom-2.5 left-2.5 right-2.5">
+            <p class="text-[11px] font-bold text-white line-clamp-2">${v.caption}</p>
+            <div class="flex items-center justify-between mt-1.5 text-[10px] text-gray-300">
+              <span class="truncate">${v.creatorHandle}</span>
+              <span>❤️ ${formatNumber(v.likes)}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterDiscover(val) {
+      renderDiscoverGrid(val);
+    }
+
+    function filterByTag(tag) {
+      if (tag === 'all') {
+        document.getElementById('discoverSearchInput').value = '';
+        renderDiscoverGrid('');
+      } else {
+        document.getElementById('discoverSearchInput').value = tag;
+        renderDiscoverGrid(tag);
+      }
+    }
+
+    function playVideoFromDiscover(videoId) {
+      const idx = appState.videos.findIndex(v => v.id === videoId);
+      if (idx > 0) {
+        const [vid] = appState.videos.splice(idx, 1);
+        appState.videos.unshift(vid);
+        renderVideoFeed();
+      }
+      switchMainTab('home');
+    }
+
+    function openLiveHub() {
+      pauseAllFeedMedia();
+      document.getElementById('liveStreamModal').classList.remove('hidden');
+    }
+
+    function sendLiveGift(giftName, cost) {
+      if (appState.currentUser.coins < cost) {
+        showToast('❌ পর্যাপ্ত কয়েন নেই! বিকাশ দিয়ে কয়েন রিচার্জ করুন।');
+        openWalletModal();
+        return;
+      }
+      appState.currentUser.coins -= cost;
+      syncUserInDirectory();
+      saveState();
+      renderProfile();
+
+      const stage = document.getElementById('giftAnimationStage');
+      const badge = document.createElement('div');
+      badge.className = 'gift-float px-5 py-3 rounded-3xl bg-gradient-to-r from-[#FE2C55] to-amber-500 text-white font-black text-lg shadow-2xl border border-white/30';
+      badge.innerText = `${appState.currentUser.name} পাঠিয়েছেন ${giftName}!`;
+      stage.appendChild(badge);
+      setTimeout(() => badge.remove(), 2500);
+
+      const feed = document.getElementById('liveChatFeed');
+      feed.innerHTML += `<div class="px-3 py-1 rounded-full bg-amber-500/25 border border-amber-400/40 inline-block text-amber-200 font-bold">🎁 ${appState.currentUser.name} ${giftName} গিফট করেছেন!</div>`;
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function sendLiveChatMessage() {
+      const input = document.getElementById('liveChatInput');
+      const txt = input.value.trim();
+      if (!txt) return;
+      const aiCheck = runAiSpamFilter(txt);
+      if (!aiCheck.safe) {
+        showToast('🛡️ ' + aiCheck.reason);
+        return;
+      }
+      const feed = document.getElementById('liveChatFeed');
+      feed.innerHTML += `<div class="px-3 py-1 rounded-full bg-black/50 inline-block"><b class="text-[#25F4EE]">${appState.currentUser.name}:</b> ${txt}</div>`;
+      input.value = '';
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function renderInbox() {
+      const friendsRow = document.getElementById('activeFriendsRow');
+      friendsRow.innerHTML = appState.usersDirectory.map(u => `
+        <div class="flex flex-col items-center shrink-0 w-16">
+          <div class="relative">
+            <img src="${u.avatar}" class="w-[52px] h-[52px] rounded-full border-2 border-emerald-400 bg-gray-900" />
+            <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#07070c]"></span>
+          </div>
+          <span class="text-[10px] font-semibold text-gray-200 truncate w-full text-center mt-1">${u.name.split(' ')[0]}</span>
+          <div class="flex gap-1 mt-1">
+            <button onclick="startPeerCall('${u.name}', '${u.avatar}', 'অডিও কল')" class="w-6 h-6 rounded-full bg-white/10 text-[10px] text-[#25F4EE]"><i class="fa-solid fa-phone"></i></button>
+            <button onclick="startPeerCall('${u.name}', '${u.avatar}', 'HD ভিডিও কল')" class="w-6 h-6 rounded-full bg-white/10 text-[10px] text-[#FE2C55]"><i class="fa-solid fa-video"></i></button>
+          </div>
+        </div>
+      `).join('');
+
+      const threads = document.getElementById('chatThreadsList');
+      threads.innerHTML = appState.usersDirectory.map(u => `
+        <div onclick="startPeerCall('${u.name}', '${u.avatar}', 'HD ভিডিও কল')" class="p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/5 flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-3">
+            <img src="${u.avatar}" class="w-11 h-11 rounded-full bg-gray-800" />
+            <div>
+              <div class="text-xs font-extrabold text-white flex items-center gap-1">${u.name} ${getVerifiedBadgeHTML(u.verified)}</div>
+              <div class="text-[11px] text-gray-400">নতুন ডুয়েট ভিডিও কোলাবোরেশন করতে চান? 🎬</div>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-[#FE2C55]/20 text-[#FE2C55] text-[10px] font-bold">কল</span>
+        </div>
+      `).join('');
+    }
+
+    function startPeerCall(name, avatar, type) {
+      document.getElementById('callPeerName').innerText = name;
+      document.getElementById('callPeerAvatar').src = avatar;
+      document.getElementById('callTypeBadge').innerText = type;
+      document.getElementById('callModal').classList.remove('hidden');
+    }
+
+    function openNotifications() {
+      const list = document.getElementById('notificationsList');
+      list.innerHTML = appState.notifications.map(n => `
+        <div class="p-3 rounded-2xl bg-white/5 border border-white/5 flex items-start justify-between gap-2">
+          <span class="text-gray-200">${n.text}</span>
+          <span class="text-[10px] text-gray-500 shrink-0">${n.time}</span>
+        </div>
+      `).join('');
+      document.getElementById('notifModal').classList.remove('hidden');
+    }
+
+    function openSupportChat() {
+      renderUserSupportChat();
+      document.getElementById('supportModal').classList.remove('hidden');
+    }
+
+    function renderUserSupportChat() {
+      const box = document.getElementById('userSupportMessages');
+      box.innerHTML = appState.supportChat.map(m => `
+        <div class="p-3 rounded-2xl ${m.sender === 'user' ? 'bg-[#FE2C55] text-white ml-8' : 'bg-white/10 text-gray-100 mr-8'}">
+          <div class="text-[10px] opacity-75 mb-0.5">${m.sender === 'user' ? 'আপনি' : 'মজালো সাপোর্ট টিম'}</div>
+          <div>${m.text}</div>
+        </div>
+      `).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendUserSupportMsg() {
+      const input = document.getElementById('userSupportInput');
+      const txt = input.value.trim();
+      if (!txt) return;
+      appState.supportChat.push({ sender: 'user', text: txt, time: 'এইমাত্র' });
+      input.value = '';
+      saveState();
+      renderUserSupportChat();
+      triggerLocalPushAlert('নতুন সাপোর্ট মেসেজ 📩', txt);
+      showToast('মেসেজ সাপোর্ট টিমে পাঠানো হয়েছে');
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+  </script>
+</body>
+</html>
